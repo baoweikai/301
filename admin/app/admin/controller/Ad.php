@@ -36,9 +36,9 @@ class Ad extends \app\admin\Controller
                 ];
                 $field = 'a.*,at.typename';
                 $result = $this->getListJson('Ad', $map, $join_arr, $field);
-                Json::success('ok', $result);
+                return $this->success($result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             return $this->fetch();

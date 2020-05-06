@@ -37,12 +37,12 @@ class System extends \app\admin\Controller
               $arr ="<?php\r\nreturn " . var_export($this->sysData, true) . ";\r\n?>";
               $result = file_put_contents($this->path,$arr);
               if($result) {
-                Json::success("修改成功");
+                return $this->success("修改成功");
               }else{
-                Json::fail('修改失败， 请修改' . $this->path . '的写入权限');
+                return $this->error('修改失败， 请修改' . $this->path . '的写入权限');
               }
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
             $this->result['title'] = '参数设置';
@@ -69,9 +69,9 @@ class System extends \app\admin\Controller
                     Db::connect("db_config9")->name("jump_count")->execute("truncate table cz_jump_count"); 
                     Db::connect("db_config9")->name("cited_count")->execute("truncate table cz_cited_count"); 
                 }
-                Json::success("清除成功");
+                return $this->success("清除成功");
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             $jumpcount =  Db::connect("db_config9")->name("jump_count")->count();
@@ -109,9 +109,9 @@ class System extends \app\admin\Controller
                 ];
                 $field = 'a.*,c.cname,u.account';
                 $result = $this->getListJson('Jump', $map, $join_arr, $field);
-                Json::success('ok', $result);
+                return $this->success($result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             return $this->fetch();
@@ -126,13 +126,13 @@ class System extends \app\admin\Controller
                 $result = $this->sysModel->addSystem($data);
                 if($result){
                     adminAddLog(UID,$this->now_user["username"].",".CONTROLLER_NAME."修改了系统设置");
-                    Json::success($this->sysModel->getError(), $result);
+                    return $this->success($this->sysModel->getError(), $result);
                 }else{
-                    Json::fail($this->sysModel->getError());
+                    return $this->error($this->sysModel->getError());
                 }
         
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             $sys_id = 1;
@@ -155,11 +155,11 @@ class System extends \app\admin\Controller
             try { 
              $result = $this->staticFetch(true,Env::get("root_path")."application/home/view/index/index.html");
              if(!$result){
-                 Json::fail("生成失败");
+                 return $this->error("生成失败");
              }
-             Json::success("生成成功");
+             return $this->success("生成成功");
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
           return $this->fetch();

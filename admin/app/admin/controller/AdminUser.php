@@ -24,9 +24,9 @@ class AdminUser extends \app\admin\Controller
                 ];
                 $field = 'a.*,ag.title';
                 $result = $this->getListJson('AdminUser', $map, $join_arr,$field);
-                Json::success('ok', $result);
+                return $this->success($result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             return $this->fetch();
@@ -45,19 +45,19 @@ class AdminUser extends \app\admin\Controller
                 $post_data = request()->post();
                 $validate = validate("AdminUser");
                 if (!$validate->check($post_data)) {
-                    Json::fail($validate->getError());
+                    return $this->error($validate->getError());
                 }
                 $result = $model->update($post_data);
                 if (!$result) {
-                    Json::fail('编辑失败');
+                    return $this->error('编辑失败');
                 }
                 if(UID == $result['id']){
                     $map['id'] = UID;
                     $model->saveUserCache($map);
                 }
-                Json::success('编辑成功', $result);
+                return $this->success('编辑成功', $result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
 
         } else {

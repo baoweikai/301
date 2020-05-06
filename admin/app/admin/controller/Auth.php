@@ -28,7 +28,7 @@ class Auth extends \app\admin\Controller
                 }
                 cache('adminRuleList', $result, 3600);
             }
-            Json::success('获取成功',$this->leftNav->menu($result));
+            return $this->success('获取成功',$this->leftNav->menu($result));
         }else{
             return $this->fetch(); 
         }
@@ -41,11 +41,11 @@ class Auth extends \app\admin\Controller
                 $post_data = input('post.');        
                 $result = $this->authService->ruleAdd($post_data);
                 if(!$result){
-                    Json::fail($this->authService->getError());
+                    return $this->error($this->authService->getError());
                 }
-                Json::success($this->authService->getError(),$result);
+                return $this->success($this->authService->getError(),$result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{        
             $pid = intval(input('pid'));
@@ -67,11 +67,11 @@ class Auth extends \app\admin\Controller
                 $post_data = input('post.');        
                 $result = $this->authService->ruleEdit($post_data);
                 if(!$result){
-                    Json::fail($this->authService->getError());
+                    return $this->error($this->authService->getError());
                 }
-                Json::success($this->authService->getError(),$result);
+                return $this->success($this->authService->getError(),$result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
             //菜单分类
@@ -99,11 +99,11 @@ class Auth extends \app\admin\Controller
             $status = input('status',0); 
             $result = $this->authService->setRuleStatus($rule_id,$status);
             if(!$result){
-                Json::fail($this->authService->getError());
+                return $this->error($this->authService->getError());
             }
-            Json::success($this->authService->getError(),$result);
+            return $this->success($this->authService->getError(),$result);
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
 
@@ -116,11 +116,11 @@ class Auth extends \app\admin\Controller
             $authopen = input('authopen',0); 
             $result = $this->authService->setRuleOpen($rule_id,$authopen);
             if(!$result){
-                Json::fail($this->authService->getError());
+                return $this->error($this->authService->getError());
             }
-            Json::success($this->authService->getError(),$result);
+            return $this->success($this->authService->getError(),$result);
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
     //删除节点
@@ -130,11 +130,11 @@ class Auth extends \app\admin\Controller
             $rule_id = input('rule_id',0);        
             $result = $this->authService->ruleDel($rule_id);
             if(!$result){
-                Json::fail($this->authService->getError());
+                return $this->error($this->authService->getError());
             }
-            Json::success($this->authService->getError(),$result);
+            return $this->success($this->authService->getError(),$result);
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
     //清除节点缓存
@@ -142,11 +142,11 @@ class Auth extends \app\admin\Controller
 		try {
 			$result = $this->authService->clearNode(); 
 			if (!$result) {
-			    Json::fail($this->authService->getError());
+			    return $this->error($this->authService->getError());
 			}
-			Json::success($this->authService->getError(), $result);
+			return $this->success($this->authService->getError(), $result);
 		} catch (\Exception $e) {
-			Json::fail($e->getMessage());
+			return $this->error($e->getMessage());
 		}
 
     }
@@ -158,13 +158,13 @@ class Auth extends \app\admin\Controller
             $post_data = input();        
             $result = $this->authService->ruleSort($post_data['rule_id'],$post_data['sort']);
             if(!$result){
-                Json::fail($this->authService->getError());
+                return $this->error($this->authService->getError());
             }
          
             $arr['url'] = url('/Auth/ruleList');
-            Json::success($this->authService->getError(),$arr);
+            return $this->success($this->authService->getError(),$arr);
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         } 
     }
 
@@ -176,9 +176,9 @@ class Auth extends \app\admin\Controller
             try {
             $map = [];
             $result = $this->_listJson('AdminGroup',$map);
-            Json::success('获取成功',$result);
+            return $this->success('获取成功',$result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
 
         }else{
@@ -194,11 +194,11 @@ class Auth extends \app\admin\Controller
                 $post_data = input('post.');        
                 $result = $this->authService->groupAdd($post_data);
                 if(!$result){
-                    Json::fail($this->authService->getError());
+                    return $this->error($this->authService->getError());
                 }
-                Json::success($this->authService->getError(),$result);
+                return $this->success($this->authService->getError(),$result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
             $this->result['title'] = '添加角色';
@@ -215,11 +215,11 @@ class Auth extends \app\admin\Controller
                 $post_data = input('post.');        
                 $result = $this->authService->groupEdit($post_data);
                 if(!$result){
-                    Json::fail($this->authService->getError());
+                    return $this->error($this->authService->getError());
                 }
-                Json::success($this->authService->getError(),$result);
+                return $this->success($this->authService->getError(),$result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
             $group_id = input('group_id');
@@ -237,11 +237,11 @@ class Auth extends \app\admin\Controller
             $rule_id = input('group_id',0);        
             $result = $this->authService->groupDel($rule_id);
             if(!$result){
-                Json::fail($this->authService->getError());
+                return $this->error($this->authService->getError());
             }
-            Json::success($this->authService->getError(),$result);
+            return $this->success($this->authService->getError(),$result);
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
 
@@ -251,11 +251,11 @@ class Auth extends \app\admin\Controller
             $post_data = input();
             $result = $this->authService->setGroupStatus($post_data['group_id'],$post_data['status']);
             if(!$result){
-                Json::fail($this->authService->getError());
+                return $this->error($this->authService->getError());
             }
-            Json::success($this->authService->getError(),$result);
+            return $this->success($this->authService->getError(),$result);
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
 
@@ -266,18 +266,18 @@ class Auth extends \app\admin\Controller
             try {
                 $rules = input('post.rules');
                 if(empty($rules)){
-                    Json::fail('请选择权限');
+                    return $this->error('请选择权限');
                 }
                 $data = input('post.');
                 $where['id'] = $data['group_id'];
                 if(model('AdminGroup')->update($data,$where)){
                     $result['url'] = url('/Auth/groupList');
-                    Json::success('权限配置成功',$result);
+                    return $this->success('权限配置成功',$result);
                 }else{
-                    Json::fail('保存错误');
+                    return $this->error('保存错误');
                 } 
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             } 
         }else{
             $admin_rule=model('AdminRule')->field('id,pid,title')->order('sort asc')->select();

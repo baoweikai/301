@@ -33,9 +33,9 @@ class JumpCount extends \app\admin\Controller
                 $list_row = input('limit', 10);
                 $field="*";
                 $result =  Db::connect("db_config9")->name("jump_count")->where($map)->field($field)->order("create_time desc")->paginate($list_row, false, ['query' => request()->param()]);
-                Json::success('ok', $result);
+                return $this->success($result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             return $this->fetch();

@@ -104,9 +104,9 @@ class Category extends \app\admin\Controller
                 $this->repair();
                 savecache('Category');
                 $arr['url']= url('/Category/index');
-                Json::success("栏目添加成功!",$arr);
+                return $this->success("栏目添加成功!",$arr);
             }else{
-                Json::fail("栏目添加失败!");
+                return $this->error("栏目添加失败!");
             }
         }else{
             $parentid =	input('param.parentid');
@@ -164,9 +164,9 @@ class Category extends \app\admin\Controller
                 savecache('Category');
                 cache('cate', NULL);
                 $result['url'] = url("/Category/index");
-                Json::success("栏目修改成功!",$result);
+                return $this->success("栏目修改成功!",$result);
             } else {
-                Json::fail("栏目修改失败!");
+                return $this->error("栏目修改失败!");
             }
         }else{
             $id = input('id');
@@ -279,7 +279,7 @@ class Category extends \app\admin\Controller
         $scount = $this->dao->where(array('parentid'=>$catid))->count();
 
         if($scount){
-            Json::fail("请先删除其子栏目!");
+            return $this->error("请先删除其子栏目!");
         }
 
         $module  = db($modules);
@@ -297,7 +297,7 @@ class Category extends \app\admin\Controller
                 $count = $module->count();
             }
             if($count){
-                Json::fail("请先删除该栏目下所有数据!");
+                return $this->error("请先删除该栏目下所有数据!");
             }
         }
         $pid = $this->categorys[$catid]['parentid'];
@@ -318,7 +318,7 @@ class Category extends \app\admin\Controller
         savecache('Category');
         cache('cate', NULL);
         $result['url'] = url('/Category/index');
-        Json::success("栏目删除成功!",$result);
+        return $this->success("栏目删除成功!",$result);
 
     }
 
@@ -328,7 +328,7 @@ class Category extends \app\admin\Controller
         savecache('Category');
         cache('cate', NULL);
         $result['url'] = url('/Category/index');
-        Json::success("排序成功!",$result);
+        return $this->success("排序成功!",$result);
     }
 }
 

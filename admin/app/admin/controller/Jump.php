@@ -43,9 +43,9 @@ class Jump extends \app\admin\Controller
                     $list["data"][$key]["citedTodayNumer"] = Db::connect("db_config9")->name("cited_count")->where("j_id=".$val["id"]." and create_time>=".strtotime($dt)." and create_time<".strtotime($new_time))->count("id");
                 }
     
-                Json::success('ok', $list);
+                return $this->success($list);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             return $this->fetch();
@@ -63,7 +63,7 @@ class Jump extends \app\admin\Controller
                 $post_data = request()->post();
                 $admin_jump_url = trim($post_data['admin_jump_url']);
                 if(!$admin_jump_url){
-                    Json::fail("请填写引量跳转链接");
+                    return $this->error("请填写引量跳转链接");
                 }
                 //数据查询
                 $list = $model->field("id,shield_url")->order("id asc")->select();
@@ -76,9 +76,9 @@ class Jump extends \app\admin\Controller
                     //删除缓存
                     $this->delJumpRedis($host);
                 }
-				Json::success("修改成功!!!");
+				return $this->success("修改成功!!!");
             } catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
             }
         }else{
             return $this->fetch('jump'); 
@@ -96,7 +96,7 @@ class Jump extends \app\admin\Controller
                 $post_data = request()->post();
                 $end_ip = trim($post_data['end_ip']);
                 if(!$end_ip){
-                    Json::fail("请填写引量IP");
+                    return $this->error("请填写引量IP");
                 }
                 //数据查询
                 $list = $model->field("id,shield_url")->order("id asc")->select();
@@ -109,9 +109,9 @@ class Jump extends \app\admin\Controller
                     //删除缓存
                     $this->delJumpRedis($host);
                 }
-				Json::success("修改成功!!!");
+				return $this->success("修改成功!!!");
             } catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
             }
         }else{
             return $this->fetch('end_ip'); 
@@ -128,7 +128,7 @@ class Jump extends \app\admin\Controller
 				$post_data = request()->post();
 				$validate = validate("Jump");
 				if (!$validate->check($post_data)) {
-					Json::fail($validate->getError());
+					return $this->error($validate->getError());
                 }
                 if($post_data["startTime"]){
                     $post_data["start_time"] = implode(",",$post_data["startTime"]);
@@ -136,7 +136,7 @@ class Jump extends \app\admin\Controller
                 unset($post_data['startTime']);
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('编辑失败');
+					return $this->error('编辑失败');
                 }
                 $map["id"] = (int)$post_data["id"];
                 $info = $model->where($map)->find();
@@ -144,9 +144,9 @@ class Jump extends \app\admin\Controller
                 //删除缓存
                 $this->delJumpRedis($host);
 
-				Json::success('编辑成功', $result);
+				return $this->success('编辑成功', $result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 
 		} else {
@@ -176,25 +176,25 @@ class Jump extends \app\admin\Controller
 				$model = model(CONTROLLER_NAME);
 				$post_data = request()->post();
 				if(!array_key_exists('id',$post_data)){
-					Json::fail('ID不存在');
+					return $this->error('ID不存在');
 				}
 				if (!array_key_exists('is_open', $post_data)) {
-					Json::fail('状态错误！！');
+					return $this->error('状态错误！！');
 				}
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('设置失败');
+					return $this->error('设置失败');
                 }
                 $map["id"] = (int)$post_data["id"];
                 $info = $model->where($map)->find();
                 $host = trim($info["shield_url"]);
                 $this->delJumpRedis($host);
-				Json::success('设置成功', $result);
+				return $this->success('设置成功', $result);
 			}catch(\Exception $e){
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 		}else{
-		   Json::fail('错误请求');	
+		   return $this->error('错误请求');	
 		}
     }
     
@@ -206,29 +206,29 @@ class Jump extends \app\admin\Controller
 				$model = model(CONTROLLER_NAME);
 				$post_data = request()->post();
 				if(!array_key_exists('ids',$post_data)){
-					Json::fail('异常参数');
+					return $this->error('异常参数');
                 }
                 $ids = trim($post_data['ids']);
                 if(!$ids) {
-                    Json::fail('请选择需要开启引量的数据！！');
+                    return $this->error('请选择需要开启引量的数据！！');
                 }
                 $map[] = ["id","in",$ids];
                 $data["is_open"] = 1;
 				$result = $model->where($map)->update($data);
 				if (!$result) {
-					Json::fail('设置失败');
+					return $this->error('设置失败');
                 }
 
                 $list = $model->where($map)->select();
                 foreach($list as $val){
                     $this->delJumpRedis($val['shield_url']);
                 }
-				Json::success('设置成功', $result);
+				return $this->success('设置成功', $result);
 			}catch(\Exception $e){
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 		}else{
-		   Json::fail('错误请求');	
+		   return $this->error('错误请求');	
 		}  
     }
     //一键关闭引量
@@ -252,19 +252,19 @@ class Jump extends \app\admin\Controller
                 $map[] = ['1','eq','1'];
 				$result = $model->where($map)->update($data);
 				if (!$result) {
-					Json::fail('设置失败');
+					return $this->error('设置失败');
                 }
                 
                 $list = $model->where($map)->select();
                 foreach($list as  $val){
                     $this->delJumpRedis($val['shield_url']);
                 }
-				Json::success('设置成功', $result);
+				return $this->success('设置成功', $result);
 			}catch(\Exception $e){
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 		}else{
-		   Json::fail('错误请求');	
+		   return $this->error('错误请求');	
 		}  
     }
 
@@ -277,25 +277,25 @@ class Jump extends \app\admin\Controller
                 //跳转id
                 $jump_ids = model("SwitchCited")->where("id=1")->value("jump_id");
                 if(!$jump_ids){
-                    Json::fail('设置失败，数据可能不存在');
+                    return $this->error('设置失败，数据可能不存在');
                 }
                 $data["is_open"] = 1;
                 $map =" id  in (".$jump_ids.")";
                 $result = $model->where($map)->update($data);
 				if (!$result) {
-					Json::fail('设置失败');
+					return $this->error('设置失败');
                 }
                 $list = $model->where($map)->select();
                 //删除缓存
                 foreach($list as $val){
                     $this->delJumpRedis($val['shield_url']);
                 }
-				Json::success('设置成功', $result);
+				return $this->success('设置成功', $result);
 			}catch(\Exception $e){
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 		}else{
-		   Json::fail('错误请求');	
+		   return $this->error('错误请求');	
 		}  
     }
 
@@ -307,14 +307,14 @@ class Jump extends \app\admin\Controller
 				$model = model(CONTROLLER_NAME);
 				$post_data = request()->post();
 				if(!array_key_exists('id',$post_data)){
-					Json::fail('ID不存在');
+					return $this->error('ID不存在');
 				}
 				if (!array_key_exists('status', $post_data)) {
-					Json::fail('状态错误！！');
+					return $this->error('状态错误！！');
 				}
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('设置失败');
+					return $this->error('设置失败');
                 }
                 
                 $map["id"] = (int)$post_data["id"];
@@ -322,12 +322,12 @@ class Jump extends \app\admin\Controller
                 $host = trim($info["shield_url"]);
                 //删除缓存
                 $this->delJumpRedis($host);
-				Json::success('设置成功', $result);
+				return $this->success('设置成功', $result);
 			}catch(\Exception $e){
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 		}else{
-		   Json::fail('错误请求');	
+		   return $this->error('错误请求');	
 		}
     }
     
@@ -337,7 +337,7 @@ class Jump extends \app\admin\Controller
 		$id = input('id');
 
 		if (empty($id)) {
-			Json::fail('请选择要操作的数据！');
+			return $this->error('请选择要操作的数据！');
 		}
 
         $map["id"] = $id;     
@@ -348,9 +348,9 @@ class Jump extends \app\admin\Controller
         $this->delJumpRedis($host);
 		$result = model($name)->where($map)->delete();
 		if(!$result) {
-			Json::fail('删除失败!');
+			return $this->error('删除失败!');
 		}
-		Json::success('删除成功!');
+		return $this->success('删除成功!');
 	}
 
 

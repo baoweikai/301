@@ -36,7 +36,7 @@ class Base extends \app\admin\Controller
 
             if($this->HrefId){
                 if(!in_array($this->HrefId,$this->adminRules)){
-                   Json::fail("您无此操作权限");
+                   return $this->error("您无此操作权限");
                 }
             }
 		}
@@ -94,12 +94,12 @@ class Base extends \app\admin\Controller
 				$model = model($name);
 				$field = '*';
 				if (!$model) {
-					Json::fail('模型' . CONTROLLER_NAME . '未找到');
+					return $this->error('模型' . CONTROLLER_NAME . '未找到');
 				} 
 				$result = $this->_listJson($name, $map, $field, $order);
-				Json::success('ok', $result);
+				return $this->success($result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 		}else{
 			return $this->fetch();
@@ -117,15 +117,15 @@ class Base extends \app\admin\Controller
 				$post_data = request()->post();
 				$validate = validate(CONTROLLER_NAME);
 				if (!$validate->check($post_data)) {
-					Json::fail($validate->getError());
+					return $this->error($validate->getError());
 				}
 				$result = $model->create($post_data);
 				if(!$result) {
-					Json::fail('添加失败');
+					return $this->error('添加失败');
 				}
-			Json::success('添加成功',$result);
+			return $this->success('添加成功',$result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 
 		}else{
@@ -145,15 +145,15 @@ class Base extends \app\admin\Controller
 				$post_data = request()->post();
 				$validate = validate(CONTROLLER_NAME);
 				if (!$validate->check($post_data)) {
-					Json::fail($validate->getError());
+					return $this->error($validate->getError());
 				}
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('编辑失败');
+					return $this->error('编辑失败');
 				}
-				Json::success('编辑成功', $result);
+				return $this->success('编辑成功', $result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 
 		} else {
@@ -171,7 +171,7 @@ class Base extends \app\admin\Controller
 		$id = input('id');
 
 		if (empty($id)) {
-			Json::fail('请选择要操作的数据！');
+			return $this->error('请选择要操作的数据！');
 		}
 		if (!empty($this->modelname)) {
 			$name = $this->modelname;
@@ -188,9 +188,9 @@ class Base extends \app\admin\Controller
 		}
 		$result = model($name)->where($map)->delete();
 		if(!$result) {
-			Json::fail('删除失败!');
+			return $this->error('删除失败!');
 		}
-		Json::success('删除成功!');
+		return $this->success('删除成功!');
 	}
 	//更改状态
 	public function setStatus()
@@ -200,21 +200,21 @@ class Base extends \app\admin\Controller
 				$model = model(CONTROLLER_NAME);
 				$post_data = request()->post();
 				if(!array_key_exists('id',$post_data)){
-					Json::fail('ID不存在');
+					return $this->error('ID不存在');
 				}
 				if (!array_key_exists('status', $post_data)) {
-					Json::fail('状态错误！！');
+					return $this->error('状态错误！！');
 				}
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('设置失败');
+					return $this->error('设置失败');
 				}
-				Json::success('设置成功', $result);
+				return $this->success('设置成功', $result);
 			}catch(\Exception $e){
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 		}else{
-		   Json::fail('错误请求');	
+		   return $this->error('错误请求');	
 		}
 	}
 
@@ -226,20 +226,20 @@ class Base extends \app\admin\Controller
 			$model = model(CONTROLLER_NAME);
 			$post_data = request()->post();
 			if (!array_key_exists('id', $post_data)) {
-				Json::fail('ID不存在');
+				return $this->error('ID不存在');
 			}
 			if (!array_key_exists('sort', $post_data)) {
-				Json::fail('排序错误！！');
+				return $this->error('排序错误！！');
 			}
 			$id = intval($post_data['id']);
 			$data['sort'] = intval($post_data['sort']);
 			$result = $model->where(['id'=>$id])->update($data);
 			if (!$result) {
-				Json::fail('修改失败');
+				return $this->error('修改失败');
 			}
-			Json::success('修改成功', $result);
+			return $this->success('修改成功', $result);
 		}else{
-			Json::fail('错误请求');	
+			return $this->error('错误请求');	
 		}	
 	}
 
@@ -274,7 +274,7 @@ class Base extends \app\admin\Controller
 	//定义空方法时跳转到404错误页面
     public function _empty($e)
     {
-		Json::fail('错误的方法');
+		return $this->error('错误的方法');
     }
 }
 

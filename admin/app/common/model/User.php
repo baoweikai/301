@@ -38,14 +38,14 @@ class User extends \think\Model
            /* 验证用户密码 */
            if (emcryPwd($password) == $user['password']) {
                $this->autoLogin($user);
-               $this->error = "登陆成功";
+               return $this->error = "登陆成功";
                return $user;
            } else {
-               $this->error = "用户不存在或密码错误";
+               return $this->error = "用户不存在或密码错误";
                return false;
            }
        }else{
-           $this->error = "用户不存在或被禁用";
+           return $this->error = "用户不存在或被禁用";
            return false;
        }
     }
@@ -93,32 +93,32 @@ class User extends \think\Model
 		}
 
 		if(emcryPwd($pass) != $user['password']) {
-			$this->error = '旧密码错误';
+			return $this->error = '旧密码错误';
 			return false;
 		}
 		
 		if(mb_strlen($password, 'utf8') < 6 && mb_strlen($password, 'utf8') >15) {
-			$this->error = '密码长度在6-15个字符之间';
+			return $this->error = '密码长度在6-15个字符之间';
 			return false;
 		}
 
 		if($pwd != $password) {
-			$this->error = '新密码与确认密码不一致';
+			return $this->error = '新密码与确认密码不一致';
 			return false;
 		}
 
 		if(emcryPwd($pwd) == $user['password']) {
-			$this->error = '新密码与旧密码一致';
+			return $this->error = '新密码与旧密码一致';
 			return false;
 		}
 
 		$data['password'] = emcryPwd($pwd);
 		$result = $this->where($map)->update($data);
 		if(!$result) {
-			$this->error ='密码修改失败';
+			return $this->error ='密码修改失败';
 			return false;
 		}
-		$this->error = '密码修改成功';
+		return $this->error = '密码修改成功';
 		return true;
 
      }

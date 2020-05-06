@@ -60,10 +60,10 @@ class Index extends \app\admin\Controller
     public function clear(){
         $R = Env::get('runtime_path');
         if (!$this->_deleteDir($R)) {
-            Json::fail('清除缓存失败');
+            return $this->error('清除缓存失败');
         } 
         $result['url'] = url('/index/index');
-        Json::success('清除成功',$result);
+        return $this->success('清除成功',$result);
     }
 
     private function _deleteDir($R)

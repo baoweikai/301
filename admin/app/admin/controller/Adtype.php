@@ -30,11 +30,11 @@ class AdtypeController extends \app\admin\Controller
             //删除分类
             $result = $AdtypeModel->delAdtype($typeid);
             if(!$result) {
-                Json::fail($AdtypeModel->getError());
+                return $this->error($AdtypeModel->getError());
             }
-            Json::success($AdtypeModel->getError());
+            return $this->success($AdtypeModel->getError());
         }catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
 }

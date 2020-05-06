@@ -26,9 +26,9 @@ class Jump extends \app\user\Controller
                 ];
                 $field = 'a.shield_url,a.jump_url,a.status,a.is_param,a.is_start,a.is_expire,a.create_time,c.cname';
                 $result = $this->getListJson('Jump', $map, $join_arr, $field);
-                Json::success('ok', $result);
+                return $this->success($result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             return $this->fetch();
@@ -46,7 +46,7 @@ class Jump extends \app\user\Controller
                $post_data = request()->post();
                $validate = validate("Jump");
                if (!$validate->check($post_data)) {
-                   Json::fail($validate->getError());
+                   return $this->error($validate->getError());
                }
                //判断条数
                $map["id"] = USER_UID;
@@ -54,7 +54,7 @@ class Jump extends \app\user\Controller
                if($userInfo["number"] == 0){
                     //回滚事务
                     Db::rollback();
-                Json::fail("条数不够，请联系客服");
+                return $this->error("条数不够，请联系客服");
                     
                }
                //扣除条数
@@ -84,15 +84,15 @@ class Jump extends \app\user\Controller
                if(!$result) {
                     //回滚事务
                     Db::rollback();
-                   Json::fail('添加失败');
+                   return $this->error('添加失败');
                }
             //回滚事务
             Db::commit();
-           Json::success('添加成功',$result);
+           return $this->success('添加成功',$result);
            } catch (\Exception $e) {
                 //回滚事务
                 Db::rollback();
-               Json::fail($e->getMessage());
+               return $this->error($e->getMessage());
            }
 
        }else{
@@ -113,16 +113,16 @@ class Jump extends \app\user\Controller
 				$post_data = request()->post();
 				$validate = validate("Jump");
 				if (!$validate->check($post_data)) {
-					Json::fail($validate->getError());
+					return $this->error($validate->getError());
                 }
                 $post_data["user_id"] = USER_UID;
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('编辑失败');
+					return $this->error('编辑失败');
 				}
-				Json::success('编辑成功', $result);
+				return $this->success('编辑成功', $result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 
 		} else {

@@ -53,13 +53,13 @@ class Module extends \app\admin\Controller
             $tablename = $prefix.input('post.name');
             //判断表名是否已经存在
             if(in_array($tablename,$tables)){
-                Json::fail("该表已经存在！");
+                return $this->error("该表已经存在！");
             }
             $name = ucfirst(input('post.name'));
             $data = Request::except('emptytable');
             $moduleid = $this->moduleModel->insertGetId($data);
             if(empty($moduleid)){
-                Json::fail("添加模型失败！");
+                return $this->error("添加模型失败！");
             }
             $emptytable =input('post.emptytable');
             if($emptytable=='0'){
@@ -129,9 +129,9 @@ class Module extends \app\admin\Controller
                  Db::execute("INSERT INTO `".$prefix."field` (`moduleid`,`field`,`name`,`tips`,`required`,`minlength`,`maxlength`,`pattern`,`errormsg`,`class`,`type`,`setup`,`ispost`,`unpostgroup`,`sort`,`status`,`issystem`) VALUES ( '".$moduleid."', 'status', '状态', '', '0', '0', '0', '', '', '', 'radio', 'array (\n  \'options\' => \'发布|1\r\n定时发布|0\',\n  \'fieldtype\' => \'tinyint\',\n  \'numbertype\' => \'1\',\n  \'labelwidth\' => \'75\',\n  \'default\' => \'1\',\n)','1','', '98', '1', '1')");
             }
             if ($moduleid  !==false) {
-                Json::success("添加模型成功！");
+                return $this->success("添加模型成功！");
             }else{
-                Json::fail("添加失败");
+                return $this->error("添加失败");
             }
         }else{
             $this->result['title'] = '添加模型';
@@ -144,9 +144,9 @@ class Module extends \app\admin\Controller
         if(request()->isPost()){
             $data = Request::except('name');
             if(db('module')->update($data)!==false){
-                Json::success("修改成功!");
+                return $this->success("修改成功!");
             }else{
-                Json::fail("添加失败");
+                return $this->error("添加失败");
             }
         }else{
             $map['id'] = input('param.id');
@@ -234,7 +234,7 @@ class Module extends \app\admin\Controller
             $tablename=$prefix.$name;
             $Fields=Db::getTableFields($tablename);
             if(in_array($fieldName,$Fields)){
-                Json::fail("字段名已经存在！");
+                return $this->error("字段名已经存在！");
             }
             $addfieldsql =$this->get_tablesql($data,'add');
             if(!in_array('setup',$data) || isset($data['setup'])) {
@@ -261,9 +261,9 @@ class Module extends \app\admin\Controller
                     $model->execute($addfieldsql);
                 }
                 $arr['url'] =  url('/Module/field',array('id'=>input('post.moduleid')));
-                Json::success("添加成功！",$arr);
+                return $this->success("添加成功！",$arr);
             } else {
-                Json::fail("添加失败！");
+                return $this->error("添加失败！");
             }
         }
     }else{
@@ -283,7 +283,7 @@ public function fieldEdit(){
         $name = db('module')->where(array('id'=>$data['moduleid']))->value('name');
         $prefix=config('database.prefix');
         if($this->_iset_field($prefix.$name,$fieldName) && $oldfield!=$fieldName){
-                Json::fail("字段名重复！");
+                return $this->error("字段名重复！");
         }
 
         $editfieldsql =$this->get_tablesql(input('post.'),'edit');
@@ -317,15 +317,15 @@ public function fieldEdit(){
                 $model->execute($editfieldsql);
             }
             $arr['url'] =  url('/Module/field',array('id'=>input('post.moduleid')));
-            Json::success("修改成功！",$arr);
+            return $this->success("修改成功！",$arr);
         } else {
-            Json::fail("修改失败！");
+            return $this->error("修改失败！");
         }
     }else{
         $model = db('field');
         $id = input('param.id');
         if(empty($id)){
-            Json::fail("缺少必要的参数！");
+            return $this->error("缺少必要的参数！");
         }
         $fieldInfo = $model->where(array('id'=>$id))->find();
 
@@ -345,9 +345,9 @@ public function fieldEdit(){
     $data = input('post.');
     if($model->update($data)!==false){
        $arr['url'] =  url('/Module/field',array('id'=>input('post.moduleid')));
-        Json::success("操作成功！",$arr);
+        return $this->success("操作成功！",$arr);
     }else{
-        Json::fail("操作失败");
+        return $this->error("操作失败");
     }
 }
 

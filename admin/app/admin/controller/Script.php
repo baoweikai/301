@@ -47,7 +47,7 @@ class Script extends \app\admin\Controller
         unset($jumpList);
         unset($data);
         unset($array);
-        Json::success("成功");
+        return $this->success("成功");
     }
 
 
@@ -77,7 +77,7 @@ class Script extends \app\admin\Controller
         unset($list);
         unset($data);
         unset($array);
-        Json::success("成功");
+        return $this->success("成功");
     }
 
 }

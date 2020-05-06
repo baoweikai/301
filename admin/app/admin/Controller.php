@@ -6,7 +6,6 @@ namespace app\admin;
 use think\App;
 use think\exception\ValidateException;
 use think\facade\Validate;
-use think\facade\Json;
 use think\facade\View;
 
 /**
@@ -81,7 +80,7 @@ abstract class Controller
 
             if($this->HrefId){
                 if(!in_array($this->HrefId,$this->adminRules)){
-                   Json::fail("您无此操作权限");
+                   return $this->error("您无此操作权限");
                 }
             }
 		}
@@ -144,5 +143,24 @@ abstract class Controller
         View::assign($this->result);
         return View::fetch($path);
     }
+    // json
+    protected function error($msg, $code = 201, $result = []){
+        $ret = [
+            'state' => $code,
+            'message'  => $msg,
+            'result' => $result,
+        ];
 
+        return json($ret, $code);
+    }
+    // json
+    protected function success($result = [], $msg = ''){
+        $ret = [
+            'state' => 200,
+            'message'  => $msg,
+            'result' => $result,
+        ];
+
+        return json($ret, 200);
+    }
 }

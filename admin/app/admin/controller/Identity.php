@@ -18,13 +18,13 @@ class Identity extends Controller{
             //验证参数
             $validate = $this->validate($post_data, 'Login');
             if (true !== $validate) {
-               Json::fail($validate);
+               return $this->error($validate);
             }
             $result =  $this->adminUserModel->login($post_data['username'],$post_data['password']);
             if(!$result) {
-                Json::fail($this->adminUserModel->getError());
+                return $this->error($this->adminUserModel->getError());
             }
-            Json::success($this->adminUserModel->getError(),$result);
+            return $this->success($this->adminUserModel->getError(),$result);
         }else{
             if (is_login()) {
                 return redirect('/');
@@ -42,11 +42,11 @@ class Identity extends Controller{
                 $post_data = input('post.');
                 $result = $this->adminUserModel->saveInfo($post_data);
                 if(!$result){
-                    Json::fail($this->adminUserModel->getError());
+                    return $this->error($this->adminUserModel->getError());
                 }
-                Json::success($this->adminUserModel->getError(), $result);
+                return $this->success($this->adminUserModel->getError(), $result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
             $this->result['title'] = '信息编辑';
@@ -64,11 +64,11 @@ class Identity extends Controller{
                 $post_data = input('post.');
                 $result = $this->adminUserModel->saveUserPwd($post_data);
                 if (!$result) {
-                    Json::fail($this->adminUserModel->getError());
+                    return $this->error($this->adminUserModel->getError());
                 }
-                Json::success($this->adminUserModel->getError(), $result);
+                return $this->success($this->adminUserModel->getError(), $result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
 
         }else{
@@ -82,9 +82,9 @@ class Identity extends Controller{
     {
         if (is_login()) {
             $this->adminUserModel->logout();
-			$this->success('退出成功！', url('/Publics/login'));
+			return $this->success('退出成功！', url('/Publics/login'));
 		} else {
-			$this->error('您还未登陆哟', url('/Publics/login'));
+			return $this->error('您还未登陆哟', url('/Publics/login'));
 		}
     }
 
@@ -93,9 +93,9 @@ class Identity extends Controller{
     //超时
     public function check_timeout() {
 		if (!is_login()) {
-			Json::fail('亲,请重新登陆~');
+			return $this->error('亲,请重新登陆~');
 		} else {
-			Json::success('OK');
+			return $this->success();
 		}
 	}
 }

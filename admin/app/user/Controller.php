@@ -110,5 +110,24 @@ abstract class Controller
         View::assign($this->result);
         return View::fetch($path);
     }
+    // json
+    protected function error($msg, $code = 201, $result = []){
+        $ret = [
+            'state' => $code,
+            'message'  => $msg,
+            'result' => $result,
+        ];
 
+        return json($ret, $code);
+    }
+    // json
+    protected function success($result = [], $msg = ''){
+        $ret = [
+            'state' => 200,
+            'message'  => $msg,
+            'result' => $result,
+        ];
+
+        return json($ret, 200);
+    }
 }

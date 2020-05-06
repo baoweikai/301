@@ -24,13 +24,13 @@ class User extends \app\admin\Controller
                $post_data = request()->post();
                $validate = validate("User");
                if (!$validate->check($post_data)) {
-                   Json::fail($validate->getError());
+                   return $this->error($validate->getError());
                }
                $post_data["password"] = emcryPwd($post_data["password"]);
                $result = $model->create($post_data);
    
                if(!$result) {
-                   Json::fail('添加失败');
+                   return $this->error('添加失败');
                }
                $data["user_id"] = $result["id"];
                $data["attr_id"]=  $post_data["attr_id"];
@@ -38,9 +38,9 @@ class User extends \app\admin\Controller
                $CnameInfo = model("Cname")->where("attr_id=".$post_data["attr_id"])->field("id")->orderRaw("rand()")->find();
                $data["c_id"] = $CnameInfo["id"];
                model("UserCname")->create($data);
-           Json::success('添加成功',$result);
+           return $this->success('添加成功',$result);
            } catch (\Exception $e) {
-               Json::fail($e->getMessage());
+               return $this->error($e->getMessage());
            }
 
        }else{
@@ -61,11 +61,11 @@ class User extends \app\admin\Controller
                 $post_data = request()->post();
 				$validate = validate("User");
 				if (!$validate->scene("edit")->check($post_data)) {
-					Json::fail($validate->getError());
+					return $this->error($validate->getError());
 				}
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('编辑失败');
+					return $this->error('编辑失败');
                 }
                 $map["user_id"] = $post_data["id"];
                 $CnameInfo = model("Cname")->where("attr_id=".$post_data["attr_id"])->field("id")->orderRaw("rand()")->find();
@@ -82,9 +82,9 @@ class User extends \app\admin\Controller
                 //     $data["attr_id"]=  $post_data["attr_id"];
                 //     model("UserCname")->create($data);
                 // }
-				Json::success('编辑成功', $result);
+				return $this->success('编辑成功', $result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 
 		} else {
@@ -104,17 +104,17 @@ class User extends \app\admin\Controller
 
                 $post_data = request()->post();
                 if(strlen($post_data['password'])< 6 || strlen($post_data['password'])>15){
-                    Json::fail("密码长度在6-15字符之间");
+                    return $this->error("密码长度在6-15字符之间");
                 }
                 $map["id"] = (int)$post_data['id'];
                 $data["password"] = emcryPwd(trim($post_data['password']));
 				$result = $model->where($map)->update($data);
 				if (!$result) {
-					Json::fail('编辑失败');
+					return $this->error('编辑失败');
                 }
-				Json::success('编辑成功'] = $result);
+				return $this->success('编辑成功'] = $result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 
 		} else {

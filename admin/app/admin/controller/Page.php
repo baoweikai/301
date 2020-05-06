@@ -32,15 +32,15 @@ class Page extends \app\admin\Controller
 				$post_data = request()->post();
 				$validate = validate(CONTROLLER_NAME);
 				if (!$validate->check($post_data)) {
-					Json::fail($validate->getError());
+					return $this->error($validate->getError());
 				}
 				$result = $model->update($post_data);
 				if (!$result) {
-					Json::fail('编辑失败');
+					return $this->error('编辑失败');
 				}
-				Json::success('编辑成功', $result);
+				return $this->success('编辑成功', $result);
 			} catch (\Exception $e) {
-				Json::fail($e->getMessage());
+				return $this->error($e->getMessage());
 			}
 
 		} else {

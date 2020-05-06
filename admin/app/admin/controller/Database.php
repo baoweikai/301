@@ -36,9 +36,9 @@ class Database extends \app\admin\Controller
                     'total' => format_bytes($total),
                     'tableNum' => count($list)
                 ];
-                Json::success('获取成功', $result);
+                return $this->success('获取成功', $result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
            return $this->fetch();
@@ -51,15 +51,15 @@ class Database extends \app\admin\Controller
         try {
             $tables = input('tables/a');
             if (empty($tables)) {
-                Json::fail('请选择要优化的表！');
+                return $this->error('请选择要优化的表！');
             }
             if ($this->db->optimize($tables)) {
-                Json::success('数据表优化成功！');
+                return $this->success('数据表优化成功！');
             } else {
-                Json::fail('数据表优化出错请重试！');
+                return $this->error('数据表优化出错请重试！');
             }
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
 
@@ -69,15 +69,15 @@ class Database extends \app\admin\Controller
         try {
             $tables = input('tables/a');
             if (empty($tables)) {
-                Json::fail('请选择要修复的表！');
+                return $this->error('请选择要修复的表！');
             }
             if ($this->db->repair($tables)) {
-                Json::success('数据表修复成功！');
+                return $this->success('数据表修复成功！');
             } else {
-                Json::fail('数据表修复出错请重试！');
+                return $this->error('数据表修复出错请重试！');
             }
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
 
@@ -91,12 +91,12 @@ class Database extends \app\admin\Controller
                 foreach ($tables as $table) {
                     $this->db->setFile()->backup($table, 0);
                 }
-                Json::success('备份成功！');
+                return $this->success('备份成功！');
             } else {
-                Json::fail('请选择要备份的表！');
+                return $this->error('请选择要备份的表！');
             }
         } catch (\Exception $e) {
-            Json::fail($e->getMessage());
+            return $this->error($e->getMessage());
         }
     }
 
@@ -109,9 +109,9 @@ class Database extends \app\admin\Controller
         if(request()->isPost()){
             try {
                 $result = $this->db->fileList();
-                Json::success('Ok',$result);
+                return $this->success('Ok',$result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         }else{
             return  $this->fetch();
@@ -127,13 +127,13 @@ class Database extends \app\admin\Controller
                 $time = input('time');
                 $result = $this->db->getFile('timeverif', $time);
                 $this->db->setFile($result)->import(1);
-                Json::success('导入成功',$result);
+                return $this->success('导入成功',$result);
             } catch(\Exception $e){
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
     
         }else{
-            Json::fail('请求错误');
+            return $this->error('请求错误');
         }
     }
 
@@ -144,13 +144,13 @@ class Database extends \app\admin\Controller
             try {
                 $time = input('time');
                 $this->db->downloadFile($time);
-                Json::success('下载成功',$result);
+                return $this->success('下载成功',$result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
 
         } else {
-            Json::fail('请求错误');
+            return $this->error('请求错误');
         }
     }
 
@@ -161,12 +161,12 @@ class Database extends \app\admin\Controller
         if (request()->isPost()) {
             $time = input('post.time');
             if ($this->db->delFile($time)) {
-                Json::success('备份文件删除成功！');
+                return $this->success('备份文件删除成功！');
             } else {
-                Json::fail('备份文件删除失败，请检查权限！');
+                return $this->error('备份文件删除失败，请检查权限！');
             }
         }else{
-            Json::fail('请求错误');
+            return $this->error('请求错误');
         }
     }
 

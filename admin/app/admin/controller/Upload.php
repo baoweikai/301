@@ -35,9 +35,9 @@ class Upload extends Controller
                 $result['thumb_url'] = '/'.$thumb_path;
             }
             $result['url'] = $imgpath;
-            Json::success('上传成功',$result);
+            return $this->success('上传成功',$result);
         }else{
-            Json::fail($file->getError());
+            return $this->error($file->getError());
         }
     }
 }

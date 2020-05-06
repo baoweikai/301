@@ -21,16 +21,16 @@ class AdminGroup extends Model
     {
         $check = validate('AdminGroup');
         if (!$check->check($post_data)) {
-           $this->error = $check->getError();
+           return $this->error = $check->getError();
            return false;
         }
     
         $result =  $this->create($post_data);
         if(!$result) {
-            $this->error = '创建失败';
+            return $this->error = '创建失败';
             return false;
         }
-        $this->error = '创建成功';
+        return $this->error = '创建成功';
         return $result;
     }
 
@@ -39,16 +39,16 @@ class AdminGroup extends Model
     {
         $check = validate('AdminGroup');
         if (!$check->check($post_data)) {
-           $this->error = $check->getError();
+           return $this->error = $check->getError();
            return false;
         }
     
         $result =  $this->update($post_data);
         if(!$result) {
-            $this->error = '编辑失败';
+            return $this->error = '编辑失败';
             return false;
         }
-        $this->error = '编辑成功';
+        return $this->error = '编辑成功';
         return $result;
     }
 
@@ -57,7 +57,7 @@ class AdminGroup extends Model
     {
         $group_id = intval($group_id);
         if( $group_id == 0) {
-            $this->error = 'ID错误';
+            return $this->error = 'ID错误';
             return false;
         }
         $map['id'] = $group_id;
@@ -65,10 +65,10 @@ class AdminGroup extends Model
 
         $result = $this->where($map)->update($data);
         if(!$result) {
-            $this->error = '设置失败';
+            return $this->error = '设置失败';
             return false;
         }
-        $this->error = '设置成功';
+        return $this->error = '设置成功';
         return $result;
     }
     
@@ -78,16 +78,16 @@ class AdminGroup extends Model
     {
         $group_id = intval($group_id);
         if( $group_id == 0) {
-            $this->error = 'ID错误';
+            return $this->error = 'ID错误';
             return false;
         }
         $result = $this->destroy($group_id);
         if(!$result) {
-            $this->error = '删除失败';
+            return $this->error = '删除失败';
             return false;
         }
 
-        $this->error = '删除成功';
+        return $this->error = '删除成功';
         return $result;
     }
 

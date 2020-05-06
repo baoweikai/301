@@ -33,9 +33,9 @@ class Cname extends \app\admin\Controller
                 ];
                 $field = 'a.*,at.name';
                 $result = $this->getListJson('Cname', $map, $join_arr, $field);
-                Json::success('ok', $result);
+                return $this->success($result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         
         }else{

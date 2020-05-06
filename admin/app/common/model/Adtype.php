@@ -35,16 +35,16 @@ class Adtype extends \think\Model
     {
         $typeId  = intval($typeId);
         if(model('Ad')->where(['typeid' => $typeId])->count()>0){
-            $this->error = '请先删除广告';
+            return $this->error = '请先删除广告';
             return false;
         }
         $map['id'] = $typeId;
         $result = $this->where($map)->delete();
         if(!$result) {
-            $this->error = '删除失败';
+            return $this->error = '删除失败';
             return false;
         }
-        $this->error = '删除成功';
+        return $this->error = '删除成功';
         return true;
     }
 

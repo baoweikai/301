@@ -51,7 +51,7 @@ class Template extends \app\admin\Controller
             $path = $type==$this->viewSuffix ?  $this->filepath : $this->publicpath.$type.'/';
             $file = $path.$filename.'.'.$type;
             if(file_exists($file)){
-                Json::fail("文件不存在!");
+                return $this->error("文件不存在!");
             }
             file_put_contents($file,stripslashes(input('post.content')));
             if($type==$this->viewSuffix){
@@ -59,7 +59,7 @@ class Template extends \app\admin\Controller
             }else{
                 $result['url'] = url('/Template/index',array('type'=>$type));
             }
-            Json::success("添加成功",$result);
+            return $this->success("添加成功",$result);
         }else{
             $this->result['title'] = '添加模版';
             return $this->fetch();
@@ -80,9 +80,9 @@ class Template extends \app\admin\Controller
                 }else{
                     $result['url'] = url('/Template/index',array('type'=>$type));
                 }
-                Json::success("修改成功",$result);
+                return $this->success("修改成功",$result);
             }else{
-                Json::fail("文件不存在!");
+                return $this->error("文件不存在!");
             }
         }else{
             $filename = input('param.file');
@@ -101,7 +101,7 @@ class Template extends \app\admin\Controller
                 $this->result['file'] = $file;
                 $this->result['content'] = $content;
             }else{
-                $this->error('文件不存在！');
+                return $this->error('文件不存在！');
             }
             return $this->fetch();
          }
@@ -167,10 +167,10 @@ class Template extends \app\admin\Controller
         $file=$path.input('post.filename');
         if(file_exists($file)){
             is_dir($file) ? dir_delete($file) : unlink($file);
-            Json::success("删除成功!");
+            return $this->success("删除成功!");
 
         }else{
-            Json::fail("文件不存在!");
+            return $this->error("文件不存在!");
         }
     }
 }

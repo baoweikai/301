@@ -17,7 +17,7 @@ class System  extends \think\Model
 			$sys_info = $sys_info->toArray();
         }
         
-        $this->error = "查询成功";
+        return $this->error = "查询成功";
         return $sys_info;
     }
 
@@ -25,12 +25,12 @@ class System  extends \think\Model
     public  function addSystem($data = [])
     {
         if(!is_array($data)){
-            $this->error = '数据错误';
+            return $this->error = '数据错误';
             return false;
         }
         //  $validate = validate($data);
         // if (!$validate->check($data)) {
-        //     $this->error = $validate->getError();
+        //     return $this->error = $validate->getError();
         //     return false;
         // }
         $sys_id = intval($data['id']);
@@ -41,10 +41,10 @@ class System  extends \think\Model
         }
 
         if($result){
-            $this->error ="编辑成功";
+            return $this->error ="编辑成功";
             return $result;
         }else{
-            $this->error ="编辑失败";
+            return $this->error ="编辑失败";
             return false; 
         }
     }

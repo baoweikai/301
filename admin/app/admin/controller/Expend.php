@@ -28,9 +28,9 @@ class Expend extends \app\admin\Controller
                 ];
                 $field = 'a.*,u.account';
                 $result = $this->getListJson('Expend', $map, $join_arr, $field);
-                Json::success('ok', $result);
+                return $this->success($result);
             } catch (\Exception $e) {
-                Json::fail($e->getMessage());
+                return $this->error($e->getMessage());
             }
         } else {
             return $this->fetch();
@@ -46,18 +46,18 @@ class Expend extends \app\admin\Controller
                $post_data = request()->post();
                $validate = validate(CONTROLLER_NAME);
                if (!$validate->check($post_data)) {
-                   Json::fail($validate->getError());
+                   return $this->error($validate->getError());
                }
                $map["id"] = (int)$post_data["user_id"];
                $number =(int)$post_data["number"];
                model("User")->where($map)->setDec("number",$number);
                $result = $model->create($post_data);
                if(!$result) {
-                   Json::fail('扣除失败');
+                   return $this->error('扣除失败');
                }
-             Json::success('扣除成功',$result);
+             return $this->success('扣除成功',$result);
            } catch (\Exception $e) {
-               Json::fail($e->getMessage());
+               return $this->error($e->getMessage());
            }
 
        }else{

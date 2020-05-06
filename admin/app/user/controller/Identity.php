@@ -2,7 +2,7 @@
 namespace app\user\controller;
 
 use app\common\model\User;
-use think\facade\Json;
+// use think\response\Json;
 
 class Identity extends \app\user\Controller
 {
@@ -20,15 +20,15 @@ class Identity extends \app\user\Controller
             //验证参数
             $validate = $this->validate($post_data, 'Login');
             if (true !== $validate) {
-               Json::fail($validate);
+               return $this->error($validate);
             }
             $user = new User();
             $result = $user->login($post_data['account'],$post_data['password']);
             if(!$result) {
-               Json::fail($user->getError());
+               return $this->error($user->getError());
             }
            
-            Json::success($user->getError(),$result);
+            return $this->success($user->getError(),$result);
         }else{
             if (is_user_login()) {
                 return redirect('/');
@@ -48,11 +48,11 @@ class Identity extends \app\user\Controller
                     $post_data = input('post.');
                     $result = $this->userModel->saveUserPwd($post_data);
                     if (!$result) {
-                        Json::fail($this->userModel->getError());
+                        return $this->error($this->userModel->getError());
                     }
-                    Json::success($this->userModel->getError(), $result);
+                    return $this->success($this->userModel->getError(), $result);
                 } catch (\Exception $e) {
-                    Json::fail($e->getMessage());
+                    return $this->error($e->getMessage());
                 }
     
             }else{
@@ -68,9 +68,9 @@ class Identity extends \app\user\Controller
         {
             if (is_user_login()) {
                 $this->userModel->logout();
-                $this->success('退出成功！', url('/Publics/login'));
+                return $this->success('退出成功！', url('/Publics/login'));
             } else {
-                $this->error('您还未登陆哟', url('/Publics/login'));
+                return $this->error('您还未登陆哟', url('/Publics/login'));
             }
         }
     
@@ -79,9 +79,9 @@ class Identity extends \app\user\Controller
         //超时
         public function check_timeout() {
             if (!is_user_login()) {
-                Json::fail('亲,请重新登陆~');
+                return $this->error('亲,请重新登陆~');
             } else {
-                Json::success('OK');
+                return $this->success();
             }
         }
 }
