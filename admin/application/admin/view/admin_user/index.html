@@ -1,0 +1,92 @@
+<include file="common/head"/>
+<div class="admin-main layui-anim layui-anim-upbit">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>管理员列表</legend>
+    </fieldset>
+    <table class="layui-table" id="list" lay-filter="list"></table>
+</div>
+<script type="text/html" id="barDemo">
+    <a onclick="openShow('/AdminUser/edit?id='+{{ d.id }},'管理员编辑',800,550);"  class="layui-btn layui-btn-xs">编辑</a>
+    {{# if(d.id==1){ }}
+    <a href="#" class="layui-btn layui-btn-xs layui-btn-disabled">删除</a>
+    {{# }else{  }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    {{# } }}
+</script>
+<script type="text/html" id="open">
+    {{# if(d.id==1){ }}
+        <input type="checkbox" disabled name="status" value="{{d.id}}" lay-skin="switch" lay-text="正常|禁用" lay-filter="status" checked>
+    {{# }else{  }}
+        <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="正常|禁用" lay-filter="status" {{ d.status.val == 1 ? 'checked' : '' }}>
+    {{# } }}
+</script>
+
+<script type="text/html" id="topBtn">
+   <a  onclick="openShow('/AdminUser/add','管理员添加',800,550);" class="layui-btn layui-btn-sm">添加管理员</a>
+</script>
+<script>
+    layui.use(['table','form'], function() {
+        var table = layui.table,form = layui.form,$ = layui.jquery;
+        var tableIn = table.render({
+            elem: '#list',
+            url: '/AdminUser/index',
+            method:'post',
+			toolbar: '#topBtn',
+            title:'管理员列表',
+             parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.data //解析数据列表
+                };
+            },
+            cols: [[
+                {field:'id', title: '编号', width:60,fixed: true}
+                ,{field:'username', title: '用户名', width:100}
+                ,{ field: 'nickname', title: '昵称', width: 100 }
+				,{field:'title', title: '用户组名', width:200}
+                ,{field:'last_login_ip', title: '登陆IP', width:200}
+                ,{field:'last_login_time', title: '登陆时间', width:200}
+                ,{field:'login_tre', title: '登陆次数',width:150}
+                ,{field:'status', title: '登陆状态',width:150,toolbar: '#open'}
+                , { field: 'create_time', title: '创建时间', width: 200 }
+                ,{width:160, align:'center',title:'操作', toolbar: '#barDemo'}
+            ]]
+        });
+        form.on('switch(status)', function(obj){
+            loading =layer.load(1, {shade: [0.1,'#fff']});
+            var id = this.value;
+            var status = obj.elem.checked===true?1:0;
+            $.post('/AdminUser/setStatus',{'id':id,'status': status},function (res) {
+                layer.close(loading);
+                if (res.code==0) {
+                    layer.msg(res.msg, { time: 1000, icon: 1 });
+                    tableIn.reload();
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                    return false;
+                }
+            })
+        });
+        table.on('tool(list)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确定要删除??', function(index){
+                    $.post("/AdminUser/del",{id:data.id},function(res){
+                        if(res.code== 0){
+                            layer.msg(res.msg,{time:1000,icon:1});
+                            obj.del();
+                        }else{
+                            layer.msg(res.msg,{time:1000,icon:2});
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

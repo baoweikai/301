@@ -1,0 +1,77 @@
+<include file="common/head"/>
+<div style="margin: 15px;" class="fadeInUp animated">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>添加权限</legend>
+    </fieldset>
+    <blockquote class="layui-elem-quote">
+        1、《控/方》：意思是 控制器/方法; 例如 /Sys/sysList<br/>
+        2、图标名称为左侧导航栏目的图标样式，具体可查看<a href="https://icomoon.io/app/#/select" target="_blank">premium</a>图标
+    </blockquote>
+    <form class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">父级</label>
+            <div class="layui-input-4">
+                <select name="pid" lay-verify="required" lay-filter="pid" >
+                    <option value="0">默认顶级</option>
+                    <volist name="admin_rule" id="vo">
+                        <option value="{$vo.id}"  <if condition ="$vo['id'] eq $pid"> selected </if>>{$vo.lefthtml}{$vo.title}</option>
+                    </volist>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限名称</label>
+            <div class="layui-input-4">
+                <input type="text" name="title" lay-verify="required" placeholder="请输入权限名称" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">控制器/方法</label>
+            <div class="layui-input-4">
+                <input type="text" name="href" lay-verify="required" placeholder="请输入控制器/方法" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标名称</label>
+            <div class="layui-input-4">
+                <input type="text" name="icon" placeholder="请输入图标名称" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" lay-filter="status" checked value="1" title="显示">
+                <input type="radio" name="status" lay-filter="status" value="0" title="隐藏">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-2">
+                <input type="text" name="sort" value="50" placeholder="请输入排序编号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="auth">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form,layer = layui.layer,$= layui.jquery;
+        form.on('submit(auth)', function (data) {
+            // 提交到方法 默认为本身
+            $.post("{:url('/Auth/ruleAdd')}",data.field,function(res){
+                if(res.code == 0){
+                    layer.msg(res.msg,{time:1000,icon:1},function(){
+                        window.parent.location.reload();
+                        admin_close();
+                    });
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                }
+            });
+        })
+    });
+</script>
