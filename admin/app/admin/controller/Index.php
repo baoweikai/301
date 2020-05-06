@@ -6,12 +6,6 @@ use think\facade\Json;
 
 class Index extends \app\admin\Controller
 {
-
-    public function initialize()
-    {
-        parent::initialize();
-    }
-    
     public function index()
     {
         // 获取缓存数据

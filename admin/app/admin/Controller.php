@@ -6,6 +6,7 @@ namespace app\admin;
 use think\App;
 use think\exception\ValidateException;
 use think\facade\Validate;
+use think\facade\Json;
 use think\facade\View;
 
 /**

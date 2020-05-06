@@ -7,7 +7,7 @@ use think\facade\Json;
 class User extends \app\admin\Controller
 {
     protected $attributeModel,$attrList;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->attributeModel = new Attribute();
@@ -16,7 +16,7 @@ class User extends \app\admin\Controller
     }
 
 
-    public function  add()
+    public function add()
     {
        if (request()->isPost()) {
            try {
