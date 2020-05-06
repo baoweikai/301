@@ -1,0 +1,107 @@
+<include file="common/head"/>
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>{$title}</legend>
+    </fieldset>
+    <form class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-4">
+                <input type="text" name="account" ng-model="field.account" lay-verify="required" placeholder="请输入用户名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-4">
+                <input type="password" name="password"  ng-model="field.password" lay-verify="required" placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+                <label class="layui-form-label">所属属性</label>
+                <div class="layui-input-4">
+                    <select name="attr_id" lay-verify="required" ng-select="field.attr_id">
+                        <option value="">请选择属性</option>
+                        <option ng-repeat="item in attrList" ng-selected='item.id ==field.attr_id' value="{{item.id}}">{{item.name}}</option>
+                    </select>
+                </div>
+            </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" ng-model="field.status.val" lay-filter="status" ng-checked="1" ng-value="1"
+                    title="开启">
+                <input type="radio" name="status" ng-model="field.status.val" lay-filter="status" ng-value="0" title="关闭">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="submit">提交</button>
+                <a href="javascript:;" class="layui-btn layui-btn-primary close">关闭</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/static/common/js/angular.min.js"></script>
+<script>
+    var m = angular.module('hd',[]);
+    m.controller('ctrl',['$scope',function($scope) {
+        $scope.field = '{$info|raw}'!='null'?{$info|raw}:{id:'',typeid:'', title:'',status:1,sort:50};
+        $scope.attrList = {$attrList|raw};
+        layui.use(['form', 'layer','upload'], function () {
+            var form = layui.form, $ = layui.jquery, upload = layui.upload;
+            if($scope.field.litpic){
+                adPic.src = $scope.field.litpic;
+            }
+            form.on('submit(submit)', function (data) {
+                // 提交到方法 默认为本身
+                data.field.id = $scope.field.id;
+                var loading = layer.load(1, {shade: [0.1, '#fff']});
+                $.post("", data.field, function (res) {
+                    layer.close(loading);
+                    if (res.code === 0) {
+                        layer.msg(res.msg, {time: 1800, icon: 1}, function () {
+                            window.parent.location.reload();
+                            admin_close();
+                        });
+                    } else {
+                        layer.msg(res.msg, {time: 1800, icon: 2});
+                    }
+                });
+            });
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#adBtn'
+                ,url: '{:url("/Upload/uploadImg")}?type=Links'
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#adPic').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res){
+       
+                    if(res.code==0){
+                        layer.msg(res.msg, {time: 1800, icon: 1});
+                        $('#litpic').val(res.data.url);
+                    }else{
+                        //如果上传失败
+                        layer.msg(res.msg, {time: 1800, icon: 2});
+                    }
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+        });
+   //关闭弹窗
+    $('.close').click(function () {
+        admin_close();
+    });
+    }]);
+</script>

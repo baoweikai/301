@@ -10,17 +10,16 @@ class Index extends BaseController
 {
     protected  $redis,$redisHandler,$getIp,$getEndIp,$timeout,$jumpIpKey,$jumpIpValue,$redisConfig;
     public function initialize(){
-        die('34567');
         //ip处理
         $this->getIp = request()->ip();
         $this->getEndIp = substr($this->getIp,-1);
         $this->jumpIpKey = "ip".$this->getIp;//跳转IP的键
         $this->jumpIpValue = $this->getIp;//跳转IP值
         //$redis配置
-        $redisConfig = config('cache.stores.redis'.$this->getEndIp);
-        $this->redis = new Redis($redisConfig)
+        $redisConfig = config('cache.stores.redis' . $this->getEndIp);
+        $this->redis = new Redis($redisConfig);
         //过期时间
-        $this->timeout = $this->redisConfig['timeout'];
+        $this->timeout = $redisConfig['timeout'];
     }
 
     public function index()
@@ -35,7 +34,9 @@ class Index extends BaseController
             ["is_start", '=', 1]
         ];
         //查询数据
+        var_dump('3456');die();
         $info = $this->redis->get('Jump' . $host);
+        
         if(!$info){
             $info = Db::name('jump')->where($map)->find();
             $this->redis->set('Jump' . $host, $info);

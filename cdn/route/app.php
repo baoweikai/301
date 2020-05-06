@@ -10,9 +10,6 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
-Route::get('think', function () {
-    return 'hello,ThinkPHP6!';
-});
-
-Route::get('/', 'index/index')->allowCrossDomain();
+Route::get('/', 'index/index');
+Route::rule(':controller/:action', ':controller/:action')->pattern(['controller' => '[\w|\-]+', 'action' => '[\w|\-]+']);
 

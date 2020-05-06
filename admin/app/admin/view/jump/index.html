@@ -1,0 +1,253 @@
+<include file="common/head"/>
+<div class="admin-main layui-anim layui-anim-upbit">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>域名列表</legend>
+    </fieldset>
+    <div class="demoTable">
+        <div class="layui-inline">
+            <input class="layui-input" name="keyword" id="keyword" placeholder="请输入关键字">
+        </div>
+        <button class="layui-btn" id="search" data-type="reload">搜索</button>
+        <a href="{:url('/Jump/index')}" class="layui-btn">显示全部</a>
+        <button  class="layui-btn layui-btn-normal" id="openLeadAmount"><i class="fa fa-plus" aria-hidden="true"></i>开启引量</button>
+        <button class="layui-btn" id="openLastAmount">开启上一次引量</button>
+        <button class="layui-btn  layui-btn-warm" id="closeLeadAmount"><i class="fa fa-plus" aria-hidden="true"></i>一键关闭引量</button>
+        <a href="javascript:void(0);" onclick="openShow('/Jump/saveJumpUrl','一键修改引量跳转域名',600,300)"  class="layui-btn">一键修改引量跳转域名</a>
+        <a href="javascript:void(0);" onclick="openShow('/Jump/saveEndIp','一键修改引量IP尾数',600,300)"  class="layui-btn layui-btn-warm">一键修改引量IP尾数</a>
+        <div style="clear: both;"></div>
+    </div>
+    <table class="layui-table" id="list" lay-filter="list"></table>
+</div>
+<script type="text/html" id="name">
+   {{d.title}}{{# if(d.litpic){ }}<img src="/static/admin/images/image.gif" onmouseover="layer.tips('<img src={{d.litpic}}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();">{{# } }}
+</script>
+<script type="text/html" id="order">
+    <input name="{{d.id}}" data-id="{{d.id}}" class="list_order layui-input" value=" {{d.sort}}" size="10"/>
+</script>
+<script type="text/html" id="status">
+    <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="status" {{ d.status.val == 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="is_open">
+    <input type="checkbox" name="is_open" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="is_open" {{ d.is_open.val == 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="is_expire">
+    {{d.is_expire.text}}
+</script>
+<script type="text/html" id="is_start">
+    {{d.is_start.text}}
+</script>
+<script type="text/html" id="is_param">
+    {{d.is_param.text}}
+</script>
+<script type="text/html" id="is_straight">
+    {{d.is_straight.text}}
+</script>
+<script type="text/html" id="jumpTodayNumer">
+    <a href="/JumpCount/index?jId={{ d.id }}">  {{d.jumpTodayNumer}}</a>
+</script>
+<script type="text/html" id="pvTodayNumer">
+    <a href="/JumpCount/index?jId={{ d.id }}">  {{d.pvTodayNumer}}</a>
+</script>
+<script type="text/html" id="citedTodayNumer">
+    <a href="/CitedCount/index?jId={{ d.id }}">  {{d.citedTodayNumer}}</a>
+</script>
+<script type="text/html" id="action">
+    <a href="javascript:void(0);" onclick="openShow('/Jump/edit?id='+{{ d.id }},'编辑跳转域名',800,650)"  class="layui-btn layui-btn-xs">编辑</a>
+    <a href="javascript:void(0);" onclick="openShow('/JumpCount/jumpHighcharts?id='+{{ d.id }},'{{d.shield_url}}-曲线图',900,500)"  class="layui-btn layui-btn-xs">曲线图</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="topBtn">
+    <!-- <a  onclick="openShow('/AdminUser/add','管理员添加',800,550);" class="layui-btn layui-btn-sm">添加管理员</a> -->
+ </script>
+<script>
+    layui.use(['table','form'], function() {
+        var table = layui.table,form = layui.form,$ = layui.jquery;
+        var tableIn = table.render({
+   
+            elem: '#list',
+            url: '{:url("/Jump/index")}',
+            method: 'post', 
+            page:true,
+            title:'域名列表',
+			toolbar: '#topBtn',
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.data //解析数据列表
+                };
+            },
+            cols: [[
+                {checkbox: true, fixed: true},
+                {field: 'id', title: 'ID', width: 80, fixed: true},
+                {field: 'account', title: '用户名'},
+                {field: 'shield_url', title: '被墙域名'},
+                {field: 'jumpTodayNumer', title: '今日跳转',toolbar:"#jumpTodayNumer"},
+                {field: 'pvTodayNumer', title: '今日PV',toolbar:"#pvTodayNumer"},
+                // {field: 'citedTodayNumer', title: '今日引量',toolbar:"#citedTodayNumer"},
+                {field: 'cname', title: 'CNAME'},
+                {field: 'is_open', align: 'center', title: '是否引量', toolbar: '#is_open'},
+                {field: 'status', align: 'center', title: '状态', toolbar: '#status'},
+                {field: 'is_param', align: 'center', title: '是否带参数', toolbar: '#is_param'},
+                {field: 'is_straight', align: 'center', title: '是否直跳', toolbar: '#is_straight'},
+                {field: 'is_start', align: 'center', title: '是否开始',toolbar: '#is_start'},
+                {field: 'is_expire', align: 'center', title: '是否过期',toolbar: '#is_expire'},
+                // {field: 'start_time', align: 'center', title: '开启时间'},
+                {field: 'create_time', title: '添加时间'},
+                {align: 'center', toolbar: '#action',title:"操作", width: 150},
+            ]],
+            limit:10
+        });
+        form.on('switch(status)', function(obj){
+            loading =layer.load(1, {shade: [0.1,'#fff']});
+            var id = this.value;
+            var status = obj.elem.checked===true?1:0;
+            $.post('{:url("/Jump/setStatus")}',{'id':id,'status':status},function (res) {
+                layer.close(loading);
+                if (res.code == 0) {
+                    layer.msg(res.msg, { time: 1000, icon: 1 });
+                    tableIn.reload();
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                    return false;
+                }
+            })
+        });
+
+        form.on('switch(is_open)', function(obj){
+            loading =layer.load(1, {shade: [0.1,'#fff']});
+            var id = this.value;
+            var is_open = obj.elem.checked===true?1:0;
+            $.post('{:url("/Jump/setIsOpen")}',{'id':id,'is_open':is_open},function (res) {
+                layer.close(loading);
+                if (res.code == 0) {
+                    layer.msg(res.msg, { time: 1000, icon: 1 });
+                    tableIn.reload();
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                    return false;
+                }
+            })
+        });
+        table.on('tool(list)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'del'){
+                layer.confirm('您确定要删除跳转链接吗？', function(index){
+                    var loading = layer.load(1, {shade: [0.1, '#fff']});
+                    $.post("{:url('/Jump/del')}",{id:data.id},function(res){
+                        layer.close(loading);
+                        if(res.code===0){
+                            layer.msg(res.msg,{time:1000,icon:1});
+                            tableIn.reload();
+                        }else{
+                            layer.msg('操作失败！',{time:1000,icon:2});
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+        //搜索
+        $('#search').on('click', function () {
+            var keyword = $('#keyword').val();
+            if ($.trim(keyword) === '') {
+                layer.msg('请输入关键字！', {icon: 0});
+                return;
+            }
+            tableIn.reload({ page: {page: 1}, where: {keyword: keyword}});
+        });
+        //开启引量
+        $('#openLeadAmount').on('click', function () {
+            var checkStatus = table.checkStatus('id')
+             ,data = checkStatus.data, id_arr =[];
+             $.each(data, function (k, v) {  // 这里的函数参数是键值对的形式，k代表键名，v代表值
+                id_arr.push(v.id);
+            });
+            var ids = id_arr.join(",");
+            if(!ids){
+                layer.msg('请选择需要引量的数据!!',{time:1000,icon:2});
+                return false;
+            }
+            layer.confirm('您确定要开启引量吗？', function(index){
+                var loading = layer.load(1, {shade: [0.1, '#fff']});
+                $.post("{:url('/Jump/openLeadAmount')}",{ids:ids},function(res){
+                    layer.close(loading);
+                    if(res.code===0){
+                        layer.msg(res.msg,{time:1000,icon:1});
+                        tableIn.reload();
+                    }else{
+                        layer.msg(res.msg,{time:1000,icon:2});
+                    }
+                });
+                layer.close(index);
+            }); 
+        });
+        //关闭引量
+        $('#closeLeadAmount').on('click', function () {
+            layer.confirm('您确定要一键关闭引量吗？', function(index){
+                var loading = layer.load(1, {shade: [0.1, '#fff']});
+                $.post("{:url('/Jump/closeLeadAmount')}",function(res){
+                    layer.close(loading);
+                    if(res.code===0){
+                        layer.msg(res.msg,{time:1000,icon:1});
+                        tableIn.reload();
+                    }else{
+                        layer.msg(res.msg,{time:1000,icon:2});
+                    }
+                });
+                layer.close(index);
+            }); 
+        });
+
+        //开启上一次引量
+        $("#openLastAmount").on("click",function(){
+            layer.confirm('此功能只针对上一次一键关闭引量,您确定要开启上一次引量吗？', function(index){
+                var loading = layer.load(1, {shade: [0.1, '#fff']});
+                $.post("{:url('/Jump/openLastAmount')}",function(res){
+                    layer.close(loading);
+                    if(res.code===0){
+                        layer.msg(res.msg,{time:1000,icon:1});
+                        tableIn.reload();
+                    }else{
+                        layer.msg(res.msg,{time:1000,icon:2});
+                    }
+                });
+                layer.close(index);
+            }); 
+        });
+        table.on('tool(list)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'del'){
+                layer.confirm('您确定要删除该数据吗？', function(index){
+                    var loading = layer.load(1, {shade: [0.1, '#fff']});
+                    $.post("{:url('/Jump/del')}",{id:data.id},function(res){
+                        layer.close(loading);
+                        if(res.code===0){
+                            layer.msg(res.msg,{time:1000,icon:1});
+                            tableIn.reload();
+                        }else{
+                            layer.msg('操作失败！',{time:1000,icon:2});
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+        $('body').on('blur','.list_order',function() {
+            var id = $(this).attr('data-id');
+            var sort = $(this).val();
+            var loading = layer.load(1, {shade: [0.1, '#fff']});
+            $.post('{:url("/Jump/setSort")}',{id:id,sort:sort},function(res){
+                layer.close(loading);
+                if(res.code === 0){
+                    layer.msg(res.msg, {time: 1000, icon: 1});
+                    tableIn.reload();
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                }
+            })
+        });
+
+    })
+</script>

@@ -1,0 +1,108 @@
+<include file="common/head"/>
+<div class="admin-main layui-anim layui-anim-upbit">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>模型列表</legend>
+    </fieldset>
+    <table class="layui-table" id="list" lay-filter="list"></table>
+</div>
+<script type="text/html" id="action">
+    <a href="{:url('/Module/field')}?id={{d.id}}" class="layui-btn layui-btn-normal layui-btn-xs">模型字段</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="status">
+    <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="开启|禁用" lay-filter="status" {{ d.status.val == 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="topBtn">
+    <button class="layui-btn layui-btn-sm" lay-event="add">添加模型</button>
+</script>
+<script>
+    layui.use(['table','form'], function() {
+        var table = layui.table, form=layui.form,$ = layui.jquery;
+        var tableIn = table.render({
+            elem: '#list',
+            url: '{:url("/Module/index")}',
+            method: 'post',
+            toolbar: '#topBtn',
+            autoSort: false,
+            page:true,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.data //解析数据列表
+                };
+            },
+            cols: [[
+                {field: 'id', title: 'ID', width:90, fixed: true,sort:true},
+                {field: 'title', title: '模型名称'},
+                {field: 'name', title: '表名',},
+                {field: 'description', title: '详述'},
+                {field: 'status', align: 'center',title: '状态',toolbar: '#status',sort:true},
+                {align: 'center', toolbar: '#action'}
+            ]]
+        });
+        //监听排序事件
+        table.on('sort(list)', function(obj){
+            table.reload('list', {
+                initSort: obj
+                ,where: {sort_by: obj.field,sort_order: obj.type}
+            });
+        });
+        //头工具栏事件
+        table.on('toolbar(list)', function(obj){
+            switch(obj.event){
+                case 'add':
+                    var index = layer.open({
+                        type: 2,
+                        content: '{:url("/Module/add")}',
+                        area: ["70%", "70%"],
+                        maxmin: false
+                    });
+                    layer.full(index);
+                    break;
+            }
+        });
+        form.on('switch(status)', function(obj){
+            loading =layer.load(1, {shade: [0.1,'#fff']});
+            var id = this.value;
+            var status = obj.elem.checked===true?1:0;
+            $.post('{:url("/Module/setStatus")}',{'id':id,'status':status},function (res) {
+                layer.close(loading);
+                if (res.status==0) {
+                    layer.msg(res.msg,{time:1000,icon:1});
+                    tableIn.reload();
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                    return false;
+                }
+            })
+        });
+        table.on('tool(list)', function(obj) {
+            var data = obj.data;
+            var id = data.id;
+            if(obj.event === 'del'){
+                layer.confirm('你确定要删除该模型吗？', {icon: 3}, function (index) {
+                    $.post("{:url('/Module/del')}",{id:data.id},function(res){
+                        if(res.code == 0){
+                            layer.msg(res.msg,{time:1000,icon:1});
+                            tableIn.reload();
+                        }else{
+                            layer.msg(res.msg,{time:1000,icon:2});
+                        }
+                    });
+                    layer.close(index);
+                });
+            }else if(obj.event === 'edit'){
+                var index = layer.open({
+                    type: 2,
+                    content: '{:url("/Module/edit")}?id='+id,
+                    area: ['70%', '70%'],
+                    maxmin: true
+                });
+                layer.full(index);
+            }
+        });
+    })
+</script>
