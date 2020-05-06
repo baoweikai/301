@@ -36,6 +36,10 @@ abstract class Controller
      * @var array
      */
     protected $middleware = [];
+    /*
+     * 结果
+     */
+    protected $result = [];
 
     /**
      * 构造方法
@@ -51,18 +55,17 @@ abstract class Controller
         $this->initialize();
     }
 
-    public function initialize()
+    protected function initialize()
     {
         define('USER_UID', is_user_login());
-		define('MODULE_NAME',request()->module());
-		define('CONTROLLER_NAME',request()->controller());
+		define('MODULE_NAME', app('http')->getName());
+		define('CONTROLLER_NAME', request()->controller());
 		define('ACTION_NAME', request()->action());
-        if (!USER_UID && (CONTROLLER_NAME != "Publics" || CONTROLLER_NAME != "publics")) {
+        if (!USER_UID && CONTROLLER_NAME != "public") {
 			//转到登录页面
-			$_SESSION["refurl"] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
-			$this->redirect("/Publics/login");
+            $_SESSION["refurl"] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
+			return redirect((string) url('public/login'));
         }
-        
         $this->result['now_user'] = cache("user_auth_" . session('UserAdmin'));
     }
 
@@ -103,7 +106,7 @@ abstract class Controller
         return $v->failException(true)->check($data);
     }
 
-    public function fetch($path = ''){
+    protected function fetch($path = ''){
         View::assign($this->result);
         return View::fetch($path);
     }

@@ -56,16 +56,16 @@ abstract class Controller
     /**
      * 后台控制器基础类
      */
-    public function initialize()
+    protected function initialize()
     {
         define('UID', is_login());
-		define('MODULE_NAME',request()->module());
-		define('CONTROLLER_NAME',request()->controller());
+		define('MODULE_NAME', app('http')->getName());
+		define('CONTROLLER_NAME', request()->controller());
 		define('ACTION_NAME', request()->action());
         if (!UID && CONTROLLER_NAME != "Publics") {
 			//转到登录页面
 			$_SESSION["refurl"] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
-			$this->redirect("/Publics/login");
+			return redirect("/public/login");
 		}
         //当前操作权限ID
         if( UID != 1){
@@ -139,7 +139,7 @@ abstract class Controller
         return $v->failException(true)->check($data);
     }
 
-    public function fetch($path = ''){
+    protected function fetch($path = ''){
         View::assign($this->result);
         return View::fetch($path);
     }
