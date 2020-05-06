@@ -10,6 +10,7 @@ class Index extends BaseController
 {
     protected  $redis,$redisHandler,$getIp,$getEndIp,$timeout,$jumpIpKey,$jumpIpValue,$redisConfig;
     public function initialize(){
+        die('34567');
         //ip处理
         $this->getIp = request()->ip();
         $this->getEndIp = substr($this->getIp,-1);

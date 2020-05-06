@@ -14,6 +14,10 @@ return [
     'with_event'       => true,
     // 默认应用
     'default_app'      => 'index',
+    // 默认控制器名
+    'default_controller'  => 'index',
+    // 默认操作名
+    'default_action'      => 'index',
     // 默认时区
     'default_timezone' => 'Asia/Shanghai',
 
