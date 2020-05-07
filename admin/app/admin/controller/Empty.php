@@ -8,7 +8,7 @@ use clt\Form;
 class Empty extends \app\admin\Controller
 {
     protected  $dao,$fields;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->moduleid = $this->mod[MODULE_NAME];
@@ -32,14 +32,14 @@ class Empty extends \app\admin\Controller
             $pageSize =input('limit')?input('limit'):config('pageSize');
             $order = "sort asc,id desc";
             if (input('post.catid')) {
-                $catids = db('category')->where(array('parentid'=>input('post.catid')))->column('id');
+                $catids = Db::name('category')->where(array('parentid'=>input('post.catid')))->column('id');
                 if($catids){
                     $catid = input('post.catid').','.implode(',',$catids);
                 }else{
                     $catid = input('post.catid');
                 }
             }
-            $cinfo= db('category')->where(array('id'=>input('post.catid')))->field('catdir,is_show')->find();
+            $cinfo= Db::name('category')->where(array('id'=>input('post.catid')))->field('catdir,is_show')->find();
             if(!empty($keyword) ){
                 $map[]=array('title','like','%'.$keyword.'%');
             }
@@ -172,7 +172,7 @@ class Empty extends \app\admin\Controller
         if (is_array($categorys) && !empty($categorys)) {
             foreach ($categorys as $id => $c) {
                 $this->categorys[$c['id']] = $c;
-                $r = db('category')->where("parentid = $c[id]")->order('listorder ASC,id ASC')->select();
+                $r = Db::name('category')->where("parentid = $c[id]")->order('listorder ASC,id ASC')->select();
                 $this->set_categorys($r);
             }
         }

@@ -42,15 +42,15 @@ class Jump extends \app\user\Controller
        if (request()->isPost()) {
            Db::startTrans();//开启回滚
            try {
-               $model = model("Jump");
-               $post_data = request()->post();
+               $model = Db::name("Jump");
+               $post = request()->post();
                $validate = validate("Jump");
-               if (!$validate->check($post_data)) {
-                   return $this->error($validate->getError());
+               if (!$validate->check($post)) {
+                   return $this->error($validate->error);
                }
                //判断条数
                $map["id"] = USER_UID;
-               $userInfo = model("User")->get($map);
+               $userInfo = Db::name("User")->where($map)->find();
                if($userInfo["number"] == 0){
                     //回滚事务
                     Db::rollback();
@@ -59,11 +59,11 @@ class Jump extends \app\user\Controller
                }
                //扣除条数
                 $number = $userInfo["number"]-1;
-                model("User")->where($map)->update(["number"=>$number]);
+                Db::name("User")->where($map)->update(["number"=>$number]);
                 $data["user_id"] = USER_UID;
                 $data["number"] = 1;
                 $data["desc"] = '添加跳转域名，扣除1条';
-                model("Expend")->create($data);
+                Db::name("Expend")->create($data);
                 //设置用户Cname是否使用
                 $conMap[] = [
                     0 =>["user_id",'eq',USER_UID],
@@ -71,16 +71,16 @@ class Jump extends \app\user\Controller
                 ];
                 $cdata["is_use"] = 1;
                 $cdata["use_time"] = time();
-                model("UserCname")->where($conMap)->update($cdata);
+                Db::name("UserCname")->where($conMap)->update($cdata);
                 //添加跳转域名
-               $post_data["user_id"] = USER_UID;
+               $post["user_id"] = USER_UID;
                //过期时间
                $expire_time = date("Y-m-d H:i:s", strtotime("+5 months",time()));
-               $post_data["expire_time"] = strtotime($expire_time);
-               $post_data["expire_time"] = strtotime($expire_time);
-               $post_data["end_ip"] = 1;
-               $post_data["start_time"] = 0;
-               $result = $model->create($post_data);
+               $post["expire_time"] = strtotime($expire_time);
+               $post["expire_time"] = strtotime($expire_time);
+               $post["end_ip"] = 1;
+               $post["start_time"] = 0;
+               $result = $model->create($post);
                if(!$result) {
                     //回滚事务
                     Db::rollback();
@@ -106,17 +106,17 @@ class Jump extends \app\user\Controller
     	 //编辑
 	public function edit()
 	{
-		$model = model("Jump");
+		$model = Db::name("Jump");
 		if (request()->isPost()) {
 			try {
 
-				$post_data = request()->post();
+				$post = request()->post();
 				$validate = validate("Jump");
-				if (!$validate->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->check($post)) {
+					return $this->error($validate->error);
                 }
-                $post_data["user_id"] = USER_UID;
-				$result = $model->update($post_data);
+                $post["user_id"] = USER_UID;
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('编辑失败');
 				}
@@ -127,7 +127,7 @@ class Jump extends \app\user\Controller
 
 		} else {
 			$id =input($model->getPk());
-			$info = $model->get($id);
+			$info = $model->where('id', $id)->find();
 			$this->result['title'] = '编辑');
 			$this->result['info'] = json_encode($info, true));
 			return $this->fetch('edit');

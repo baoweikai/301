@@ -14,48 +14,48 @@
     }
     
     //节点添加
-    public function ruleAdd($post_data)
+    public function ruleAdd($post)
     {
-        if(!$post_data){
+        if(!$post){
             return $this->error = '数据不能为空';
             return false;
         }
         
         $check = validate('AdminRule');
-        if (!$check->check($post_data)) {
-            return $this->error = $check->getError();
+        if (!$check->check($post)) {
+            return $this->error = $check->error;
             return false;
         }
 
-        $result = $this->AdminRuleModel->ruleAdd($post_data);
+        $result = $this->AdminRuleModel->ruleAdd($post);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->getError();
+            return $this->error = $this->AdminRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->getError();
+        return $this->error = $this->AdminRuleModel->error;
         return $result;
     }
 
     //节点编辑
-    public function ruleEdit($post_data)
+    public function ruleEdit($post)
     {
-        if(!$post_data){
+        if(!$post){
             return $this->error = '数据不能为空';
             return false;
         }
         
         $check = validate('AdminRule');
-        if (!$check->check($post_data)) {
-            return $this->error = $check->getError();
+        if (!$check->check($post)) {
+            return $this->error = $check->error;
             return false;
         }
 
-        $result = $this->AdminRuleModel->ruleEdit($post_data);
+        $result = $this->AdminRuleModel->ruleEdit($post);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->getError();
+            return $this->error = $this->AdminRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->getError();
+        return $this->error = $this->AdminRuleModel->error;
         return $result;
     }
 
@@ -69,10 +69,10 @@
 
         $result = $this->AdminRuleModel->ruleDel($rule_id);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->getError();
+            return $this->error = $this->AdminRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->getError();
+        return $this->error = $this->AdminRuleModel->error;
         return $result;
     }
 
@@ -83,25 +83,25 @@
     {
          $result = $this->AdminRuleModel->clearNode();
          if(!$result) {
-             return $this->error = $this->AdminRuleModel->getError();
+             return $this->error = $this->AdminRuleModel->error;
              return false;
          }
-         return $this->error = $this->AdminRuleModel->getError();
+         return $this->error = $this->AdminRuleModel->error;
          return true;
     }
     //更新角色
-    public function saveRole($post_data)
+    public function saveRole($post)
     {
-        if(!$post_data) {
+        if(!$post) {
             return $this->error = '不存在数据';
             return  false;
         }
-        $result = $this->AdminRuleModel->saveRole($post_data);
+        $result = $this->AdminRuleModel->saveRole($post);
         if(!$result){
-            return $this->error = $this->AdminRuleModel->getError();
+            return $this->error = $this->AdminRuleModel->error;
             return false;
         } 
-        return $this->error = $this->AdminRuleModel->getError();
+        return $this->error = $this->AdminRuleModel->error;
         return $result;
     }
 
@@ -115,10 +115,10 @@
         }
         $result = $this->AdminRuleModel->setRuleStatus($rule_id,$status);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->getError();
+            return $this->error = $this->AdminRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->getError();
+        return $this->error = $this->AdminRuleModel->error;
         return $result;
     }
     
@@ -132,10 +132,10 @@
         }
         $result = $this->AdminRuleModel->setRuleOpen($rule_id,$authopen);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->getError();
+            return $this->error = $this->AdminRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->getError();
+        return $this->error = $this->AdminRuleModel->error;
         return $result;
     }
 
@@ -144,10 +144,10 @@
     {
         $result = $this->AdminRuleModel->ruleSort($rule_id,$sort);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->getError();
+            return $this->error = $this->AdminRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->getError();
+        return $this->error = $this->AdminRuleModel->error;
         return $result;
     }
 
@@ -156,49 +156,49 @@
     /**************************************** 角色管理*********************************************/
 
     //角色添加
-    public function groupAdd($post_data)
+    public function groupAdd($post)
     {
-        if(!$post_data && !in_array($post_data)) {
+        if(!$post && !in_array($post)) {
         return $this->error = '数据不存在';
         return false;
         }
     
         $check = validate('AdminGroup');
-        if (!$check->check($post_data)) {
-        return $this->error = $check->getError();
+        if (!$check->check($post)) {
+        return $this->error = $check->error;
         return false;
         }
 
-        $result = $this->AdminGroupModel->groupAdd($post_data);
+        $result = $this->AdminGroupModel->groupAdd($post);
         if(!$result) {
-        return $this->error = $this->AdminGroupModel->getError();
+        return $this->error = $this->AdminGroupModel->error;
         return false;
         }
     
-        return $this->error = $this->AdminGroupModel->getError();
+        return $this->error = $this->AdminGroupModel->error;
         return $result;
     }
 
-    public function groupEdit($post_data)
+    public function groupEdit($post)
     {
-        if(!$post_data && !in_array($post_data)) {
+        if(!$post && !in_array($post)) {
         return $this->error = '数据不存在';
         return false;
         }
     
         $check = validate('AdminGroup');
-        if (!$check->check($post_data)) {
-        return $this->error = $check->getError();
+        if (!$check->check($post)) {
+        return $this->error = $check->error;
         return false;
         }
 
-        $result = $this->AdminGroupModel->groupEdit($post_data);
+        $result = $this->AdminGroupModel->groupEdit($post);
         if(!$result) {
-        return $this->error = $this->AdminGroupModel->getError();
+        return $this->error = $this->AdminGroupModel->error;
         return false;
         }
     
-        return $this->error = $this->AdminGroupModel->getError();
+        return $this->error = $this->AdminGroupModel->error;
         return $result;
     }
 
@@ -224,10 +224,10 @@
 
         $result = $this->AdminGroupModel->groupDel($group_id);
         if(!$result) {
-            return $this->error = $this->AdminGroupModel->getError();
+            return $this->error = $this->AdminGroupModel->error;
             return false;
         }
-        return $this->error = $this->AdminGroupModel->getError();
+        return $this->error = $this->AdminGroupModel->error;
         return $result;
     }
 
@@ -239,10 +239,10 @@
         }
         $result = $this->AdminGroupModel->setGroupStatus($group_id,$status);
         if(!$result) {
-            return $this->error = $this->AdminGroupModel->getError();
+            return $this->error = $this->AdminGroupModel->error;
             return false;
         }
-        return $this->error = $this->AdminGroupModel->getError();
+        return $this->error = $this->AdminGroupModel->error;
         return $result;
     }
 

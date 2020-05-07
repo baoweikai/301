@@ -18,13 +18,13 @@ class AdminRule extends Model
  
 
     //添加节点
-    public function ruleAdd($post_data) 
+    public function ruleAdd($post) 
     {
-        if(!$post_data){
+        if(!$post){
             return $this->error = '数据不存在';
             return false;
         }
-        $result =  $this->create($post_data);
+        $result =  $this->create($post);
         if(!$result) {
             return $this->error = '创建失败';
             return false;
@@ -36,16 +36,16 @@ class AdminRule extends Model
     }
 
     //编辑节点
-    public function  ruleEdit($post_data){
-        if(!$post_data){
+    public function  ruleEdit($post){
+        if(!$post){
             return $this->error = '数据不存在';
             return false;
         }
-        if((int)$post_data['id'] == 0) {
+        if((int)$post['id'] == 0) {
             return $this->error = '信息不存在';
             return false;
         }
-        $result =  $this->update($post_data);
+        $result =  $this->update($post);
         if(!$result) {
             return $this->error = '修改失败';
             return false;

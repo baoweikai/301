@@ -8,8 +8,8 @@ use app\common\model\Adtype;
  */
 class Ad extends \app\admin\Controller
 {
-    protected  $AdtypeModel;
-    public function initialize()
+    protected $AdtypeModel;
+    protected function initialize()
     {
         parent::initialize();
         $this->AdtypeModel = new Adtype();

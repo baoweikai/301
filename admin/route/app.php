@@ -11,6 +11,6 @@
 use think\facade\Route;
 
 Route::get('/', 'index/index');
-Route::get(':controller/:id', ':controller/view')->pattern(['controller' => '[\w|\-]+', 'id' => '\d+'])->allowCrossDomain();
-Route::rule(':controller/:action/:id', ':controller/:action')->pattern(['controller' => '[\w|\-]+', 'action' => '[\w|\-]+', 'id' => '\d+'])->allowCrossDomain();
-Route::rule(':controller/:action', ':controller/:action')->pattern(['controller' => '[\w|\-]+', 'action' => '[\w|\-]+'])->allowCrossDomain();
+Route::get(':controller/:id', ':controller/view')->pattern(['controller' => '[\w|\-]+', 'id' => '\d+']);
+Route::rule(':controller/:action/:id', ':controller/:action')->pattern(['controller' => '[\w|\-]+', 'action' => '[\w|\-]+', 'id' => '\d+']);
+Route::rule(':controller/:action', ':controller/:action')->pattern(['controller' => '[\w|\-]+', 'action' => '[\w|\-]+']);

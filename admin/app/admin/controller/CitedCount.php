@@ -5,7 +5,7 @@ use think\facade\Json;
 class CitedCount extends \app\admin\Controller
 {
     protected $time_slot;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->time_slot = config("time_slot");

@@ -58,12 +58,12 @@ class Base extends Controller
 		if (request()->isPost()) {
 			try {
 				$model = model(CONTROLLER_NAME);
-				$post_data = request()->post();
+				$post = request()->post();
 				$validate = validate(CONTROLLER_NAME);
-				if (!$validate->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->check($post)) {
+					return $this->error($validate->error);
 				}
-				$result = $model->create($post_data);
+				$result = $model->create($post);
 				if(!$result) {
 					return $this->error('添加失败');
 				}
@@ -86,12 +86,12 @@ class Base extends Controller
 		if (request()->isPost()) {
 			try {
 
-				$post_data = request()->post();
+				$post = request()->post();
 				$validate = validate(CONTROLLER_NAME);
-				if (!$validate->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->check($post)) {
+					return $this->error($validate->error);
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('编辑失败');
 				}
@@ -102,7 +102,7 @@ class Base extends Controller
 
 		} else {
 			$id =input($model->getPk());
-			$info = $model->get($id);
+			$info = $model->where('id', $id)->find();
 			$this->result['title'] = '编辑';
 			$this->result['info'] = json_encode($info, true);
 			return $this->fetch('form');
@@ -123,7 +123,7 @@ class Base extends Controller
 			$name = CONTROLLER_NAME;
 		}
 		$map["id"] = ['in', $id];
-		$info = model($name)->get($map);
+		$info = model($name)->where($map)->find();
 		$info = $info->toArray();
 		if(array_key_exists('litpic',$info)){
 			if($info['litpic']) {
@@ -142,14 +142,14 @@ class Base extends Controller
 		if (request()->isPost()) {
 			try {
 				$model = model(CONTROLLER_NAME);
-				$post_data = request()->post();
-				if(!array_key_exists('id',$post_data)){
+				$post = request()->post();
+				if(!array_key_exists('id',$post)){
 					return $this->error('ID不存在');
 				}
-				if (!array_key_exists('status', $post_data)) {
+				if (!array_key_exists('status', $post)) {
 					return $this->error('状态错误！！');
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('设置失败');
 				}
@@ -168,15 +168,15 @@ class Base extends Controller
 	{
 		if (request()->isPost()) {
 			$model = model(CONTROLLER_NAME);
-			$post_data = request()->post();
-			if (!array_key_exists('id', $post_data)) {
+			$post = request()->post();
+			if (!array_key_exists('id', $post)) {
 				return $this->error('ID不存在');
 			}
-			if (!array_key_exists('sort', $post_data)) {
+			if (!array_key_exists('sort', $post)) {
 				return $this->error('排序错误！！');
 			}
-			$id = intval($post_data['id']);
-			$data['sort'] = intval($post_data['sort']);
+			$id = intval($post['id']);
+			$data['sort'] = intval($post['sort']);
 			$result = $model->where(['id'=>$id])->update($data);
 			if (!$result) {
 				return $this->error('修改失败');

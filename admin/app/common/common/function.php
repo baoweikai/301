@@ -387,7 +387,7 @@ function emcryPwd($pwd = '')
 //跳转IP统计
 function  jumpCount($jump_id = 0,$jump_url = '')
 {
-   $model = model("JumpCount");
+   $model = Db::name("JumpCount");
    $jump_id = (int)$jump_id;
    $jump_url = trim($jump_url);
    $time = time();
@@ -414,7 +414,7 @@ function  jumpCount($jump_id = 0,$jump_url = '')
 //引量ip
 function citedCount($jump_id = 0,$jump_url = '')
 {
-    $model = model("CitedCount");
+    $model = Db::name("CitedCount");
     $jump_id = (int)$jump_id;
     $jump_url = trim($jump_url);
     $time = time();

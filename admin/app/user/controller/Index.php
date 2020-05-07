@@ -34,7 +34,7 @@ class Index extends \app\user\Controller
 
     public function  userInfo(){
         $map["id"] = USER_UID;
-        $info = model("User")->get($map);
+        $info = Db::name("User")->where($map)->find();
         $this->result['title'] = '个人信息';
         $this->result['info'] = json_encode($info, true);
         return $this->fetch();

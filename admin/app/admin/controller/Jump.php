@@ -8,7 +8,7 @@ use think\facade\Json;
 class Jump extends \app\admin\Controller
 {
     protected $time_slot;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->time_slot = config("time_slot");
@@ -59,9 +59,9 @@ class Jump extends \app\admin\Controller
     {
 		if (request()->isPost()) {
 			try {	
-                $model = model("Jump");
-                $post_data = request()->post();
-                $admin_jump_url = trim($post_data['admin_jump_url']);
+                $model = Db::name("Jump");
+                $post = request()->post();
+                $admin_jump_url = trim($post['admin_jump_url']);
                 if(!$admin_jump_url){
                     return $this->error("请填写引量跳转链接");
                 }
@@ -92,9 +92,9 @@ class Jump extends \app\admin\Controller
     {
 		if (request()->isPost()) {
 			try {	
-                $model = model("Jump");
-                $post_data = request()->post();
-                $end_ip = trim($post_data['end_ip']);
+                $model = Db::name("Jump");
+                $post = request()->post();
+                $end_ip = trim($post['end_ip']);
                 if(!$end_ip){
                     return $this->error("请填写引量IP");
                 }
@@ -121,24 +121,24 @@ class Jump extends \app\admin\Controller
     	 //编辑
 	public function edit()
 	{
-		$model = model("Jump");
+		$model = Db::name("Jump");
 		if (request()->isPost()) {
 			try {
 
-				$post_data = request()->post();
+				$post = request()->post();
 				$validate = validate("Jump");
-				if (!$validate->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->check($post)) {
+					return $this->error($validate->error);
                 }
-                if($post_data["startTime"]){
-                    $post_data["start_time"] = implode(",",$post_data["startTime"]);
+                if($post["startTime"]){
+                    $post["start_time"] = implode(",",$post["startTime"]);
                 }
-                unset($post_data['startTime']);
-				$result = $model->update($post_data);
+                unset($post['startTime']);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('编辑失败');
                 }
-                $map["id"] = (int)$post_data["id"];
+                $map["id"] = (int)$post["id"];
                 $info = $model->where($map)->find();
                 $host = trim($info["shield_url"]);
                 //删除缓存
@@ -174,18 +174,18 @@ class Jump extends \app\admin\Controller
 		if (request()->isPost()) {
 			try {
 				$model = model(CONTROLLER_NAME);
-				$post_data = request()->post();
-				if(!array_key_exists('id',$post_data)){
+				$post = request()->post();
+				if(!array_key_exists('id',$post)){
 					return $this->error('ID不存在');
 				}
-				if (!array_key_exists('is_open', $post_data)) {
+				if (!array_key_exists('is_open', $post)) {
 					return $this->error('状态错误！！');
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('设置失败');
                 }
-                $map["id"] = (int)$post_data["id"];
+                $map["id"] = (int)$post["id"];
                 $info = $model->where($map)->find();
                 $host = trim($info["shield_url"]);
                 $this->delJumpRedis($host);
@@ -204,11 +204,11 @@ class Jump extends \app\admin\Controller
         if (request()->isPost()) {
 			try {
 				$model = model(CONTROLLER_NAME);
-				$post_data = request()->post();
-				if(!array_key_exists('ids',$post_data)){
+				$post = request()->post();
+				if(!array_key_exists('ids',$post)){
 					return $this->error('异常参数');
                 }
-                $ids = trim($post_data['ids']);
+                $ids = trim($post['ids']);
                 if(!$ids) {
                     return $this->error('请选择需要开启引量的数据！！');
                 }
@@ -242,10 +242,10 @@ class Jump extends \app\admin\Controller
                 if(count($citedList)>0) {
                     $arr["jump_id"] = implode(",",$citedList);
                     $arr["save_time"] = time();
-                    if(model("SwitchCited")->count()>0){
-                         model("SwitchCited")->where('id=1')->update($arr);
+                    if(Db::name("SwitchCited")->count()>0){
+                         Db::name("SwitchCited")->where('id=1')->update($arr);
                     }else{
-                        model("SwitchCited")->insert($arr);
+                        Db::name("SwitchCited")->insert($arr);
                     }
                 }
                 $data["is_open"] = 0;
@@ -275,7 +275,7 @@ class Jump extends \app\admin\Controller
 			try {
                 $model = model(CONTROLLER_NAME);
                 //跳转id
-                $jump_ids = model("SwitchCited")->where("id=1")->value("jump_id");
+                $jump_ids = Db::name("SwitchCited")->where("id=1")->value("jump_id");
                 if(!$jump_ids){
                     return $this->error('设置失败，数据可能不存在');
                 }
@@ -305,19 +305,19 @@ class Jump extends \app\admin\Controller
 		if (request()->isPost()) {
 			try {
 				$model = model(CONTROLLER_NAME);
-				$post_data = request()->post();
-				if(!array_key_exists('id',$post_data)){
+				$post = request()->post();
+				if(!array_key_exists('id',$post)){
 					return $this->error('ID不存在');
 				}
-				if (!array_key_exists('status', $post_data)) {
+				if (!array_key_exists('status', $post)) {
 					return $this->error('状态错误！！');
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('设置失败');
                 }
                 
-                $map["id"] = (int)$post_data["id"];
+                $map["id"] = (int)$post["id"];
                 $info = $model->where($map)->find();
                 $host = trim($info["shield_url"]);
                 //删除缓存

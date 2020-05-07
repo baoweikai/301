@@ -16,19 +16,19 @@ class Identity extends \app\user\Controller
     {
 
 		if (request()->isPost()) {
-            $post_data = input('post.');
+            $post = input('post.');
             //验证参数
-            $validate = $this->validate($post_data, 'Login');
+            $validate = $this->validate($post, 'Login');
             if (true !== $validate) {
                return $this->error($validate);
             }
             $user = new User();
-            $result = $user->login($post_data['account'],$post_data['password']);
+            $result = $user->login($post['account'],$post['password']);
             if(!$result) {
-               return $this->error($user->getError());
+               return $this->error($user->error);
             }
            
-            return $this->success($user->getError(),$result);
+            return $this->success($user->error,$result);
         }else{
             if (is_user_login()) {
                 return redirect('/');
@@ -45,12 +45,12 @@ class Identity extends \app\user\Controller
             $info = cache("user_auth_" . session('UserAdmin'));
             if (request()->isPost()) {
                 try {
-                    $post_data = input('post.');
-                    $result = $this->userModel->saveUserPwd($post_data);
+                    $post = input('post.');
+                    $result = $this->userModel->saveUserPwd($post);
                     if (!$result) {
-                        return $this->error($this->userModel->getError());
+                        return $this->error($this->userModel->error);
                     }
-                    return $this->success($this->userModel->getError(), $result);
+                    return $this->success($this->userModel->error, $result);
                 } catch (\Exception $e) {
                     return $this->error($e->getMessage());
                 }

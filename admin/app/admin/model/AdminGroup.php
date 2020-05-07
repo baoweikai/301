@@ -17,15 +17,15 @@ class AdminGroup extends Model
         return isset($data['return_arr'])&&$data['return_arr'] ? $status_arr : ['val'=>$value,'text'=>$status_arr[$value]];
     }
 
-    public  function groupAdd($post_data)
+    public  function groupAdd($post)
     {
         $check = validate('AdminGroup');
-        if (!$check->check($post_data)) {
-           return $this->error = $check->getError();
+        if (!$check->check($post)) {
+           return $this->error = $check->error;
            return false;
         }
     
-        $result =  $this->create($post_data);
+        $result =  $this->create($post);
         if(!$result) {
             return $this->error = '创建失败';
             return false;
@@ -35,15 +35,15 @@ class AdminGroup extends Model
     }
 
     
-    public  function groupEdit($post_data)
+    public  function groupEdit($post)
     {
         $check = validate('AdminGroup');
-        if (!$check->check($post_data)) {
-           return $this->error = $check->getError();
+        if (!$check->check($post)) {
+           return $this->error = $check->error;
            return false;
         }
     
-        $result =  $this->update($post_data);
+        $result =  $this->update($post);
         if(!$result) {
             return $this->error = '编辑失败';
             return false;

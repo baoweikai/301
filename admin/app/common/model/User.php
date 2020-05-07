@@ -29,7 +29,7 @@ class User extends \think\Model
     {
        $map['account'] = $account;
        /* 获取用户数据 */
-       $user = $this->get($map);
+       $user = $this->where($map)->find();
        if ($user) {
            $user = $user->toArray();
        }
@@ -81,13 +81,13 @@ class User extends \think\Model
     }
 
 	 //修改用户密码
-	 public function saveUserPwd($post_data)
+	 public function saveUserPwd($post)
 	 {
-		$map['id'] = intval($post_data['id']);
-		$pass = trim($post_data['pass']);//旧密码
-		$password = trim($post_data['password']);//新密码
-		$pwd = trim($post_data['pwd']);//确认密码
-		$user = $this->get($map);
+		$map['id'] = intval($post['id']);
+		$pass = trim($post['pass']);//旧密码
+		$password = trim($post['password']);//新密码
+		$pwd = trim($post['pwd']);//确认密码
+		$user = $this->where($map)->find();
 		if($user) {
 			$user = $user->toArray();
 		}

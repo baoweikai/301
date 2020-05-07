@@ -8,7 +8,7 @@ use think\facade\Db;
 class Database extends \app\admin\Controller
 {
     protected $db = '', $datadir;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->config = [

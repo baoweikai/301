@@ -2,13 +2,14 @@
 namespace app\admin\controller;
 
 use think\facade\Json;
+use think\facade\Db;
 
 class AdminUser extends \app\admin\Controller
 {
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
-        $groupList = model('AdminGroup')->groupList();
+        $groupList = Db::name('AdminGroup')->groupList();
         $this->result['groupList'] = $groupList;
     }
 
@@ -39,15 +40,15 @@ class AdminUser extends \app\admin\Controller
 	 //编辑
     public function edit()
     {
-        $model = model("AdminUser");
+        $model = Db::name("AdminUser");
         if (request()->isPost()) {
             try {
-                $post_data = request()->post();
+                $post = request()->post();
                 $validate = validate("AdminUser");
-                if (!$validate->check($post_data)) {
-                    return $this->error($validate->getError());
+                if (!$validate->check($post)) {
+                    return $this->error($validate->error);
                 }
-                $result = $model->update($post_data);
+                $result = $model->update($post);
                 if (!$result) {
                     return $this->error('编辑失败');
                 }
@@ -62,7 +63,7 @@ class AdminUser extends \app\admin\Controller
 
         } else {
             $id = $_REQUEST[$model->getPk()];
-            $info = $model->get($id);
+            $info = $model->where('id', $id)->find();
             $this->result['title'] = '编辑');
             $this->result['info'] = json_encode($info, true);
             return $this->fetch('form');

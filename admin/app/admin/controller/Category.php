@@ -11,7 +11,7 @@ use com\Tree;
 class Category extends \app\admin\Controller
 {
     protected $dao, $categorys , $module,$groupId;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         foreach ((array)$this->module as $rw){
@@ -22,7 +22,7 @@ class Category extends \app\admin\Controller
         $this->module=$data['module'];
         $this->assign($data);
         unset($data);
-        $this->dao = db('category');
+        $this->dao = Db::name('category');
         $this->groupId = Db::name('admin_user')->where('id',UID)->value('group_id');
     }
 
@@ -89,7 +89,7 @@ class Category extends \app\admin\Controller
             }
             $data['module'] = $this->module[$data['moduleid']]['name'];
             $data['child'] = isset($data['child'])?1:0;
-            $id = db('category')->insertGetId($data);
+            $id = Db::name('category')->insertGetId($data);
             if($id) {
                 if($data['module']=='page'){
                     $data2['id']=$id;
@@ -97,7 +97,7 @@ class Category extends \app\admin\Controller
                         $data2['title'] = $data['catname'];
                         $data2['content'] = '';
                     }
-                    $page=db('page');
+                    $page=Db::name('page');
                     $page->insert($data2);
                 }
                 $this->repair();
@@ -111,7 +111,7 @@ class Category extends \app\admin\Controller
         }else{
             $parentid =	input('param.parentid');
             //模型列表
-            $module = db('module')->where('status',1)->field('id,title,name')->select();
+            $module = Db::name('module')->where('status',1)->field('id,title,name')->select();
             $this->result['modulelist'] = $module;
             //父级模型ID
             if($parentid){
@@ -132,7 +132,7 @@ class Category extends \app\admin\Controller
             $templates= template_file();
             $this->result['templates'] = $templates;
             //管理员权限组
-            $usergroup=db('admin_group')->select();
+            $usergroup=Db::name('admin_group')->select();
             $this->result['rlist'] = $usergroup;
             $this->result['title'] = '添加栏目';
             return $this->fetch();
@@ -143,7 +143,7 @@ class Category extends \app\admin\Controller
     public function edit(){
         if (request()->isPost()) {
             $data = $data = Request::except('file');
-            $data['module'] = db('module')->where(array('id'=>$data['moduleid']))->value('name');
+            $data['module'] = Db::name('module')->where(array('id'=>$data['moduleid']))->value('name');
             if(!empty($data['readgroup'])){
                 $data['readgroup'] = implode(',',$_POST['readgroup']);
             }else{
@@ -151,13 +151,13 @@ class Category extends \app\admin\Controller
             }
             $data['arrparentid'] = $this->get_arrparentid($data['id']);
             $data['child'] = isset($data['child']) ? '1' : '0';
-            if (false !==db('category')->update($data)) {
+            if (false !==Db::name('category')->update($data)) {
                 if($data['child']==1){
                     $arrchildid = $this->get_arrchildid($data['id']);
                     $data2['ismenu'] = $data['ismenu'];
                     $data2['pagesize'] = $data['pagesize'];
                     $data2['readgroup'] = $data['readgroup'];
-                    db('category')->where( ' id in ('.$arrchildid.')')->update($data2);
+                    Db::name('category')->where( ' id in ('.$arrchildid.')')->update($data2);
                 }
                 $this->repair();
                 $this->repair();
@@ -171,7 +171,7 @@ class Category extends \app\admin\Controller
         }else{
             $id = input('id');
             $this->result['module'] = $this->categorys[$id]['moduleid'];
-            $module = db('module')->field('id,title,name')->select();
+            $module = Db::name('module')->field('id,title,name')->select();
             $this->result['modulelist'] = $module;
 
             $record = $this->categorys[$id];
@@ -189,7 +189,7 @@ class Category extends \app\admin\Controller
             $categorys = $tree->get_tree(0, $str,$parentid);
             $this->result['categorys'] = $categorys;
             $this->result['record'] = $record;
-            $usergroup=db('admin_group')->select();
+            $usergroup=Db::name('admin_group')->select();
             $this->result['rlist'] = $usergroup;
             $this->result['title'] = '编辑栏目';
             //模版
@@ -202,7 +202,7 @@ class Category extends \app\admin\Controller
     public function repair() {
         @set_time_limit(500);
         $this->categorys = $categorys = array();
-        $categorys =  db('category')->where("parentid=0")->order('sort ASC,id ASC')->select();
+        $categorys =  Db::name('category')->where("parentid=0")->order('sort ASC,id ASC')->select();
         $this->set_categorys($categorys);
         if(is_array($this->categorys)) {
             foreach($this->categorys as $id => $cat) {
@@ -210,7 +210,7 @@ class Category extends \app\admin\Controller
                 $this->categorys[$id]['arrparentid'] = $arrparentid = $this->get_arrparentid($id);
                 $this->categorys[$id]['arrchildid'] = $arrchildid = $this->get_arrchildid($id);
                 $this->categorys[$id]['parentdir'] = $parentdir = $this->get_parentdir($id);
-                db('category')->update(array('parentdir'=>$parentdir,'arrparentid'=>$arrparentid,'arrchildid'=>$arrchildid,'id'=>$id));
+                Db::name('category')->update(array('parentdir'=>$parentdir,'arrparentid'=>$arrparentid,'arrchildid'=>$arrchildid,'id'=>$id));
             }
         }
 
@@ -220,7 +220,7 @@ class Category extends \app\admin\Controller
         if (is_array($categorys) && !empty($categorys)) {
             foreach ($categorys as $id => $c) {
                 $this->categorys[$c['id']] = $c;
-                $r = db('category')->where(array("parentid"=>$c['id']))->Order('sort ASC,id ASC')->select();
+                $r = Db::name('category')->where(array("parentid"=>$c['id']))->Order('sort ASC,id ASC')->select();
                 $this->set_categorys($r);
             }
         }
@@ -304,13 +304,13 @@ class Category extends \app\admin\Controller
 
         $scat = $this->dao->where(array('parentid'=>$pid))->count();
         if($scat==1){
-            db('category')->where(array('id'=>$pid))->update(array('child'=>0));
+            Db::name('category')->where(array('id'=>$pid))->update(array('child'=>0));
         }
-        db('category')->where('id','in',$arrchildid)->delete();
+        Db::name('category')->where('id','in',$arrchildid)->delete();
         $arr=explode(',',$arrchildid);
         foreach((array)$arr as $r){
             if($this->categorys[$r]['module']=='page'){
-                $module=db('page');
+                $module=Db::name('page');
                 $module->delete($r);
             }
         }

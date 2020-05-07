@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use app\common\model\Attribute;
 use think\facade\Json;
+use think\facade\Db;
 
 class User extends \app\admin\Controller
 {
@@ -20,24 +21,24 @@ class User extends \app\admin\Controller
     {
        if (request()->isPost()) {
            try {
-               $model = model("User");
-               $post_data = request()->post();
+               $model = Db::name("User");
+               $post = request()->post();
                $validate = validate("User");
-               if (!$validate->check($post_data)) {
-                   return $this->error($validate->getError());
+               if (!$validate->check($post)) {
+                   return $this->error($validate->error);
                }
-               $post_data["password"] = emcryPwd($post_data["password"]);
-               $result = $model->create($post_data);
+               $post["password"] = emcryPwd($post["password"]);
+               $result = $model->create($post);
    
                if(!$result) {
                    return $this->error('添加失败');
                }
                $data["user_id"] = $result["id"];
-               $data["attr_id"]=  $post_data["attr_id"];
+               $data["attr_id"]=  $post["attr_id"];
                //随机
-               $CnameInfo = model("Cname")->where("attr_id=".$post_data["attr_id"])->field("id")->orderRaw("rand()")->find();
+               $CnameInfo = Db::name("Cname")->where("attr_id=".$post["attr_id"])->field("id")->orderRaw("rand()")->find();
                $data["c_id"] = $CnameInfo["id"];
-               model("UserCname")->create($data);
+               Db::name("UserCname")->create($data);
            return $this->success('添加成功',$result);
            } catch (\Exception $e) {
                return $this->error($e->getMessage());
@@ -54,33 +55,33 @@ class User extends \app\admin\Controller
      //编辑
 	public function edit()
 	{
-		$model = model("User");
+		$model = Db::name("User");
 		if (request()->isPost()) {
 			try {
 
-                $post_data = request()->post();
+                $post = request()->post();
 				$validate = validate("User");
-				if (!$validate->scene("edit")->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->scene("edit")->check($post)) {
+					return $this->error($validate->error);
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('编辑失败');
                 }
-                $map["user_id"] = $post_data["id"];
-                $CnameInfo = model("Cname")->where("attr_id=".$post_data["attr_id"])->field("id")->orderRaw("rand()")->find();
+                $map["user_id"] = $post["id"];
+                $CnameInfo = Db::name("Cname")->where("attr_id=".$post["attr_id"])->field("id")->orderRaw("rand()")->find();
                 $data["c_id"] = $CnameInfo["id"];
-                $data["attr_id"]=  $post_data["attr_id"];
-                model("UserCname")->where($map)->update($data);
-                // $map["user_id"] = $post_data["id"];
-                // $map["attr_id"] = $post_data["attr_id"];
-                // if(model("UserCname")->where($map)->count()==0){
+                $data["attr_id"]=  $post["attr_id"];
+                Db::name("UserCname")->where($map)->update($data);
+                // $map["user_id"] = $post["id"];
+                // $map["attr_id"] = $post["attr_id"];
+                // if(Db::name("UserCname")->where($map)->count()==0){
                 //     //随机
-                //     $CnameInfo = model("Cname")->where("attr_id=".$post_data["attr_id"])->field("id")->orderRaw("rand()")->find();
+                //     $CnameInfo = Db::name("Cname")->where("attr_id=".$post["attr_id"])->field("id")->orderRaw("rand()")->find();
                 //     $data["c_id"] = $CnameInfo["id"];
-                //     $data["user_id"]=  $post_data["id"];
-                //     $data["attr_id"]=  $post_data["attr_id"];
-                //     model("UserCname")->create($data);
+                //     $data["user_id"]=  $post["id"];
+                //     $data["attr_id"]=  $post["attr_id"];
+                //     Db::name("UserCname")->create($data);
                 // }
 				return $this->success('编辑成功', $result);
 			} catch (\Exception $e) {
@@ -89,7 +90,7 @@ class User extends \app\admin\Controller
 
 		} else {
 			$id =input($model->getPk());
-			$info = $model->get($id);
+			$info = $model->where('id', $id)->find();
 			$this->result['title'] = '编辑';
 			$this->result['info'] = json_encode($info, true);
 			return $this->fetch('edit');
@@ -98,16 +99,16 @@ class User extends \app\admin\Controller
     
     public function editPwd()
 	{
-		$model = model("User");
+		$model = Db::name("User");
 		if (request()->isPost()) {
 			try {
 
-                $post_data = request()->post();
-                if(strlen($post_data['password'])< 6 || strlen($post_data['password'])>15){
+                $post = request()->post();
+                if(strlen($post['password'])< 6 || strlen($post['password'])>15){
                     return $this->error("密码长度在6-15字符之间");
                 }
-                $map["id"] = (int)$post_data['id'];
-                $data["password"] = emcryPwd(trim($post_data['password']));
+                $map["id"] = (int)$post['id'];
+                $data["password"] = emcryPwd(trim($post['password']));
 				$result = $model->where($map)->update($data);
 				if (!$result) {
 					return $this->error('编辑失败');
@@ -119,7 +120,7 @@ class User extends \app\admin\Controller
 
 		} else {
 			$id =input($model->getPk());
-			$info = $model->get($id);
+			$info = $model->where('id', $id)->find();
 			$this->result['title'] = '编辑';
 			$this->result['info'] = json_encode($info, true);
 			return $this->fetch();

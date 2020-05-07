@@ -7,7 +7,7 @@ use think\facade\Json;
 class Cname extends \app\admin\Controller
 {
     protected $attributeModel,$attrList;
-    public function initialize()
+    protected function initialize()
     { 
         parent::initialize();
         $this->attributeModel = new Attribute();

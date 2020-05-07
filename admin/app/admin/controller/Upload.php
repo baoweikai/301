@@ -37,7 +37,7 @@ class Upload extends Controller
             $result['url'] = $imgpath;
             return $this->success('上传成功',$result);
         }else{
-            return $this->error($file->getError());
+            return $this->error($file->error);
         }
     }
 }

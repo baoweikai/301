@@ -12,7 +12,7 @@ class System  extends \think\Model
     public function getSysInfo($sys_id = 1) {
         $map['id'] = intval($sys_id);
 
-        $sys_info = $this->get($map);
+        $sys_info = $this->where($map)->find();
         if ($sys_info) {
 			$sys_info = $sys_info->toArray();
         }
@@ -30,7 +30,7 @@ class System  extends \think\Model
         }
         //  $validate = validate($data);
         // if (!$validate->check($data)) {
-        //     return $this->error = $validate->getError();
+        //     return $this->error = $validate->error;
         //     return false;
         // }
         $sys_id = intval($data['id']);

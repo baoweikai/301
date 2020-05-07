@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use think\facade\Env;
 use think\facade\Json;
+use think\facade\Db;
 
 class Index extends \app\admin\Controller
 {
@@ -12,14 +13,12 @@ class Index extends \app\admin\Controller
         $adminRule = cache('adminRule');
 
         if(!$adminRule){
-            $adminRule = db('AdminRule')->where('status=1')->order('sort')->select();
+            $adminRule = Db::name('AdminRule')->where('status', 1)->order('sort')->select()->toArray();
             cache('adminRule', $adminRule, 3600);
-       }
-
+        }
         //声明数组
         $menus = [];
         foreach ($adminRule as $key=>$val){
-         //  $adminRule[$key]['href'] = url($val['href']);
             $adminRule[$key]['href'] = $val['href'];
             if($val['pid']==0){
                 if(UID != 1){
@@ -45,7 +44,7 @@ class Index extends \app\admin\Controller
                 }
             }
         }
-        $this->result['menus',json_encode($menus,true);
+        $this->result['menus'] = json_encode($menus,true);
         return $this->fetch();
     }
 

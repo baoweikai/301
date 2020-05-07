@@ -33,7 +33,7 @@ class AdminUser extends Model
      {
         $map['username'] = $username;
         /* 获取用户数据 */
-        $user = $this->get($map);
+        $user = $this->where($map)->find();
         if ($user) {
 			$user = $user->toArray();
         }
@@ -98,11 +98,11 @@ class AdminUser extends Model
 		cache('user_auth_sign_'.session('admin'), data_auth_sign($auth), 3600);
 	 }
 	 //修改用户信息
-	 public function saveInfo($post_data)
+	 public function saveInfo($post)
 	 {
-		$map['id'] = intval($post_data['id']);
+		$map['id'] = intval($post['id']);
 		
-		$result = $this->where($map)->update($post_data);
+		$result = $this->where($map)->update($post);
 		if(!$result) {
 			return $this->error = '修改失败';
 			return false;
@@ -115,13 +115,13 @@ class AdminUser extends Model
 	 }
 
 	 //修改用户密码
-	 public function saveUserPwd($post_data)
+	 public function saveUserPwd($post)
 	 {
-		$map['id'] = intval($post_data['id']);
-		$pass = trim($post_data['pass']);//旧密码
-		$password = trim($post_data['password']);//新密码
-		$pwd = trim($post_data['pwd']);//确认密码
-		$user = $this->get($map);
+		$map['id'] = intval($post['id']);
+		$pass = trim($post['pass']);//旧密码
+		$password = trim($post['password']);//新密码
+		$pwd = trim($post['pwd']);//确认密码
+		$user = $this->where($map)->find();
 		if($user) {
 			$user = $user->toArray();
 		}
@@ -160,7 +160,7 @@ class AdminUser extends Model
 	 //更新后台用户缓存
 	 public function saveUserCache($map)
 	 {
-		$user = $this->get($map);
+		$user = $this->where($map)->find();
 		$ip = request()->ip();
 		$auth = [
 			'id' => $user['id'],

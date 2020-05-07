@@ -13,7 +13,7 @@ use think\facade\Db;
 class System extends \app\admin\Controller
 {
     public $sysModel,$sysData,$path;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->path =  Env::get("app_path").'/common/config/system.php';
@@ -126,9 +126,9 @@ class System extends \app\admin\Controller
                 $result = $this->sysModel->addSystem($data);
                 if($result){
                     adminAddLog(UID,$this->now_user["username"].",".CONTROLLER_NAME."修改了系统设置");
-                    return $this->success($this->sysModel->getError(), $result);
+                    return $this->success($this->sysModel->error, $result);
                 }else{
-                    return $this->error($this->sysModel->getError());
+                    return $this->error($this->sysModel->error);
                 }
         
             } catch (\Exception $e) {

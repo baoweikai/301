@@ -5,26 +5,29 @@ use think\Controller;
 use app\admin\model\AdminUser;
 use think\facade\Json;
 
-class Identity extends Controller{
-    private $adminUserModel;
-    public function initialize(){
-        $this->adminUserModel = new AdminUser();
+class Identity extends \app\admin\Controller{
+    private $adminUser;
+    protected function initialize(){
+        $this->adminUser = new AdminUser();
     }
     public function login()
     {
 		if (request()->isPost()) {
-            $post_data = input('post.');
+            $post = input('post.');
 
             //验证参数
-            $validate = $this->validate($post_data, 'Login');
+            /*
+            $validate = $this->validate($post, 'Login');
             if (true !== $validate) {
                return $this->error($validate);
             }
-            $result =  $this->adminUserModel->login($post_data['username'],$post_data['password']);
+            */
+            $model = new AdminUser();
+            $result = $model->login($post['username'], $post['password']);
             if(!$result) {
-                return $this->error($this->adminUserModel->getError());
+                return $this->error($model->error);
             }
-            return $this->success($this->adminUserModel->getError(),$result);
+            return $this->success($model->error, $result);
         }else{
             if (is_login()) {
                 return redirect('/');
@@ -39,12 +42,12 @@ class Identity extends Controller{
         $info = cache("user_auth_" . session('admin'));
         if (request()->isPost()) {
             try{
-                $post_data = input('post.');
-                $result = $this->adminUserModel->saveInfo($post_data);
+                $post = input('post.');
+                $result = $this->adminUser->saveInfo($post);
                 if(!$result){
-                    return $this->error($this->adminUserModel->getError());
+                    return $this->error($this->adminUser->error);
                 }
-                return $this->success($this->adminUserModel->getError(), $result);
+                return $this->success($this->adminUser->error, $result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -61,12 +64,12 @@ class Identity extends Controller{
         $info = cache("user_auth_" . session('admin'));
         if (request()->isPost()) {
             try {
-                $post_data = input('post.');
-                $result = $this->adminUserModel->saveUserPwd($post_data);
+                $post = input('post.');
+                $result = $this->adminUser->saveUserPwd($post);
                 if (!$result) {
-                    return $this->error($this->adminUserModel->getError());
+                    return $this->error($this->adminUser->error);
                 }
-                return $this->success($this->adminUserModel->getError(), $result);
+                return $this->success($this->adminUser->error, $result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -81,7 +84,7 @@ class Identity extends Controller{
     public function logout()
     {
         if (is_login()) {
-            $this->adminUserModel->logout();
+            $this->adminUser->logout();
 			return $this->success('退出成功！', url('/Publics/login'));
 		} else {
 			return $this->error('您还未登陆哟', url('/Publics/login'));

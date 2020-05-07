@@ -10,10 +10,10 @@ class Module extends \app\admin\Controller
 {
     protected $dao;
     public $moduleModel;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
-        $this->dao=db('module');
+        $this->dao=Db::name('module');
         $this->moduleModel = new Module();
         $field_pattern = [
             ['name'=>'defaul','title'=>'默认'],
@@ -143,14 +143,14 @@ class Module extends \app\admin\Controller
     public function edit(){
         if(request()->isPost()){
             $data = Request::except('name');
-            if(db('module')->update($data)!==false){
+            if(Db::name('module')->update($data)!==false){
                 return $this->success("修改成功!");
             }else{
                 return $this->error("添加失败");
             }
         }else{
             $map['id'] = input('param.id');
-            $info = db('module')->field('id,title,name,description,listfields')->where($map)->find();
+            $info = Db::name('module')->field('id,title,name,description,listfields')->where($map)->find();
             $this->result['title'] = '修改模型';
             $this->result['info'] = json_encode($info,true);
             return $this->fetch('form');
@@ -164,7 +164,7 @@ class Module extends \app\admin\Controller
         if(request()->isPost()){
             $nodostatus = array('catid','title','status','create_time');
             $sysfield = array('catid','userid','username','title','thumb','keywords','description','posid','status','create_time','url','template');
-            $list = db('field')->where("moduleid=".input('param.id'))->order('sort asc,id asc')->select();
+            $list = Db::name('field')->where("moduleid=".input('param.id'))->order('sort asc,id asc')->select();
             foreach ($list as $k=>$v){
                 if($v['status']==1){
                     if(in_array($v['field'],$nodostatus)){
@@ -194,7 +194,7 @@ class Module extends \app\admin\Controller
     public function fieldStatus(){
         $map['id']=input('post.id');
         //判断当前状态情况
-        $field = db('field');
+        $field = Db::name('field');
         $status=$field->where($map)->value('status');
         if($status==1){
             $data['status'] = 0;
@@ -213,7 +213,7 @@ class Module extends \app\admin\Controller
         if(input('isajax')) {
             $this->assign(input('get.'));
             $this->assign(input('post.'));
-            $name = db('module')->where(array('id' => input('moduleid')))->value('name');
+            $name = Db::name('module')->where(array('id' => input('moduleid')))->value('name');
             if (input('name')) {
                 $files = Db::getTableFields(config('database.prefix') . $name);
                 if(isset($files['type'][input('name')])){
@@ -230,7 +230,7 @@ class Module extends \app\admin\Controller
             $data = input('post.');
             $fieldName=$data['field'];
             $prefix=config('database.prefix');
-            $name = db('module')->where(array('id'=>$data['moduleid']))->value('name');
+            $name = Db::name('module')->where(array('id'=>$data['moduleid']))->value('name');
             $tablename=$prefix.$name;
             $Fields=Db::getTableFields($tablename);
             if(in_array($fieldName,$Fields)){
@@ -250,7 +250,7 @@ class Module extends \app\admin\Controller
             if(empty($data['class'])){
                 $data['class'] = $data['field'];
             }
-            $model = db('field');
+            $model = Db::name('field');
             if ($model->insert($data) !==false) {
                 savecache('Field',$data['moduleid']);
                 if(is_array($addfieldsql)){
@@ -280,7 +280,7 @@ public function fieldEdit(){
         $data = Request::except('oldfield');
         $oldfield = input('oldfield');
         $fieldName=$data['field'];
-        $name = db('module')->where(array('id'=>$data['moduleid']))->value('name');
+        $name = Db::name('module')->where(array('id'=>$data['moduleid']))->value('name');
         $prefix=config('database.prefix');
         if($this->_iset_field($prefix.$name,$fieldName) && $oldfield!=$fieldName){
                 return $this->error("字段名重复！");
@@ -305,7 +305,7 @@ public function fieldEdit(){
         }
 
 
-        $model = db('field');
+        $model = Db::name('field');
         if (false !== $model->update($data)) {
             savecache('Field',$data['moduleid']);
             if(is_array($editfieldsql)){
@@ -322,7 +322,7 @@ public function fieldEdit(){
             return $this->error("修改失败！");
         }
     }else{
-        $model = db('field');
+        $model = Db::name('field');
         $id = input('param.id');
         if(empty($id)){
             return $this->error("缺少必要的参数！");
@@ -341,7 +341,7 @@ public function fieldEdit(){
 
  //字段排序
  public function listOrder(){
-    $model =db('field');
+    $model =Db::name('field');
     $data = input('post.');
     if($model->update($data)!==false){
        $arr['url'] =  url('/Module/field',array('id'=>input('post.moduleid')));
@@ -353,18 +353,18 @@ public function fieldEdit(){
 
 function fieldDel() {
     $id=input('id');
-    $r = db('field')->find($id);
-    db('field')->delete($id);
+    $r = Db::name('field')->find($id);
+    Db::name('field')->delete($id);
 
     $moduleid = $r['moduleid'];
 
     $field = $r['field'];
 
     $prefix=config('database.prefix');
-    $name = db('module')->where(array('id'=>$moduleid))->value('name');
+    $name = Db::name('module')->where(array('id'=>$moduleid))->value('name');
     $tablename=$prefix.$name;
 
-    db('field')->execute("ALTER TABLE `$tablename` DROP `$field`");
+    Db::name('field')->execute("ALTER TABLE `$tablename` DROP `$field`");
 
     return ['code'=>1,'msg'=>'删除成功！'];
 }
@@ -383,7 +383,7 @@ public function get_tablesql($info,$do){
     }
     $field = $info['field'];
     $prefix = config('database.prefix');
-    $name = db('module')->where(array('id'=>$moduleid))->value('name');
+    $name = Db::name('module')->where(array('id'=>$moduleid))->value('name');
     $tablename=$prefix.$name;
     $maxlength = intval($info['maxlength']);
     $minlength = intval($info['minlength']);

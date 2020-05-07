@@ -3,7 +3,7 @@ namespace app\admin\controller;
 
 class AttributeController extends \app\admin\Controller
 {
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
     }

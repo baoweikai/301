@@ -21,12 +21,19 @@ return [
     // 默认时区
     'default_timezone' => 'Asia/Shanghai',
 
+    // 
+    'app_name' => '301',
+
     // 应用映射（自动多应用模式有效）
     'app_map'          => [],
     // 域名绑定（自动多应用模式有效）
-    'domain_bind'      => [],
+    'domain_bind'      => [
+        'admin' =>  'admin',  
+        'user'  =>  'user',  
+        // '*'     =>  'index'
+    ],
     // 禁止URL访问的应用列表（自动多应用模式有效）
-    'deny_app_list'    => [],
+    'deny_app_list'    => ['common'],
 
     // 异常页面的模板文件
     'exception_tmpl'   => app()->getThinkPath() . 'tpl/think_exception.tpl',

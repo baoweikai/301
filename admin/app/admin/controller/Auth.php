@@ -3,13 +3,14 @@ namespace app\admin\controller;
 
 use app\admin\service\AuthService;
 use think\facade\Json;
+use think\facade\Db;
 use com\LeftNav;
 
 class Auth extends \app\admin\Controller
 {
     public  $authService;
     public $leftNav;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->authService = new AuthService();
@@ -22,7 +23,7 @@ class Auth extends \app\admin\Controller
         if(request()->isPost()){
             $result = cache('adminRuleList');
             if(!$result){
-				$result = model('AdminRule')->order('pid asc,sort asc')->select();
+				$result = Db::name('AdminRule')->order('pid asc,sort asc')->select();
 				foreach($result as $k=>$v){
                     $result[$k]['lay_is_open'] = false;
                 }
@@ -38,18 +39,18 @@ class Auth extends \app\admin\Controller
     {
         if(request()->isPost()){
             try {
-                $post_data = input('post.');        
-                $result = $this->authService->ruleAdd($post_data);
+                $post = input('post.');        
+                $result = $this->authService->ruleAdd($post);
                 if(!$result){
-                    return $this->error($this->authService->getError());
+                    return $this->error($this->authService->error);
                 }
-                return $this->success($this->authService->getError(),$result);
+                return $this->success($this->authService->error,$result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
         }else{        
             $pid = intval(input('pid'));
-            $adminRule = model('AdminRule')->all(function($query){
+            $adminRule = Db::name('AdminRule')->all(function($query){
                 $query->order('sort', 'asc');
             });
             $result = $this->leftNav->menu($adminRule);
@@ -64,25 +65,25 @@ class Auth extends \app\admin\Controller
     {
         if(request()->isPost()){
             try {
-                $post_data = input('post.');        
-                $result = $this->authService->ruleEdit($post_data);
+                $post = input('post.');        
+                $result = $this->authService->ruleEdit($post);
                 if(!$result){
-                    return $this->error($this->authService->getError());
+                    return $this->error($this->authService->error);
                 }
-                return $this->success($this->authService->getError(),$result);
+                return $this->success($this->authService->error,$result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
         }else{
             //菜单分类
-            $adminRule = model('AdminRule')->all(function($query){
+            $adminRule = Db::name('AdminRule')->all(function($query){
                 $query->order('sort', 'asc');
             });
             $result = $this->leftNav->menu($adminRule);
             cache('adminRuleList', $adminRule, 3600);
             $this->result['admin_rule'] = $result;//权限列表
             //权限详情
-            $rule = model('AdminRule')->get(function($query){
+            $rule = Db::name('AdminRule')->get(function($query){
                 $query->where(['id'=>input('id')])->field('id,href,title,icon,sort,pid,status');
             });
             $this->result['rule'] = $rule;
@@ -99,9 +100,9 @@ class Auth extends \app\admin\Controller
             $status = input('status',0); 
             $result = $this->authService->setRuleStatus($rule_id,$status);
             if(!$result){
-                return $this->error($this->authService->getError());
+                return $this->error($this->authService->error);
             }
-            return $this->success($this->authService->getError(),$result);
+            return $this->success($this->authService->error,$result);
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
@@ -116,9 +117,9 @@ class Auth extends \app\admin\Controller
             $authopen = input('authopen',0); 
             $result = $this->authService->setRuleOpen($rule_id,$authopen);
             if(!$result){
-                return $this->error($this->authService->getError());
+                return $this->error($this->authService->error);
             }
-            return $this->success($this->authService->getError(),$result);
+            return $this->success($this->authService->error,$result);
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
@@ -130,9 +131,9 @@ class Auth extends \app\admin\Controller
             $rule_id = input('rule_id',0);        
             $result = $this->authService->ruleDel($rule_id);
             if(!$result){
-                return $this->error($this->authService->getError());
+                return $this->error($this->authService->error);
             }
-            return $this->success($this->authService->getError(),$result);
+            return $this->success($this->authService->error,$result);
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
@@ -142,9 +143,9 @@ class Auth extends \app\admin\Controller
 		try {
 			$result = $this->authService->clearNode(); 
 			if (!$result) {
-			    return $this->error($this->authService->getError());
+			    return $this->error($this->authService->error);
 			}
-			return $this->success($this->authService->getError(), $result);
+			return $this->success($this->authService->error, $result);
 		} catch (\Exception $e) {
 			return $this->error($e->getMessage());
 		}
@@ -155,14 +156,14 @@ class Auth extends \app\admin\Controller
     public function  ruleSort()
     {
         try {
-            $post_data = input();        
-            $result = $this->authService->ruleSort($post_data['rule_id'],$post_data['sort']);
+            $post = input();        
+            $result = $this->authService->ruleSort($post['rule_id'],$post['sort']);
             if(!$result){
-                return $this->error($this->authService->getError());
+                return $this->error($this->authService->error);
             }
          
             $arr['url'] = url('/Auth/ruleList');
-            return $this->success($this->authService->getError(),$arr);
+            return $this->success($this->authService->error,$arr);
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         } 
@@ -191,12 +192,12 @@ class Auth extends \app\admin\Controller
     {
         if(request()->isPost()){
             try {
-                $post_data = input('post.');        
-                $result = $this->authService->groupAdd($post_data);
+                $post = input('post.');        
+                $result = $this->authService->groupAdd($post);
                 if(!$result){
-                    return $this->error($this->authService->getError());
+                    return $this->error($this->authService->error);
                 }
-                return $this->success($this->authService->getError(),$result);
+                return $this->success($this->authService->error,$result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -212,12 +213,12 @@ class Auth extends \app\admin\Controller
     {
         if(request()->isPost()){
             try {
-                $post_data = input('post.');        
-                $result = $this->authService->groupEdit($post_data);
+                $post = input('post.');        
+                $result = $this->authService->groupEdit($post);
                 if(!$result){
-                    return $this->error($this->authService->getError());
+                    return $this->error($this->authService->error);
                 }
-                return $this->success($this->authService->getError(),$result);
+                return $this->success($this->authService->error,$result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -237,9 +238,9 @@ class Auth extends \app\admin\Controller
             $rule_id = input('group_id',0);        
             $result = $this->authService->groupDel($rule_id);
             if(!$result){
-                return $this->error($this->authService->getError());
+                return $this->error($this->authService->error);
             }
-            return $this->success($this->authService->getError(),$result);
+            return $this->success($this->authService->error,$result);
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
@@ -248,12 +249,12 @@ class Auth extends \app\admin\Controller
     public function setGroupStatus()
     {
         try {
-            $post_data = input();
-            $result = $this->authService->setGroupStatus($post_data['group_id'],$post_data['status']);
+            $post = input();
+            $result = $this->authService->setGroupStatus($post['group_id'],$post['status']);
             if(!$result){
-                return $this->error($this->authService->getError());
+                return $this->error($this->authService->error);
             }
-            return $this->success($this->authService->getError(),$result);
+            return $this->success($this->authService->error,$result);
         } catch (\Exception $e) {
             return $this->error($e->getMessage());
         }
@@ -270,7 +271,7 @@ class Auth extends \app\admin\Controller
                 }
                 $data = input('post.');
                 $where['id'] = $data['group_id'];
-                if(model('AdminGroup')->update($data,$where)){
+                if(Db::name('AdminGroup')->update($data,$where)){
                     $result['url'] = url('/Auth/groupList');
                     return $this->success('权限配置成功',$result);
                 }else{
@@ -280,8 +281,8 @@ class Auth extends \app\admin\Controller
                 return $this->error($e->getMessage());
             } 
         }else{
-            $admin_rule=model('AdminRule')->field('id,pid,title')->order('sort asc')->select();
-            $rules = db('AdminGroup')->where('id',input('id'))->value('rules');
+            $admin_rule=Db::name('AdminRule')->field('id,pid,title')->order('sort asc')->select();
+            $rules = Db::name('AdminGroup')->where('id',input('id'))->value('rules');
             $arr =  $this->leftNav->auth($admin_rule,$pid=0,$rules);
             $arr[] = array(
                 "id"=>0,

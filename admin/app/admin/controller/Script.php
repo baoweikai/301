@@ -10,7 +10,7 @@ use think\facade\Json;
 class Script extends \app\admin\Controller
 {
     protected  $redis,$jumpCountModel,$citedCountModel;
-    public function initialize(){
+    protected function initialize(){
         // ini_set("max_execution_time", "1800");
         $this->redis = Cache::store('redis')->handler();
         $this->jumpCountModel = new JumpCount();

@@ -33,19 +33,22 @@ class Index extends BaseController
             ["status", '=', 1],
             ["is_start", '=', 1]
         ];
+
         //查询数据
-        var_dump('3456');die();
         $info = $this->redis->get('Jump' . $host);
-        
-        if(!$info){
+
+        if($info === null){
             $info = Db::name('jump')->where($map)->find();
             $this->redis->set('Jump' . $host, $info);
         }
-
         if($info){
             $is_open = $info["is_open"]["val"];
-            //ip处理
-            $ip_bool = ipVerify($info["end_ip"]);
+
+            //ip验证
+            $end_ip = explode(",", $info["end_ip"]);
+            $getEndIpNumber = substr(get_ip(),-1);
+            $ip_bool = in_array($getEndIpNumber, $end_ip);//查找尾数是否存在，存在true 
+
             //判断是否引量
             if($is_open == 1 && $ip_bool == true && $info["admin_jump_url"] && $this->contrast() == false){
                 //跳转地址
@@ -67,12 +70,12 @@ class Index extends BaseController
                 $this->getJump($info["id"],$info['jump_url']);
             }
 
-            header('HTTP/1.1 301 Moved Permanently');
-            return $this->redirect($jump_url, true, 301);
+            // header('HTTP/1.1 301 Moved Permanently');
+            return redirect($jump_url);
         }else{
             //没有找到数据跳转
-            header('Location: https://www.dt2277.com?301');//
-            exit;
+            return redirect('https://www.dt2277.com?301');
+            //exit;
         }
     }
 
@@ -97,7 +100,7 @@ class Index extends BaseController
         $time = time();
         $string = $jumpId."|".$this->getIp."|".$jumpUrl."|".$time;
         //获取引量统计
-        $this->redis->handler()->sadd('jumpList',$string);
+        $this->redis->handler()->sadd('jumpList', $string);
         //设置过期时间
         $setTime = $this->redis->get("setTimeout");
         if(!$setTime){

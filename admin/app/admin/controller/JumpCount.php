@@ -7,7 +7,7 @@ use think\facade\Json;
 class JumpCount extends \app\admin\Controller
 {
     protected $time_slot;
-    public function initialize()
+    protected function initialize()
     {
         parent::initialize();
         $this->time_slot = config("time_slot");
@@ -49,7 +49,7 @@ class JumpCount extends \app\admin\Controller
 
             $jump_id = input("id",0,'int');
             //查询被墙域名
-            $shield_url = model("Jump")->where("id=".$jump_id)->value("shield_url");
+            $shield_url = Db::name("Jump")->where("id=".$jump_id)->value("shield_url");
             $title=$shield_url."-曲线图";
             $this->result['title'] = $title;
             //曲线图

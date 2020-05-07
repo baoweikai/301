@@ -2,6 +2,7 @@
 namespace app\user\controller;
 
 use think\facade\Json;
+use think\facade\Db;
 
 class Recharge extends \app\user\Controller
 {
@@ -37,16 +38,16 @@ class Recharge extends \app\user\Controller
     {
        if (request()->isPost()) {
            try {
-               $model = model(CONTROLLER_NAME);
-               $post_data = request()->post();
+               $model = Db::name(CONTROLLER_NAME);
+               $post = request()->post();
                $validate = validate(CONTROLLER_NAME);
-               if (!$validate->check($post_data)) {
-                   return $this->error($validate->getError());
+               if (!$validate->check($post)) {
+                   return $this->error($validate->error);
                }
-               $map["id"] = (int)$post_data["user_id"];
-               $number =(int)$post_data["number"];
-               model("User")->where($map)->setInc("number",$number);
-               $result = $model->create($post_data);
+               $map["id"] = (int)$post["user_id"];
+               $number =(int)$post["number"];
+               Db::name("User")->where($map)->setInc("number",$number);
+               $result = $model->create($post);
                if(!$result) {
                    return $this->error('充值失败');
                }
@@ -58,7 +59,7 @@ class Recharge extends \app\user\Controller
        }else{
            $this->result['title'] = '充值';
            $map["id"] = (int)input("userId");
-           $userInfo = model("User")->get($map);
+           $userInfo = Db::name("User")->where($map)->find();
            $this->result['info'] = $userInfo;
            return $this->fetch('form');
        }

@@ -3,7 +3,7 @@ namespace app\admin\controller;
 use think\facade\Request;
 use think\facade\Json;
 use think\facade\Validate;
-
+use think\facade\Db;
 
 class Base extends \app\admin\Controller 
 {
@@ -12,7 +12,7 @@ class Base extends \app\admin\Controller
     /**
      * 后台控制器基础类
      */
-    public function initialize()
+    protected function initialize()
     {
         define('UID', is_login());
 		define('MODULE_NAME',request()->module());
@@ -25,13 +25,13 @@ class Base extends \app\admin\Controller
 		}
         //当前操作权限ID
         if( UID != 1){
-			$this->HrefId = model('AdminRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
+			$this->HrefId = Db::name('AdminRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
             //当前管理员权限
 			$map['a.id'] = UID;
 			$join_arr =[
 				0=>['AdminGroup g','a.group_id = g.id','LEFT'],
 			];
-			$rules = model('AdminUser')->alias('a')->join($join_arr)->where($map)->value('g.rules');
+			$rules = Db::name('AdminUser')->alias('a')->join($join_arr)->where($map)->value('g.rules');
 			$this->adminRules = explode(',',$rules);
 
             if($this->HrefId){
@@ -114,12 +114,12 @@ class Base extends \app\admin\Controller
 		if (request()->isPost()) {
 			try {
 				$model = model(CONTROLLER_NAME);
-				$post_data = request()->post();
+				$post = request()->post();
 				$validate = validate(CONTROLLER_NAME);
-				if (!$validate->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->check($post)) {
+					return $this->error($validate->error);
 				}
-				$result = $model->create($post_data);
+				$result = $model->create($post);
 				if(!$result) {
 					return $this->error('添加失败');
 				}
@@ -142,12 +142,12 @@ class Base extends \app\admin\Controller
 		if (request()->isPost()) {
 			try {
 
-				$post_data = request()->post();
+				$post = request()->post();
 				$validate = validate(CONTROLLER_NAME);
-				if (!$validate->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->check($post)) {
+					return $this->error($validate->error);
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('编辑失败');
 				}
@@ -158,7 +158,7 @@ class Base extends \app\admin\Controller
 
 		} else {
 			$id =input($model->getPk());
-			$info = $model->get($id);
+			$info = $model->where('id', $id)->find();
 			$this->result['title'] = '编辑';
 			$this->result['info'] = json_encode($info, true);
 			return $this->fetch('form');
@@ -179,7 +179,7 @@ class Base extends \app\admin\Controller
 			$name = CONTROLLER_NAME;
 		}
 		$map["id"] = ['in', $id];
-		$info = model($name)->get($map);
+		$info = model($name)->where($map)->find();
 		$info = $info->toArray();
 		if(array_key_exists('litpic',$info)){
 			if($info['litpic']) {
@@ -198,14 +198,14 @@ class Base extends \app\admin\Controller
 		if (request()->isPost()) {
 			try {
 				$model = model(CONTROLLER_NAME);
-				$post_data = request()->post();
-				if(!array_key_exists('id',$post_data)){
+				$post = request()->post();
+				if(!array_key_exists('id',$post)){
 					return $this->error('ID不存在');
 				}
-				if (!array_key_exists('status', $post_data)) {
+				if (!array_key_exists('status', $post)) {
 					return $this->error('状态错误！！');
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('设置失败');
 				}
@@ -224,15 +224,15 @@ class Base extends \app\admin\Controller
 	{
 		if (request()->isPost()) {
 			$model = model(CONTROLLER_NAME);
-			$post_data = request()->post();
-			if (!array_key_exists('id', $post_data)) {
+			$post = request()->post();
+			if (!array_key_exists('id', $post)) {
 				return $this->error('ID不存在');
 			}
-			if (!array_key_exists('sort', $post_data)) {
+			if (!array_key_exists('sort', $post)) {
 				return $this->error('排序错误！！');
 			}
-			$id = intval($post_data['id']);
-			$data['sort'] = intval($post_data['sort']);
+			$id = intval($post['id']);
+			$data['sort'] = intval($post['sort']);
 			$result = $model->where(['id'=>$id])->update($data);
 			if (!$result) {
 				return $this->error('修改失败');

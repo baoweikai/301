@@ -7,6 +7,7 @@ use think\App;
 use think\exception\ValidateException;
 use think\facade\Validate;
 use think\facade\View;
+use think\facade\Db;
 
 /**
  * 控制器基础类
@@ -38,6 +39,7 @@ abstract class Controller
     protected $middleware = [];
 
     protected $mod,$role,$system,$nav,$menudata,$cache_model,$categorys,$module,$moduleid,$adminRules,$HrefId;
+    protected $result = [];
 
     /**
      * 构造方法
@@ -50,7 +52,7 @@ abstract class Controller
         $this->request = $this->app->request;
 
         // 控制器初始化
-        $this->initialize();
+        return $this->initialize();
     }
 
     /**
@@ -61,21 +63,22 @@ abstract class Controller
         define('UID', is_login());
 		define('MODULE_NAME', app('http')->getName());
 		define('CONTROLLER_NAME', request()->controller());
-		define('ACTION_NAME', request()->action());
-        if (!UID && CONTROLLER_NAME != "Publics") {
+        define('ACTION_NAME', request()->action());
+        if (!UID && CONTROLLER_NAME != "Identity") {
 			//转到登录页面
-			$_SESSION["refurl"] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
-			return redirect("/public/login");
+            $_SESSION["refurl"] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
+            header('Location: ' . request()->domain() . '/admin/identity/login');
+            die();
 		}
         //当前操作权限ID
+
+
         if( UID != 1){
-			$this->HrefId = model('AdminRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
+			$this->HrefId = Db::name('AdminRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
             //当前管理员权限
 			$map['a.id'] = UID;
-			$join_arr =[
-				0=>['AdminGroup g','a.group_id = g.id','LEFT'],
-			];
-			$rules = model('AdminUser')->alias('a')->join($join_arr)->where($map)->value('g.rules');
+			// $join_arr =['AdminGroup g', 'a.group_id = g.id'];
+            $rules = Db::name('AdminUser')->alias('a')->leftjoin('AdminGroup g', 'a.group_id = g.id')->where($map)->value('g.rules');
 			$this->adminRules = explode(',',$rules);
 
             if($this->HrefId){

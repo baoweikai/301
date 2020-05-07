@@ -7,7 +7,7 @@ use com\Form;
 class Page extends \app\admin\Controller
 {
     protected  $dao,$fields;
-    public function initialize()
+    protected function initialize()
     {
 		parent::initialize();
         $this->moduleid = $this->mod[strtolower(CONTROLLER_NAME)];
@@ -29,12 +29,12 @@ class Page extends \app\admin\Controller
 		if (request()->isPost()) {
 			try {
 
-				$post_data = request()->post();
+				$post = request()->post();
 				$validate = validate(CONTROLLER_NAME);
-				if (!$validate->check($post_data)) {
-					return $this->error($validate->getError());
+				if (!$validate->check($post)) {
+					return $this->error($validate->error);
 				}
-				$result = $model->update($post_data);
+				$result = $model->update($post);
 				if (!$result) {
 					return $this->error('编辑失败');
 				}
@@ -45,7 +45,7 @@ class Page extends \app\admin\Controller
 
 		} else {
 			$id =input($model->getPk());
-			$info = $model->get($id);
+			$info = $model->where('id', $id)->find();
 			$form=new Form($info);
 
 			$this->result['info'] = $info;
