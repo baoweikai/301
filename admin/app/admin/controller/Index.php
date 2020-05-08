@@ -57,7 +57,7 @@ class Index extends \app\admin\Controller
 
     //清除缓存
     public function clear(){
-        $R = Env::get('runtime_path');
+        $R = env('runtime_path');
         if (!$this->_deleteDir($R)) {
             return $this->error('清除缓存失败');
         } 

@@ -13,7 +13,7 @@ return [
     // 是否启用事件
     'with_event'       => true,
     // 默认应用
-    'default_app'      => 'user',
+    'default_app'      => 'index',
     // 默认控制器名
     'default_controller'  => 'index',
     // 默认操作名
@@ -30,7 +30,7 @@ return [
     'domain_bind'      => [
         'admin' =>  'admin',  
         'user'  =>  'user',  
-        // '*'     =>  'index'
+        '*'     =>  'index'
     ],
     // 禁止URL访问的应用列表（自动多应用模式有效）
     'deny_app_list'    => ['common'],

@@ -13,7 +13,7 @@ class Template extends \app\admin\Controller
         $viewPath = config('template.view_path');
         $this->viewSuffix = config('template.view_suffix');
 		$viewPath = $viewPath ? $viewPath : 'view';
-        $this->filepath =  Env::get('app_path').config('default_module').'/'.$viewPath.'/';
+        $this->filepath =  env('app_path').config('default_module').'/'.$viewPath.'/';
         $this->publicpath =  'static/Home/';
 		$this->result['viewSuffix'] = $this->viewSuffix;
     }

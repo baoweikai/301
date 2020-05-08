@@ -92,7 +92,7 @@ class AdminUser extends Model
 			'last_login_ip' => $ip,
         ];
 
-        session('admin',time());
+		session('admin',time());
 		$this->where(array('id' => $user['id']))->update($data);
 		cache('user_auth_'.session('admin'), $auth, 3600);
 		cache('user_auth_sign_'.session('admin'), data_auth_sign($auth), 3600);

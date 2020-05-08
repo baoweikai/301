@@ -2,7 +2,6 @@
 namespace app\user\controller;
 
 use app\common\model\User;
-// use think\response\Json;
 
 class Identity extends \app\user\Controller
 {

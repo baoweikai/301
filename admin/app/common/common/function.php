@@ -1,4 +1,6 @@
 <?php
+use think\facade\Db;
+
 /**
  * 系统公共库文件
  * 主要定义系统公共函数库
@@ -8,7 +10,7 @@
 function savecache($name = '',$id='') {
 	if($name=='Field'){
 			if($id){
-					$Model = db($name);
+					$Model = Db::name($name);
 					$data = $Model->order('sort')->where('moduleid='.$id)->column('*', 'field');
 					$name=$id.'_'.$name;
 					$data = $data ? $data : null;
@@ -20,11 +22,11 @@ function savecache($name = '',$id='') {
 					}
 			}
 	}elseif($name=='System'){
-			$Model = db ( $name );
+			$Model = Db::name( $name );
 			$list = $Model->where(array('id'=>1))->find();
 			cache($name, $list);
 	}elseif($name=='Module'){
-			$Model = db ( $name );
+			$Model = Db::name( $name );
 			$list = $Model->order('sort')->select ();
 			$pkid = $Model->getPk ();
 			$data = array ();
@@ -36,7 +38,7 @@ function savecache($name = '',$id='') {
 			cache($name, $data);
 			cache('Mod', $smalldata);
 	}elseif($name == 'cm'){
-			$list = db('category')
+			$list = Db::name('category')
 					->alias('c')
 					->join('module m','c.moduleid = m.id')
 					->order('c.sort')
@@ -44,7 +46,7 @@ function savecache($name = '',$id='') {
 					->select();
 			cache($name, $list);
 	}else{
-			$Model = db ($name);
+			$Model = Db::name($name);
 			$list = $Model->order('sort')->select ();
 			$pkid = $Model->getPk ();
 			$data = array ();
@@ -62,7 +64,7 @@ function savecache($name = '',$id='') {
  * @return integer 0-未登录，大于0-当前登录用户ID
  */
 function is_login() {
-	$user = cache('user_auth_' . session('admin'));
+    $user = cache('user_auth_' . session('admin'));
 	if (empty($user)) {
 		return 0;
 	} else {
@@ -104,7 +106,7 @@ function template_file($module=''){
     $viewPath = config('template.view_path');
     $viewSuffix = config('template.view_suffix');
     $viewPath = $viewPath ? $viewPath : 'view';
-	$filepath = think\facade\Env::get('app_path').strtolower(config('default_module')).'/'.$viewPath.'/';
+	$filepath = env('app_path').strtolower(config('default_module')).'/'.$viewPath.'/';
 
     $tempfiles = dir_list($filepath,$viewSuffix);
     $arr=[];
@@ -149,7 +151,7 @@ function fileext($filename) {
     return strtolower(trim(substr(strrchr($filename, '.'), 1, 10)));
 }
 function checkField($table,$value,$field){
-    $count = db($table)->where(array($field=>$value))->count();
+    $count = Db::name($table)->where(array($field=>$value))->count();
     if($count>0){
         return true;
     }else{

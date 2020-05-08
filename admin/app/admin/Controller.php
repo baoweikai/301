@@ -64,10 +64,11 @@ abstract class Controller
 		define('MODULE_NAME', app('http')->getName());
 		define('CONTROLLER_NAME', request()->controller());
         define('ACTION_NAME', request()->action());
+
         if (!UID && CONTROLLER_NAME != "Identity") {
 			//转到登录页面
             $_SESSION["refurl"] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
-            header('Location: ' . request()->domain() . '/admin/identity/login');
+            header('Location: ' . url('/identity/login'));
             die();
 		}
         //当前操作权限ID
@@ -150,7 +151,7 @@ abstract class Controller
     protected function error($msg, $code = 201, $result = []){
         $ret = [
             'state' => $code,
-            'message'  => $msg,
+            'msg'  => $msg,
             'result' => $result,
         ];
 
@@ -160,7 +161,7 @@ abstract class Controller
     protected function success($result = [], $msg = ''){
         $ret = [
             'state' => 200,
-            'message'  => $msg,
+            'msg'  => $msg,
             'result' => $result,
         ];
 

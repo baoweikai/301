@@ -16,7 +16,7 @@ class System extends \app\admin\Controller
     protected function initialize()
     {
         parent::initialize();
-        $this->path =  Env::get("app_path").'/common/config/system.php';
+        $this->path =  env("app_path").'/common/config/system.php';
         $this->sysData = include $this->path;
         $this->sysModel = new System();
     }
@@ -153,7 +153,7 @@ class System extends \app\admin\Controller
     {
         if (request()->isPost()) {
             try { 
-             $result = $this->staticFetch(true,Env::get("root_path")."application/home/view/index/index.html");
+             $result = $this->staticFetch(true,env("root_path")."application/home/view/index/index.html");
              if(!$result){
                  return $this->error("生成失败");
              }

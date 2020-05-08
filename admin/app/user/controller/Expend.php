@@ -1,7 +1,6 @@
 <?php
 namespace app\user\controller;
 
-use think\facade\Json;
 use think\facade\Db;
 
 class Expend extends \app\user\Controller
