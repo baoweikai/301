@@ -89,8 +89,6 @@ abstract class Controller
         $this->system = cache('System');
         $this->categorys = cache('Category');
 		$this->module = cache('Module');
-		$this->mod = cache('Mod');
-		$this->rule = cache('AdminRule');
 		$this->cm = cache('cm');
 
         $this->result['now_user'] = ['nickname' => ''];

@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\AuthAdmin;
-// use thans\jwt\facade\JWTAuth;
+use thans\jwt\facade\JWTAuth;
 
 class Identity extends \app\admin\Controller{
     private $admin;
@@ -23,7 +23,17 @@ class Identity extends \app\admin\Controller{
             */
             $model = new AuthAdmin();
             $result = $model->login($post['username'], $post['password']);
-            if(!$result) {
+            if($result){ 
+                // 获取token
+                try{
+                    $token = JWTAuth::builder(['id' => $user['id'], 'account' => $user['username']]);
+                    cookie('token', $token);
+                    return ['access_token' => $token];  //参数为用户认证的信息，请自行添加
+                } catch(\Exception $e){
+                    $this->error = $e->getMessage();
+                    return false;
+                }
+            } else {
                 return $this->error($model->error);
             }
             return $this->success($model->error, $result);
