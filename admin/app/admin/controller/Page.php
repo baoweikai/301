@@ -6,6 +6,7 @@ use com\Form;
 
 class Page extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected  $dao,$fields;
     protected function initialize()
     {

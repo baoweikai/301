@@ -1,7 +1,7 @@
 <?php
 namespace app\common\model;
 
-class JumpModel   extends \think\Model
+class Jump extends \think\Model
 {
     protected $resultSetType = 'collection';
     protected $autoWriteTimestamp = true;

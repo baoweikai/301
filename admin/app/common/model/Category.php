@@ -3,7 +3,7 @@ namespace app\common\model;
 /**
  * 栏目
  */
-class CategoryModel   extends \think\Model
+class Category extends \think\Model
 {
 
 

@@ -1,14 +1,13 @@
 <?php
 namespace app\admin\controller;
 
-use think\Controller;
-use app\admin\model\AdminUser;
-use think\facade\Json;
+use app\admin\model\AuthAdmin;
+// use thans\jwt\facade\JWTAuth;
 
 class Identity extends \app\admin\Controller{
-    private $adminUser;
+    private $admin;
     protected function initialize(){
-        $this->adminUser = new AdminUser();
+        $this->admin = new AuthAdmin();
     }
     public function login()
     {
@@ -22,7 +21,7 @@ class Identity extends \app\admin\Controller{
                return $this->error($validate);
             }
             */
-            $model = new AdminUser();
+            $model = new AuthAdmin();
             $result = $model->login($post['username'], $post['password']);
             if(!$result) {
                 return $this->error($model->error);
@@ -43,11 +42,11 @@ class Identity extends \app\admin\Controller{
         if (request()->isPost()) {
             try{
                 $post = input('post.');
-                $result = $this->adminUser->saveInfo($post);
+                $result = $this->admin->saveInfo($post);
                 if(!$result){
-                    return $this->error($this->adminUser->error);
+                    return $this->error($this->admin->error);
                 }
-                return $this->success($this->adminUser->error, $result);
+                return $this->success($this->admin->error, $result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -65,11 +64,11 @@ class Identity extends \app\admin\Controller{
         if (request()->isPost()) {
             try {
                 $post = input('post.');
-                $result = $this->adminUser->saveUserPwd($post);
+                $result = $this->admin->saveUserPwd($post);
                 if (!$result) {
-                    return $this->error($this->adminUser->error);
+                    return $this->error($this->admin->error);
                 }
-                return $this->success($this->adminUser->error, $result);
+                return $this->success($this->admin->error, $result);
             } catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -84,7 +83,7 @@ class Identity extends \app\admin\Controller{
     public function logout()
     {
         if (is_login()) {
-            $this->adminUser->logout();
+            $this->admin->logout();
 			return $this->success('退出成功！', url('/Publics/login'));
 		} else {
 			return $this->error('您还未登陆哟', url('/Publics/login'));

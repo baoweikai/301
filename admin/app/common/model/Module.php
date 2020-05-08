@@ -3,7 +3,7 @@ namespace app\common\model;
 /**
  * 模型
  */
-class ModuleModel   extends \think\Model
+class Module extends \think\Model
 {
 
     //定义属性

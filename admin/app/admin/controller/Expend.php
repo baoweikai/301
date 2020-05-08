@@ -5,11 +5,7 @@ use think\facade\Db;
 
 class Expend extends \app\admin\Controller
 {
-    protected function initialize()
-    {
-        parent::initialize();
-    }
-
+    protected $middleware = ['auth'];
 
     public function index()
     {

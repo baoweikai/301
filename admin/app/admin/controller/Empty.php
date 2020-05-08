@@ -7,6 +7,7 @@ use clt\Form;
 
 class Empty extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected  $dao,$fields;
     protected function initialize()
     {

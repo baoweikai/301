@@ -1,12 +1,12 @@
 <?php
 namespace app\admin\controller;
 
-use think\Controller;
-use think\facade\Json;
+use app\admin\Controller;
 use think\Image;
 
 class Upload extends Controller
 {
+    protected $middleware = ['auth'];
     public function uploadImg()
     {
         $type = trim(input('type'));

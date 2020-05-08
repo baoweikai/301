@@ -2,10 +2,10 @@
 namespace app\admin\controller;
 
 use think\facade\Db;
-use think\facade\Json;
 
 class JumpCount extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $time_slot;
     protected function initialize()
     {

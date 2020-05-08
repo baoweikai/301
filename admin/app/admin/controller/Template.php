@@ -1,11 +1,10 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Json;
-use think\facade\Env;
 
 class Template extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $filepath,$publicpath,$viewSuffix;
     function initialize()
     {

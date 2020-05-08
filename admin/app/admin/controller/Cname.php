@@ -2,10 +2,10 @@
 namespace app\admin\controller;
 
 use app\common\model\Attribute;
-use think\facade\Json;
 
 class Cname extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $attributeModel,$attrList;
     protected function initialize()
     { 

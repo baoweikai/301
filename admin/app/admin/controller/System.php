@@ -4,7 +4,7 @@ namespace app\admin\controller;
 use think\facade\Json;
 use think\facade\Request;
 use think\facade\Env;
-use app\common\model\System;
+use app\common\model\System as Model;
 use think\facade\Db;
 
 /**
@@ -12,6 +12,8 @@ use think\facade\Db;
  */
 class System extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
+
     public $sysModel,$sysData,$path;
     protected function initialize()
     {

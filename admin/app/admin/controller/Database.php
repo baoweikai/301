@@ -2,11 +2,10 @@
 namespace app\admin\controller;
 
 use com\Backup;
-use think\facade\Json;
-use think\facade\Db;
 
 class Database extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $db = '', $datadir;
     protected function initialize()
     {

@@ -6,6 +6,7 @@ use think\facade\Db;
 
 class AdminUser extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected function initialize()
     {
         parent::initialize();

@@ -64,11 +64,11 @@ function savecache($name = '',$id='') {
  * @return integer 0-未登录，大于0-当前登录用户ID
  */
 function is_login() {
-    $user = cache('user_auth_' . session('admin'));
+    $user = cache('user_auth_' . session('user'));
 	if (empty($user)) {
 		return 0;
 	} else {
-		return cache('user_auth_sign_' . session('admin')) == data_auth_sign($user) ? $user['id'] : 0;
+		return cache('user_auth_sign_' . session('user')) == data_auth_sign($user) ? $user['id'] : 0;
 	}
 }
 
@@ -76,12 +76,13 @@ function is_login() {
  * 检测用户是否登录
  * @return integer 0-未登录，大于0-当前登录用户ID
  */
-function is_user_login() {
-	$user = cache('user_auth_' . session('UserAdmin'));
+function is_admin_login() {
+    $user = cache('user_auth_' . session('admin'));
+
 	if (empty($user)) {
 		return 0;
 	} else {
-		return cache('user_auth_sign_' . session('UserAdmin')) == data_auth_sign($user) ? $user['id'] : 0;
+		return cache('user_auth_sign_' . session('admin')) == data_auth_sign($user) ? $user['id'] : 0;
 	}
 }
 

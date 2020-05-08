@@ -1,17 +1,11 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Json;
 use think\facade\Db;
 
 class Recharge extends \app\admin\Controller
 {
-    protected function initialize()
-    {
-        parent::initialize();
-    }
-
-
+    protected $middleware = ['auth'];
     public function index()
     {
         if (request()->isPost()) {

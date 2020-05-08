@@ -1,41 +1,40 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Env;
-use think\facade\Json;
 use think\facade\Db;
 
 class Index extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     public function index()
     {
         // 获取缓存数据
-        $adminRule = cache('adminRule');
+        $AuthRule = cache('AuthRule');
 
-        if(!$adminRule){
-            $adminRule = Db::name('AdminRule')->where('status', 1)->order('sort')->select()->toArray();
-            cache('adminRule', $adminRule, 3600);
+        if(!$AuthRule){
+            $AuthRule = Db::name('AuthRule')->where('status', 1)->order('sort')->select()->toArray();
+            cache('AuthRule', $AuthRule, 3600);
         }
         //声明数组
         $menus = [];
-        foreach ($adminRule as $key=>$val){
-            $adminRule[$key]['href'] = $val['href'];
+        foreach ($AuthRule as $key=>$val){
+            $AuthRule[$key]['href'] = $val['href'];
             if($val['pid']==0){
-                if(UID != 1){
-                    if(in_array($val['id'],$this->adminRules)){
+                if(request()->uid > 1){
+                    if(in_array($val['id'], $this->AuthRules)){
                         $menus[] = $val;
                     }
-                }else{
+                }elseif(request()->uid === 1){
                     $menus[] = $val;
                 }
             }
         }
 
         foreach ($menus as $k=>$v){
-            foreach ($adminRule as $kk=>$vv){
+            foreach ($AuthRule as $kk=>$vv){
                 if($v['id']==$vv['pid']){
-                    if(UID != 1) {
-                        if (in_array($vv['id'], $this->adminRules)) {
+                    if(request()->uid != 1) {
+                        if (in_array($vv['id'], $this->AuthRules)) {
                            $menus[$k]['children'][]  = $vv;
                         }
                     }else{

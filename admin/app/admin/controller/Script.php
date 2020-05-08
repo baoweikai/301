@@ -4,11 +4,11 @@ namespace app\admin\controller;
 use app\common\model\CitedCount;
 use app\common\model\JumpCount;
 use think\facade\Cache;
-use think\facade\Json;
 
 //脚本
 class Script extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected  $redis,$jumpCountModel,$citedCountModel;
     protected function initialize(){
         // ini_set("max_execution_time", "1800");

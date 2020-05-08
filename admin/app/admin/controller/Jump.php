@@ -7,6 +7,7 @@ use think\facade\Json;
 
 class Jump extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $time_slot;
     protected function initialize()
     {

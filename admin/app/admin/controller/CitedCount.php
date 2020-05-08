@@ -1,9 +1,9 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Json; 
 class CitedCount extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $time_slot;
     protected function initialize()
     {

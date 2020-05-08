@@ -3,10 +3,7 @@ namespace app\admin\controller;
 
 class AttributeController extends \app\admin\Controller
 {
-    protected function initialize()
-    {
-        parent::initialize();
-    }
+    protected $middleware = ['auth'];
 
     protected function _filter(&$map)
     {

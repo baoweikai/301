@@ -60,42 +60,32 @@ abstract class Controller
      */
     protected function initialize()
     {
-        define('UID', is_login());
 		define('MODULE_NAME', app('http')->getName());
 		define('CONTROLLER_NAME', request()->controller());
         define('ACTION_NAME', request()->action());
 
-        if (!UID && CONTROLLER_NAME != "Identity") {
-			//转到登录页面
-            $_SESSION["refurl"] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
-            header('Location: ' . url('/identity/login'));
-            die();
-		}
-        //当前操作权限ID
+        /*
+        $this->HrefId = Db::name('AuthRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
+        //当前管理员权限
+        $admin = Db::name('AuthAdmin')->with('role')->where('id', $uid)->find();
+        var_dump(request()->uid);die();
+        $this->adminRules = explode(',', $admin->rules);
 
-
-        if( UID != 1){
-			$this->HrefId = Db::name('AdminRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
-            //当前管理员权限
-			$map['a.id'] = UID;
-			// $join_arr =['AdminGroup g', 'a.group_id = g.id'];
-            $rules = Db::name('AdminUser')->alias('a')->leftjoin('AdminGroup g', 'a.group_id = g.id')->where($map)->value('g.rules');
-			$this->adminRules = explode(',',$rules);
-
-            if($this->HrefId){
-                if(!in_array($this->HrefId,$this->adminRules)){
-                   return $this->error("您无此操作权限");
-                }
+        if($this->HrefId){
+            if(!in_array($this->HrefId, $this->adminRules)){
+                return $this->error("您无此操作权限");
             }
-		}
+        }
+        */
 			
-		$this->cache_model=array('Module','AdminRule','Category','Posid','Field','System','cm');
+		$this->cache_model=array('Module','AuthRule','Category','Posid','Field','System','cm');
 		//$this->cache_model=array('Module','AdminRule','Category','System','cm');
         foreach($this->cache_model as $r){
             if(!cache($r)){
                 savecache($r);
             }
         }
+
         $this->system = cache('System');
         $this->categorys = cache('Category');
 		$this->module = cache('Module');
@@ -103,7 +93,7 @@ abstract class Controller
 		$this->rule = cache('AdminRule');
 		$this->cm = cache('cm');
 
-        $this->result['now_user'] = cache("user_auth_" . session('admin'));
+        $this->result['now_user'] = ['nickname' => ''];
 	}
 
     /**

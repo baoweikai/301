@@ -1,13 +1,13 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Json;
 use app\common\model\Adtype;
 /**
  * 广告管理
  */
 class Ad extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $AdtypeModel;
     protected function initialize()
     {

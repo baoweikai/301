@@ -1,7 +1,7 @@
 <?php
 namespace app\common\model;
 
-class CnameModel   extends \think\Model
+class Cname extends \think\Model
 {
     protected $resultSetType = 'collection';
     protected $autoWriteTimestamp = true;

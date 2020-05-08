@@ -1,5 +1,6 @@
 <?php
 namespace app\common\model;
+
 class Attribute extends \think\Model
 {
     protected $resultSetType = 'collection';

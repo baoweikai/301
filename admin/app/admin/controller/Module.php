@@ -1,20 +1,20 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Json;
 use think\facade\Db;
 use think\facade\Request;
-use app\common\model\ModuleModel;
+use app\common\model\Module as Model;
 
 class Module extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $dao;
     public $moduleModel;
     protected function initialize()
     {
         parent::initialize();
         $this->dao=Db::name('module');
-        $this->moduleModel = new Module();
+        $this->moduleModel = new Model();
         $field_pattern = [
             ['name'=>'defaul','title'=>'默认'],
             ['name'=>'email','title'=>'电子邮件'],

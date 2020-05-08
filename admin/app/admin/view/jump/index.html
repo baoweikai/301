@@ -19,7 +19,7 @@
     <table class="layui-table" id="list" lay-filter="list"></table>
 </div>
 <script type="text/html" id="name">
-   {{d.title}}{{# if(d.litpic){ }}<img src="/Static/admin/images/image.gif" onmouseover="layer.tips('<img src={{d.litpic}}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();">{{# } }}
+   {{d.title}}{{# if(d.litpic){ }}<img src="/static/admin/images/image.gif" onmouseover="layer.tips('<img src={{d.litpic}}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();">{{# } }}
 </script>
 <script type="text/html" id="order">
     <input name="{{d.id}}" data-id="{{d.id}}" class="list_order layui-input" value=" {{d.sort}}" size="10"/>

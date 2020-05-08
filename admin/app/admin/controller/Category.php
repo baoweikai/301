@@ -2,14 +2,13 @@
 namespace app\admin\controller;
 use think\facade\Db;
 use think\facade\Request;
-use think\facade\Env;
-use think\facade\Json;
 use com\Tree;
 /**
  * 栏目管理
  */
 class Category extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     protected $dao, $categorys , $module,$groupId;
     protected function initialize()
     {

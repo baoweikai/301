@@ -2,12 +2,12 @@
 namespace app\admin\controller;
 
 use app\admin\service\AuthService;
-use think\facade\Json;
 use think\facade\Db;
 use com\LeftNav;
 
 class Auth extends \app\admin\Controller
 {
+    protected $middleware = ['auth'];
     public  $authService;
     public $leftNav;
     protected function initialize()
