@@ -10,40 +10,25 @@ class Index extends \app\admin\Controller
     {
         // 获取缓存数据
         $AuthRule = cache('AuthRule');
+        $uid = request()->uid;
+        $where = [['status', '=', 1]];
+        $uid > 1 && ($where[] = ['id', 'in', $AuthRule]);
 
-        if(!$AuthRule){
-            $AuthRule = Db::name('AuthRule')->where('status', 1)->order('sort')->select()->toArray();
-            cache('AuthRule', $AuthRule, 3600);
-        }
-        //声明数组
+        $rows = Db::name('AuthRule')->where('status', 1)->column('id, title, href, pid', 'id');
+        // 声明数组
         $menus = [];
-        foreach ($AuthRule as $key=>$val){
-            $AuthRule[$key]['href'] = $val['href'];
-            if($val['pid']==0){
-                if(request()->uid > 1){
-                    if(in_array($val['id'], $this->AuthRules)){
-                        $menus[] = $val;
-                    }
-                }elseif(request()->uid === 1){
-                    $menus[] = $val;
+        foreach ($rows as $row){
+            if($row['pid'] === 0) {
+                $menus[$row['id']]  = $row;
+            } else{
+                if(!isset($menus[$row['pid']])){
+                    $menus[$row['pid']] = $rows[$row['pid']];
                 }
+                $menus[$row['pid']]['children'][]  = $row;
             }
         }
 
-        foreach ($menus as $k=>$v){
-            foreach ($AuthRule as $kk=>$vv){
-                if($v['id']==$vv['pid']){
-                    if(request()->uid != 1) {
-                        if (in_array($vv['id'], $this->AuthRules)) {
-                           $menus[$k]['children'][]  = $vv;
-                        }
-                    }else{
-                        $menus[$k]['children'][]  = $vv;
-                    }
-                }
-            }
-        }
-        $this->result['menus'] = json_encode($menus,true);
+        $this->result['menus'] = json_encode($menus, true);
         return $this->fetch();
     }
 

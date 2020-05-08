@@ -23,7 +23,7 @@ class Auth extends \app\admin\Controller
         if(request()->isPost()){
             $result = cache('adminRuleList');
             if(!$result){
-				$result = Db::name('AdminRule')->order('pid asc,sort asc')->select();
+				$result = Db::name('AuthRule')->order('pid asc,sort asc')->select();
 				foreach($result as $k=>$v){
                     $result[$k]['lay_is_open'] = false;
                 }
@@ -50,7 +50,7 @@ class Auth extends \app\admin\Controller
             }
         }else{        
             $pid = intval(input('pid'));
-            $adminRule = Db::name('AdminRule')->all(function($query){
+            $adminRule = Db::name('AuthRule')->all(function($query){
                 $query->order('sort', 'asc');
             });
             $result = $this->leftNav->menu($adminRule);
@@ -76,14 +76,14 @@ class Auth extends \app\admin\Controller
             }
         }else{
             //菜单分类
-            $adminRule = Db::name('AdminRule')->all(function($query){
+            $adminRule = Db::name('AuthRule')->all(function($query){
                 $query->order('sort', 'asc');
             });
             $result = $this->leftNav->menu($adminRule);
             cache('adminRuleList', $adminRule, 3600);
             $this->result['admin_rule'] = $result;//权限列表
             //权限详情
-            $rule = Db::name('AdminRule')->get(function($query){
+            $rule = Db::name('AuthRule')->get(function($query){
                 $query->where(['id'=>input('id')])->field('id,href,title,icon,sort,pid,status');
             });
             $this->result['rule'] = $rule;
@@ -281,7 +281,7 @@ class Auth extends \app\admin\Controller
                 return $this->error($e->getMessage());
             } 
         }else{
-            $admin_rule=Db::name('AdminRule')->field('id,pid,title')->order('sort asc')->select();
+            $admin_rule=Db::name('AuthRule')->field('id,pid,title')->order('sort asc')->select();
             $rules = Db::name('AdminGroup')->where('id',input('id'))->value('rules');
             $arr =  $this->leftNav->auth($admin_rule,$pid=0,$rules);
             $arr[] = array(

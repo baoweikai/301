@@ -25,7 +25,7 @@ class Base extends \app\admin\Controller
 		}
         //当前操作权限ID
         if( UID != 1){
-			$this->HrefId = Db::name('AdminRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
+			$this->HrefId = Db::name('AuthRule')->where('href','/'.CONTROLLER_NAME .'/'.ACTION_NAME)->value('id');
             //当前管理员权限
 			$map['a.id'] = UID;
 			$join_arr =[
@@ -41,8 +41,8 @@ class Base extends \app\admin\Controller
             }
 		}
 			
-		$this->cache_model=array('Module','AdminRule','Category','Posid','Field','System','cm');
-		//$this->cache_model=array('Module','AdminRule','Category','System','cm');
+		$this->cache_model=array('Module','AuthRule','Category','Posid','Field','System','cm');
+		//$this->cache_model=array('Module','AuthRule','Category','System','cm');
         foreach($this->cache_model as $r){
             if(!cache($r)){
                 savecache($r);
@@ -52,7 +52,7 @@ class Base extends \app\admin\Controller
         $this->categorys = cache('Category');
 		$this->module = cache('Module');
 		$this->mod = cache('Mod');
-		$this->rule = cache('AdminRule');
+		$this->rule = cache('AuthRule');
 		$this->cm = cache('cm');
 
         $this->result['now_user'] = cache("user_auth_" . session('admin'));

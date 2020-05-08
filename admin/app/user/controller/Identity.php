@@ -67,9 +67,9 @@ class Identity extends \app\user\Controller
         {
             if (is_user_login()) {
                 $this->userModel->logout();
-                return $this->success('退出成功！', url('/Publics/login'));
+                return $this->success('退出成功！', url('/identity/login'));
             } else {
-                return $this->error('您还未登陆哟', url('/Publics/login'));
+                return $this->error('您还未登陆哟', url('/identity/login'));
             }
         }
     

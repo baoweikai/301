@@ -39,8 +39,8 @@
                     </a>
                     
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;"  onclick="openShow('{:url('/Publics/saveInfo')}','修改信息',600,500);">修改信息</a></dd>
-                        <dd><a href="javascript:;" onclick="openShow('{:url('/Publics/savePwd')}','密码修改',800,500);">修改密码</a></dd>
+                        <dd><a href="javascript:;"  onclick="openShow('{:url(\'/identity/saveInfo\')}','修改信息',600,500);">修改信息</a></dd>
+                        <dd><a href="javascript:;" onclick="openShow('{:url(\'/identity/savePwd\')}','密码修改',800,500);">修改密码</a></dd>
                         <dd>
                             <a href="javascript:void(0);" id="logout" ><i class="fa fa-sign-out" aria-hidden="true"></i>注销</a>
                         </dd>
@@ -93,7 +93,7 @@
             $("#logout").click(function(){
 
                 layer.confirm('确认要注销?', {icon: 3}, function () {
-                    $.post('{:url("/Publics/logout")}',function (data) {
+                    $.post('{:url("/identity/logout")}',function (data) {
                         layer.msg(data.msg, {icon: 6}, function (index) {
                             layer.close(index);
                             window.location.href = data.data.url;
@@ -122,11 +122,11 @@
         },100);
         //超时
         var check_timeout = setInterval(function(){
-          $.post('/Publics/check_timeout','',function(data){
+          $.post('/identity/check_timeout','',function(data){
             if(data.code!=0){
               clearInterval(check_timeout);
               error_yes(data.msg,function(){
-                location.href='/Publics/login.html';
+                location.href='/identity/login.html';
               })
             }
           },'json','no');
@@ -134,6 +134,3 @@
 
         })
     </script>
-</div>
-</body>
-</html>

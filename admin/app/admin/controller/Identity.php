@@ -14,29 +14,23 @@ class Identity extends \app\admin\Controller{
 		if (request()->isPost()) {
             $post = input('post.');
 
-            //验证参数
-            /*
-            $validate = $this->validate($post, 'Login');
-            if (true !== $validate) {
-               return $this->error($validate);
-            }
-            */
             $model = new AuthAdmin();
-            $result = $model->login($post['username'], $post['password']);
-            if($result){ 
+            $user = $model->login($post['username'], $post['password']);
+            if($user){ 
                 // 获取token
                 try{
                     $token = JWTAuth::builder(['id' => $user['id'], 'account' => $user['username']]);
                     cookie('token', $token);
-                    return ['access_token' => $token];  //参数为用户认证的信息，请自行添加
+                    $admin = AuthAdmin::with('role')->where('id', $user['id'])->find();
+
+                    cache('AuthRule', explode(',', $admin->rules));  //参数为用户认证的信息，请自行添加
                 } catch(\Exception $e){
-                    $this->error = $e->getMessage();
-                    return false;
+                    return $this->error($e->getMessage());
                 }
             } else {
                 return $this->error($model->error);
             }
-            return $this->success($model->error, $result);
+            return $this->success($user);
         }else{
             if (is_login()) {
                 return redirect('/');
@@ -92,11 +86,11 @@ class Identity extends \app\admin\Controller{
 
     public function logout()
     {
-        if (is_login()) {
+        if (is_admin_login()) {
             $this->admin->logout();
-			return $this->success('退出成功！', url('/Publics/login'));
+			return $this->success('退出成功！', url('/identity/login'));
 		} else {
-			return $this->error('您还未登陆哟', url('/Publics/login'));
+			return $this->error('您还未登陆哟', url('/identity/login'));
 		}
     }
 
@@ -104,7 +98,7 @@ class Identity extends \app\admin\Controller{
     
     //超时
     public function check_timeout() {
-		if (!is_login()) {
+		if (!is_admin_login()) {
 			return $this->error('亲,请重新登陆~');
 		} else {
 			return $this->success();

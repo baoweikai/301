@@ -1,15 +1,15 @@
 <?php
  namespace app\admin\service;
- use app\admin\model\AdminRuleModel;
+ use app\admin\model\AuthRuleModel;
  use think\facade\Validate;
  use app\admin\model\AdminGroupModel;
  class AuthService {
     private $error = '';
-    private $AdminRuleModel;
+    private $AuthRuleModel;
     private $AdminGroupModel;
 
     public function __construct() {
-        $this->AdminRuleModel = new AdminRuleModel();
+        $this->AuthRuleModel = new AuthRuleModel();
         $this->AdminGroupModel = new AdminGroupModel();
     }
     
@@ -21,18 +21,18 @@
             return false;
         }
         
-        $check = validate('AdminRule');
+        $check = validate('AuthRule');
         if (!$check->check($post)) {
             return $this->error = $check->error;
             return false;
         }
 
-        $result = $this->AdminRuleModel->ruleAdd($post);
+        $result = $this->AuthRuleModel->ruleAdd($post);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->error;
+            return $this->error = $this->AuthRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->error;
+        return $this->error = $this->AuthRuleModel->error;
         return $result;
     }
 
@@ -44,18 +44,18 @@
             return false;
         }
         
-        $check = validate('AdminRule');
+        $check = validate('AuthRule');
         if (!$check->check($post)) {
             return $this->error = $check->error;
             return false;
         }
 
-        $result = $this->AdminRuleModel->ruleEdit($post);
+        $result = $this->AuthRuleModel->ruleEdit($post);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->error;
+            return $this->error = $this->AuthRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->error;
+        return $this->error = $this->AuthRuleModel->error;
         return $result;
     }
 
@@ -67,12 +67,12 @@
              return false;
         }
 
-        $result = $this->AdminRuleModel->ruleDel($rule_id);
+        $result = $this->AuthRuleModel->ruleDel($rule_id);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->error;
+            return $this->error = $this->AuthRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->error;
+        return $this->error = $this->AuthRuleModel->error;
         return $result;
     }
 
@@ -81,12 +81,12 @@
      */
     public function clearNode()
     {
-         $result = $this->AdminRuleModel->clearNode();
+         $result = $this->AuthRuleModel->clearNode();
          if(!$result) {
-             return $this->error = $this->AdminRuleModel->error;
+             return $this->error = $this->AuthRuleModel->error;
              return false;
          }
-         return $this->error = $this->AdminRuleModel->error;
+         return $this->error = $this->AuthRuleModel->error;
          return true;
     }
     //更新角色
@@ -96,12 +96,12 @@
             return $this->error = '不存在数据';
             return  false;
         }
-        $result = $this->AdminRuleModel->saveRole($post);
+        $result = $this->AuthRuleModel->saveRole($post);
         if(!$result){
-            return $this->error = $this->AdminRuleModel->error;
+            return $this->error = $this->AuthRuleModel->error;
             return false;
         } 
-        return $this->error = $this->AdminRuleModel->error;
+        return $this->error = $this->AuthRuleModel->error;
         return $result;
     }
 
@@ -113,12 +113,12 @@
             return $this->error = '节点ID错误';
             return false;
         }
-        $result = $this->AdminRuleModel->setRuleStatus($rule_id,$status);
+        $result = $this->AuthRuleModel->setRuleStatus($rule_id,$status);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->error;
+            return $this->error = $this->AuthRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->error;
+        return $this->error = $this->AuthRuleModel->error;
         return $result;
     }
     
@@ -130,24 +130,24 @@
             return $this->error = '节点ID错误';
             return false;
         }
-        $result = $this->AdminRuleModel->setRuleOpen($rule_id,$authopen);
+        $result = $this->AuthRuleModel->setRuleOpen($rule_id,$authopen);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->error;
+            return $this->error = $this->AuthRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->error;
+        return $this->error = $this->AuthRuleModel->error;
         return $result;
     }
 
     //设置排序
     public function ruleSort($rule_id = 0,$sort)
     {
-        $result = $this->AdminRuleModel->ruleSort($rule_id,$sort);
+        $result = $this->AuthRuleModel->ruleSort($rule_id,$sort);
         if(!$result) {
-            return $this->error = $this->AdminRuleModel->error;
+            return $this->error = $this->AuthRuleModel->error;
             return false;
         }
-        return $this->error = $this->AdminRuleModel->error;
+        return $this->error = $this->AuthRuleModel->error;
         return $result;
     }
 

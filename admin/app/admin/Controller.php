@@ -79,7 +79,7 @@ abstract class Controller
         */
 			
 		$this->cache_model=array('Module','AuthRule','Category','Posid','Field','System','cm');
-		//$this->cache_model=array('Module','AdminRule','Category','System','cm');
+		//$this->cache_model=array('Module','AuthRule','Category','System','cm');
         foreach($this->cache_model as $r){
             if(!cache($r)){
                 savecache($r);
@@ -89,6 +89,7 @@ abstract class Controller
         $this->system = cache('System');
         $this->categorys = cache('Category');
 		$this->module = cache('Module');
+		$this->mod = cache('Mod');
 		$this->cm = cache('cm');
 
         $this->result['now_user'] = ['nickname' => ''];
