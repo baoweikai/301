@@ -1,0 +1,115 @@
+<template>
+  <div>
+    <a-input placeholder="请点击获取数据" style="width: 200px" v-model="label" @click="visible=true" :readOnly="true" />
+
+    <a-modal
+      :closable="false"
+      :centered="true"
+      :visible="visible"
+      @cancel="visible=false"
+      :footer="null"
+    >
+      <a-list
+        itemLayout="vertical"
+        size="small"
+        :pagination="pagination"
+        :dataSource="list"
+        :bordered="true"
+      >
+        <a-list-item slot="renderItem" slot-scope="item" @click="handelChoose(item)">
+          <div class="fjb">
+            <div>{{item.name}}</div>
+            <a-icon v-show="value == item.id" type="check" class="fc-success" />
+          </div>
+        </a-list-item>
+      </a-list>
+    </a-modal>
+  </div>
+</template>
+
+<script>
+import { http, filters } from '@/utils'
+
+export default {
+  name: 'IRelate',
+  props: ['column', 'findColumns', 'controller'],
+  data () {
+    return {
+      visible: false,
+      list: [],
+      pagination: {
+        onChange: (page) => {
+          this.fetch({
+            pageSize: this.pagination.pageSize,
+            page: page,
+            ...this.queryParams
+          })
+        },
+        pageSize: 10,
+        total: 0
+      }
+    }
+  },
+  beforeCreate () {
+    const values = {}
+    values[this.$attrs['data-__field'].name] = { label: '' }
+    this.$store.commit('form/UPDATE', values)
+  },
+  computed: {
+    // 从store读取数据
+    value: {
+      get () {
+        console.log(this.$props)
+        return this.$attrs['data-__field'].value
+      },
+      set (value) {
+        this.$emit('update:data-__field', { value: value, name: this.$attrs['data-__field'].value })
+      }
+    },
+    label: {
+      get () {
+        return this.$attrs.text
+      },
+      set (value) {
+        this.$emit('update:text', value)
+      }
+    }
+  },
+  filters,
+  methods: {
+    fresh (params = {}) {
+      this.queryParams = params
+      this.fetch(params)
+    },
+    fetch (params = {}) {
+      this.loading = true
+      http.get(this.controller + '/select', params).then(result => {
+        this.loading = false
+        this.pagination.total = result.total
+        this.list = result.list
+      })
+    },
+    handelChoose (item) {
+      this.$emit('update:value', item.id)
+      this.label = item.name
+      this.visible = false
+    }
+  },
+  watch: {
+    visible: {
+      handler (newVal, oldVal) {
+        if (newVal) {
+          this.fetch()
+        }
+      }
+    }
+  }
+}
+</script>
+<style scoped>
+.ant-list-item-content { position: relative; }
+.ant-list-item-content i{
+  position: absolute;
+  right: 10px;
+}
+</style>
