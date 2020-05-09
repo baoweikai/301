@@ -23,6 +23,8 @@ layui.define(['element', 'common'], function (exports) {
     };
     //渲染
     Navbar.prototype.render = function (){
+        console.log(this.config.data)
+
         var _that = this;
         var _config = _that.config;
         if (typeof (_config.elem) !== 'string' && typeof (_config.elem) !== 'object') {

@@ -1,4 +1,4 @@
-<include file="common/head"/>
+{include file="common/head" /}
 <style>
     a{text-decoration: none;}
     .table-list ul.pic { list-style: none;}
@@ -52,11 +52,11 @@
                 <volist name="files" id="vo">
                 <li>
                     <span>
-                        <a href="/Static/home/images/{:input('folder')}{$vo.filename}" target="_blank">
+                        <a href="/static/home/images/{:input('folder')}{$vo.filename}" target="_blank">
                             <if condition="!empty($vo['ico'])">
-                            <img src="/Static/home/images/ext/{$vo['ext']}.png">
+                            <img src="/static/home/images/ext/{$vo['ext']}.png">
                             <else />
-                            <img src="/Static/home/images/{:input('folder')}{$vo.filename}" >
+                            <img src="/static/home/images/{:input('folder')}{$vo.filename}" >
                          </if>
                         </a>
                     </span>
@@ -68,7 +68,7 @@
         </div>
     </div>
 </div>
-<script src="/Static/common/js/jquery.2.1.1.min.js"></script>
+<script src="/static/common/js/jquery.2.1.1.min.js"></script>
 <script>
     layui.use('form',function() {
         var form = layui.form, $ = layui.jquery;

@@ -1,4 +1,4 @@
-<include file="common/head"/>
+{include file="common/head" /}
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
@@ -49,7 +49,7 @@
        $('#container').highcharts(json);
     });
     </script>
-<script src="/Static/common/js/angular.min.js"></script>
+<script src="/static/common/js/angular.min.js"></script>
 <script>
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope) {

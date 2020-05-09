@@ -1,7 +1,7 @@
 {include file="common/head"}
 <script>
     var ADMIN = '/static/admin';
-    var navs = {$menus|raw};
+    var navs = '';
 </script>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header header">
@@ -58,7 +58,23 @@
         </div>
     </div>
     <div class="layui-side layui-bg-black" id="admin-side">
-        <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side"></div>
+        <ul class="layui-side-scroll layui-nav layui-nav-tree" lay-filter="side">
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+            {foreach $menus as $menu}
+            {if $menu['children']}
+            <li class="layui-nav-item layui-nav-itemed">
+                <a href="javascript:;">{$menu['title']}</a>
+                <dl class="layui-nav-child">
+                    {foreach $menu['children'] as $child}
+                    <dd><a href="{$child['href']}" target="main">{$child['title']}</a></dd>
+                    {/foreach}
+                </dl>
+            </li>
+            {else}
+            <li class="layui-nav-item"><a href="{$menu['href']}" target="main">{$menu['title']}</a></li>
+            {/if}
+            {/foreach}
+        </ul>
     </div>
     <div class="layui-body" style="bottom: 0;border-left: solid 2px #1AA094;" id="admin-body">
         <div class="layui-tab admin-nav-card layui-tab-brief" lay-filter="admin-tab">
@@ -70,7 +86,7 @@
             </ul>
             <div class="layui-tab-content" style="min-height: 150px; padding: 0;">
                 <div class="layui-tab-item layui-show">
-                    <iframe src="{:url('/Index/main')}"></iframe>
+                    <iframe name="main" src="{:url('/Index/main')}"></iframe>
                 </div>
             </div>
         </div>
@@ -84,7 +100,7 @@
     </div>
     <div class="site-mobile-shade"></div>
 
-    <script src="/static/admin/js/index.js?12345"></script>
+    <script src="/static/admin/js/index.js?123464466889900088"></script>
     <script>
         layui.use('layer',function(){
             var $ = layui.jquery, layer = layui.layer;
@@ -120,6 +136,7 @@
                 $("#checkbox_fixedheader").click();
             }
         },100);
+				/*
         //超时
         var check_timeout = setInterval(function(){
           $.post('/identity/check_timeout','',function(data){
@@ -131,6 +148,6 @@
             }
           },'json','no');
         },8000);
-
+				*/
         })
     </script>

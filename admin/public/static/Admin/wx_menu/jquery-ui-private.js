@@ -146,7 +146,7 @@ $.widget = function( name, base, prototype ) {
 				this._super = __super;
 				this._superApply = __superApply;
 
-				return returnValue;
+				return returnssValue;
 			};
 		} )();
 	} );
@@ -1638,11 +1638,11 @@ var labels = $.fn.labels = function() {
 
 var scrollParent = $.fn.scrollParent = function( includeHidden ) {
 	var position = this.css( "position" ),
-		excludeStaticParent = position === "absolute",
+		excludestaticParent = position === "absolute",
 		overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/,
 		scrollParent = this.parents().filter( function() {
 			var parent = $( this );
-			if ( excludeStaticParent && parent.css( "position" ) === "static" ) {
+			if ( excludestaticParent && parent.css( "position" ) === "static" ) {
 				return false;
 			}
 			return overflowRegex.test( parent.css( "overflow" ) + parent.css( "overflow-y" ) +

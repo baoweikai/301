@@ -65,7 +65,7 @@ class AdminUser extends \app\admin\Controller
         } else {
             $id = $_REQUEST[$model->getPk()];
             $info = $model->where('id', $id)->find();
-            $this->result['title'] = '编辑');
+            $this->result['title'] = '编辑';
             $this->result['info'] = json_encode($info, true);
             return $this->fetch('form');
         }

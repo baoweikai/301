@@ -14,7 +14,7 @@ class Index extends \app\admin\Controller
         $where = [['status', '=', 1]];
         $uid > 1 && ($where[] = ['id', 'in', $AuthRule]);
 
-        $rows = Db::name('AuthRule')->where('status', 1)->column('id, title, href, pid', 'id');
+        $rows = Db::name('AuthRule')->where($where)->column('id, title, href, pid', 'id');
         // 声明数组
         $menus = [];
         foreach ($rows as $row){
@@ -27,14 +27,13 @@ class Index extends \app\admin\Controller
                 $menus[$row['pid']]['children'][]  = $row;
             }
         }
-
-        $this->result['menus'] = json_encode($menus, true);
+        // var_dump($menus);die();
+        $this->result['menus'] = $menus;
         return $this->fetch();
     }
 
     public function main()
     {
-
         return $this->fetch();
     }
 

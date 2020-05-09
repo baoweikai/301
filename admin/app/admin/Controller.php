@@ -77,9 +77,9 @@ abstract class Controller
             }
         }
         */
-			
+
 		$this->cache_model=array('Module','AuthRule','Category','Posid','Field','System','cm');
-		//$this->cache_model=array('Module','AuthRule','Category','System','cm');
+		// $this->cache_model=array('Module','AuthRule','Category','System','cm');
         foreach($this->cache_model as $r){
             if(!cache($r)){
                 savecache($r);

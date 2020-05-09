@@ -1,13 +1,12 @@
 /** index.js By Beginner Emain:zheng_jinfan@126.com HomePage:http://www.zhengjinfan.cn */
-
 var tab;
 
 layui.config({
-    base: '/static/Admin/js/',
+    base: '/static/admin/js/',
     //version: new Date().getTime()
     version: false
-}).use(['element', 'layer', 'navbar', 'tab'], function () {
-    var element = layui.element, $ = layui.jquery,layer = layui.layer,navbar = layui.navbar();
+}).use(['element', 'layer', 'tab'], function () {
+    var element = layui.element, $ = layui.jquery,layer = layui.layer;
     tab = layui.tab({
         elem: '.admin-nav-card', //设置选项卡容器
         maxSetting: {
@@ -45,19 +44,6 @@ layui.config({
         });
     }).resize();
 
-    //设置navbar
-    navbar.set({
-        spreadOne: true,
-        elem: '#admin-navbar-side',
-        cached: true,
-        data: navs
-    });
-    //渲染navbar
-    navbar.render();
-    //监听点击事件
-    navbar.on('click(side)', function (data) {
-        tab.tabAdd(data.field);
-    });
     //清除缓存
     $('#clearCached').on('click', function () {
         navbar.cleanCached();

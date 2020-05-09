@@ -1,4 +1,4 @@
-<include file="common/head"/>
+{include file="common/head" /}
 <div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
     <fieldset class="layui-elem-field layui-field-title">
         <legend>{$title}</legend>
@@ -36,7 +36,7 @@
         </div>
     </form>
 </div>
-<script src="/Static/common/js/angular.min.js"></script>
+<script src="/static/common/js/angular.min.js"></script>
 <script>
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope) {

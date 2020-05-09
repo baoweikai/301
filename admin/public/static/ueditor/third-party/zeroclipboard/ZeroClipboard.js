@@ -923,7 +923,7 @@
       returnVal = tmp.data;
       _clipDataFormatMap = tmp.formatMap;
     }
-    return returnVal;
+    returnVal;
   };
   var _dispatchClientCallbacks = function(event, async) {
     var handlers = _clientMeta[this.id] && _clientMeta[this.id].handlers[event.type];

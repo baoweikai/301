@@ -1,16 +1,16 @@
 <?php
  namespace app\admin\service;
- use app\admin\model\AuthRuleModel;
+ use app\admin\model\AuthRule;
  use think\facade\Validate;
- use app\admin\model\AdminGroupModel;
+ use app\admin\model\AuthRole;
  class AuthService {
     private $error = '';
-    private $AuthRuleModel;
-    private $AdminGroupModel;
+    private $AuthRole;
+    private $AuthRule;
 
     public function __construct() {
-        $this->AuthRuleModel = new AuthRuleModel();
-        $this->AdminGroupModel = new AdminGroupModel();
+        $this->AuthRole = new AuthRole();
+        $this->AuthRule = new AuthRule();
     }
     
     //节点添加
@@ -27,12 +27,12 @@
             return false;
         }
 
-        $result = $this->AuthRuleModel->ruleAdd($post);
+        $result = $this->AuthRule->ruleAdd($post);
         if(!$result) {
-            return $this->error = $this->AuthRuleModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AuthRuleModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -50,12 +50,12 @@
             return false;
         }
 
-        $result = $this->AuthRuleModel->ruleEdit($post);
+        $result = $this->AuthRule->ruleEdit($post);
         if(!$result) {
-            return $this->error = $this->AuthRuleModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AuthRuleModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -67,12 +67,12 @@
              return false;
         }
 
-        $result = $this->AuthRuleModel->ruleDel($rule_id);
+        $result = $this->AuthRule->ruleDel($rule_id);
         if(!$result) {
-            return $this->error = $this->AuthRuleModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AuthRuleModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -81,12 +81,12 @@
      */
     public function clearNode()
     {
-         $result = $this->AuthRuleModel->clearNode();
+         $result = $this->AuthRule->clearNode();
          if(!$result) {
-             return $this->error = $this->AuthRuleModel->error;
+             return $this->error = $this->AuthRule->error;
              return false;
          }
-         return $this->error = $this->AuthRuleModel->error;
+         return $this->error = $this->AuthRule->error;
          return true;
     }
     //更新角色
@@ -96,12 +96,12 @@
             return $this->error = '不存在数据';
             return  false;
         }
-        $result = $this->AuthRuleModel->saveRole($post);
+        $result = $this->AuthRule->saveRole($post);
         if(!$result){
-            return $this->error = $this->AuthRuleModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         } 
-        return $this->error = $this->AuthRuleModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -113,12 +113,12 @@
             return $this->error = '节点ID错误';
             return false;
         }
-        $result = $this->AuthRuleModel->setRuleStatus($rule_id,$status);
+        $result = $this->AuthRule->setRuleStatus($rule_id,$status);
         if(!$result) {
-            return $this->error = $this->AuthRuleModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AuthRuleModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
     
@@ -130,24 +130,24 @@
             return $this->error = '节点ID错误';
             return false;
         }
-        $result = $this->AuthRuleModel->setRuleOpen($rule_id,$authopen);
+        $result = $this->AuthRule->setRuleOpen($rule_id,$authopen);
         if(!$result) {
-            return $this->error = $this->AuthRuleModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AuthRuleModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
     //设置排序
     public function ruleSort($rule_id = 0,$sort)
     {
-        $result = $this->AuthRuleModel->ruleSort($rule_id,$sort);
+        $result = $this->AuthRule->ruleSort($rule_id,$sort);
         if(!$result) {
-            return $this->error = $this->AuthRuleModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AuthRuleModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -169,13 +169,13 @@
         return false;
         }
 
-        $result = $this->AdminGroupModel->groupAdd($post);
+        $result = $this->AuthRule->groupAdd($post);
         if(!$result) {
-        return $this->error = $this->AdminGroupModel->error;
+        return $this->error = $this->AuthRule->error;
         return false;
         }
     
-        return $this->error = $this->AdminGroupModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -192,13 +192,13 @@
         return false;
         }
 
-        $result = $this->AdminGroupModel->groupEdit($post);
+        $result = $this->AuthRule->groupEdit($post);
         if(!$result) {
-        return $this->error = $this->AdminGroupModel->error;
+        return $this->error = $this->AuthRule->error;
         return false;
         }
     
-        return $this->error = $this->AdminGroupModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -206,7 +206,7 @@
     public function getGroupInfo($group_id = 0)
     {
         $group_id = intval($group_id);
-        $result = $this->AdminGroupModel->get($group_id);
+        $result = $this->AuthRule->get($group_id);
         if(!$result){
             return $this->error = '角色不存在';
             return false;
@@ -222,12 +222,12 @@
              return false;
         }
 
-        $result = $this->AdminGroupModel->groupDel($group_id);
+        $result = $this->AuthRule->groupDel($group_id);
         if(!$result) {
-            return $this->error = $this->AdminGroupModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AdminGroupModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
@@ -237,18 +237,18 @@
             return $this->error = 'ID错误';
             return false;
         }
-        $result = $this->AdminGroupModel->setGroupStatus($group_id,$status);
+        $result = $this->AuthRule->setGroupStatus($group_id,$status);
         if(!$result) {
-            return $this->error = $this->AdminGroupModel->error;
+            return $this->error = $this->AuthRule->error;
             return false;
         }
-        return $this->error = $this->AdminGroupModel->error;
+        return $this->error = $this->AuthRule->error;
         return $result;
     }
 
     //返回错误信息
 	public function getError() {
-		return return $this->error;
+		return $this->error;
 	}
  }
 
