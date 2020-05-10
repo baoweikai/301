@@ -14,19 +14,8 @@ return [
     'with_event'       => true,
     // 默认应用
     'default_app'      => 'index',
-    // 默认控制器名
-    'default_controller'  => 'index',
-    // 默认操作名
-    'default_action'      => 'index',
     // 默认时区
     'default_timezone' => 'Asia/Shanghai',
-    // 调试模式
-    'app_debug'              => true,
-    // 应用Trace
-    'app_trace'              => false,
-
-    // 
-    'app_name' => '301',
 
     // 应用映射（自动多应用模式有效）
     'app_map'          => [],
