@@ -1,5 +1,6 @@
 import { message, notification } from 'ant-design-vue'
 import pick from 'lodash.pick'
+import router from '@/utils/perm' // permission control
 
 const tipTypes = {
   success: '成功',
@@ -149,5 +150,10 @@ export default {
       }
       return pre
     }, '')
+  },
+  navto (path) {
+    router.push({ path: path }).catch(err => {
+      console.log(err)
+    })
   }
 }

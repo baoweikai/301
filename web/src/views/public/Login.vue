@@ -92,12 +92,12 @@ export default {
 
           http.post('identity/login', loginParams)
             .then(res => {
-              if (!res.state || res.state === 200) {
+              if (res) {
                 this.Login(res)
                 this.loginSuccess(res)
               }
-            }).catch(e => {
-              console.log('catch:', e)
+            }).catch(() => {
+              // console.log('catch:', e)
             }).finally(() => {
               this.state.loginBtn = false
             })
@@ -107,7 +107,7 @@ export default {
       })
     },
     loginSuccess (res) {
-      this.$router.push({ name: 'Dashboard' })
+      this.$router.push({ name: 'Dashboard' }).catch(() => {})
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         util.notify(`${util.timeFix()}，欢迎回来`)

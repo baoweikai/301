@@ -57,8 +57,6 @@ export default {
   },
   mutations: {
     SET_INFO (state, res) {
-      // state.perms = perms
-      console.log(res)
       storage.set('ACCESS_PERMS', res.perms, 168 * 3600)
       storage.set('ME', { nickname: res.username }, 168 * 3600)
       Object.assign(state, { perms: res.perms, name: res.username })

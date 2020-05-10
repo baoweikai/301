@@ -147,12 +147,14 @@ export default {
 
       http.index(this.controller, Object.assign(this.queryParams, params))
         .then(result => {
-          this.loading = false
-          for (const i in result.columns) {
-            Object.assign(this.$parent.columns[i], result.columns[i])
+          if (result) {
+            this.loading = false
+            for (const i in result.columns) {
+              Object.assign(this.$parent.columns[i], result.columns[i])
+            }
+            this.isPage && (this.pagination.total = result.total)
+            this.list = result.list.map(row => Object.assign(row, { key: `${row.id}` }))
           }
-          this.isPage && (this.pagination.total = result.total)
-          this.list = result.list.map(row => Object.assign(row, { key: `${row.id}` }))
         })
     },
     action (act, id, record) {

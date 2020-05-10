@@ -60,8 +60,7 @@ const http = {
       }
       return false
     }, ({ response: { data, status } }) => {
-      // console.log(response)
-      // util.notify(codes[status], 'error')
+      console.log(status)
       if (status === 401) {
         util.navto('/login')
       }
