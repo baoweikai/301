@@ -4,7 +4,7 @@ namespace app\user\controller;
 use think\facade\Db;
 use think\Json;
 
-class Jump extends \app\user\Controller
+class Jump extends \core\Controller
 {
     public function index()
     {
@@ -24,7 +24,7 @@ class Jump extends \app\user\Controller
                     2 => ['UserCname uc', 'uc.user_id = u.id'],
                     3 => ['Cname c', 'c.id = uc.c_id'],
                 ];
-                $field = 'a.shield_url,a.jump_url,a.status,a.is_param,a.is_start,a.is_expire,a.create_time,c.cname';
+                $field = 'a.shield_url,a.jump_url,a.status,a.is_param,a.is_start,a.is_expire,a.create_at,c.cname';
                 $result = $this->getListJson('Jump', $map, $join_arr, $field);
                 return $this->success($result);
             } catch (\Exception $e) {

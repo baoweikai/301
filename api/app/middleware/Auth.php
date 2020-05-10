@@ -15,11 +15,7 @@ class Auth
             $payload = JWTAuth::getPayload();
             $request->uid = $payload['id']->getValue('id'); 
         } catch (JWTException $e) {
-            if(request()->isPjax()){
-                return json(['state' => 401, 'message' => $e->getMessage()], 401);
-            } else {
-                return redirect('/identity/login');
-            }
+            return json(['message' => $e->getMessage(), 'state' => 401])->code(401);
         }
 
         return $next($request);

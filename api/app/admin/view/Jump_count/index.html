@@ -13,8 +13,8 @@
         <div style="clear: both;"></div>
     </div>
     <table class="layui-table" id="list" lay-filter="list"></table>
-    <script type="text/html" id="create_time">  
-    {{ layui.util.toDateString(d.create_time) }}
+    <script type="text/html" id="create_at">  
+    {{ layui.util.toDateString(d.create_at) }}
 </script>
 </div>
 
@@ -43,7 +43,7 @@
                 {field: 'id', title: 'ID', width: 80, fixed: true},
                 {field: 'jump_url', title: '跳转链接'},
                 {field: 'get_ip', title: 'IP'},
-                {field: 'create_time', title: '添加时间',templet:'#createTime',templet:function(d){return util.toDateString(d.create_time*1000, "yyyy-MM-dd HH:mm:ss");}},
+                {field: 'create_at', title: '添加时间',templet:'#createTime',templet:function(d){return util.toDateString(d.create_at*1000, "yyyy-MM-dd HH:mm:ss");}},
             ]],
             limit:10
         });

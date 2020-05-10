@@ -88,7 +88,7 @@ module.exports = {
     proxy: {
       '/api': {
         // target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-        target: 'http://cz.mm.com/api/',
+        target: 'http://admin.301.com/api/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
@@ -97,7 +97,7 @@ module.exports = {
       },
       '/image': {
         // target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-        target: 'http://cz.mm.com/uploads/',
+        target: 'http://admin.301.com/uploads/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

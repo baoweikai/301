@@ -1,18 +1,18 @@
 <?php
 namespace app\model;
 
-class Jump extends \think\Model
+class Jump extends \core\Model
 {
     protected $resultSetType = 'collection';
     protected $autoWriteTimestamp = true;
-    protected $createTime = 'create_time';
-    protected $updateTime = 'update_time';
+    protected $createTime = 'create_at';
+    protected $updateTime = 'update_at';
     //定义属性
     protected $type = [
         'is_use' => 'integer',
         'status' => 'integer',
-        'create_time' => 'timestamp:Y-m-d H:i:s',
-        'update_time' => 'timestamp:Y-m-d H:i:s',
+        'create_at' => 'timestamp:Y-m-d H:i:s',
+        'update_at' => 'timestamp:Y-m-d H:i:s',
         // 'start_time' =>  'timestamp:Y-m-d H:i:s',
         'expire_time' =>  'timestamp:Y-m-d H:i:s',
     ];

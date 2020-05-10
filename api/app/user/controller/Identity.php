@@ -3,7 +3,7 @@ namespace app\user\controller;
 
 use app\common\model\User;
 
-class Identity extends \app\user\Controller
+class Identity extends \core\Controller
 {
     private $userModel;
     protected function initialize(){

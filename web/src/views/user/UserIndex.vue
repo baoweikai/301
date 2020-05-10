@@ -21,17 +21,9 @@ export default {
       controller: 'user',
       columns: {
         id: { title: 'ID', type: 'string' },
-        username: { title: '用户名', type: 'string' },
-        avatar: { title: '头像', type: 'image' },
-        sex: {
-          title: '性别',
-          type: 'state',
-          options: ['女', '男'],
-          rules: [{ required: true }]
-        },
-        email: { title: '邮箱', type: 'string' },
-        mobile: { title: '手机号', type: 'string' },
-        state: {
+        account: { title: '用户名', type: 'string' },
+        phone: { title: '手机号', type: 'string' },
+        status: {
           title: '状态',
           type: 'state',
           options: ['封禁', '正常'],
@@ -50,10 +42,10 @@ export default {
         }
       },
       // 列表项
-      listItems: ['id', 'username', 'email', 'mobile', 'avatar', 'sex', 'state', 'create_at', 'action'],
+      listItems: ['id', 'account', 'email', 'phone', 'state', 'create_at', 'action'],
       // 表单
       formItems: ['state'],
-      findItems: ['username', 'mobile', 'state']
+      findItems: ['account', 'phone', 'status']
     }
   },
   methods: {}

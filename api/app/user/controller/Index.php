@@ -3,7 +3,7 @@ namespace app\user\controller;
 
 use think\facade\Db;
 
-class Index extends \app\user\Controller
+class Index extends \core\Controller
 {
     public function index()
     {

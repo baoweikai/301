@@ -1,69 +1,34 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Db;
-
-class Recharge extends \app\admin\Controller
+class Recharge extends \core\Controller
 {
     protected $middleware = ['auth'];
+    protected $model = '\app\common\model\Recharge'; // 对应表格
+    protected $name = '管理员';
+
     public function index()
     {
-        if (request()->isPost()) {
-            try { 
-                $keyword = input('keyword');
-				//列表过滤器，生成查询Map对象
-                $map = [];
-                if (!empty($keyword)) {
-        
-                    $map[] = ['a.desc|u.account','like', '%' . $keyword . '%'];
-
-                }
-        
-                $join_arr = [
-                    0 => ['User u', 'u.id = a.user_id']
-                ];
-                $field = 'a.*,u.account';
-                $result = $this->getListJson('Recharge', $map, $join_arr, $field);
-                return $this->success($result);
-            } catch (\Exception $e) {
-                return $this->error($e->getMessage());
-            }
-        } else {
-            return $this->fetch();
-        }
+        return $this->_index();
     }
-
-
-    public function  add()
+    // 添加
+    public function add()
     {
-       if (request()->isPost()) {
-           try {
-               $model = model(CONTROLLER_NAME);
-               $post = request()->post();
-               $validate = validate(CONTROLLER_NAME);
-               if (!$validate->check($post)) {
-                   return $this->error($validate->error);
-               }
-               $map["id"] = (int)$post["user_id"];
-               $number =(int)$post["number"];
-               Db::name("User")->where($map)->setInc("number",$number);
-               $result = $model->create($post);
-               if(!$result) {
-                   return $this->error('充值失败');
-               }
-           return $this->success('充值成功',$result);
-           } catch (\Exception $e) {
-               return $this->error($e->getMessage());
-           }
-
-       }else{
-           $this->result['title'] = '充值';
-           $map["id"] = (int)input("userId");
-           $userInfo = Db::name("User")->where($map)->find();
-           $this->result['info'] = $userInfo;
-           return $this->fetch('form');
-       }
+        return $this->_add();
     }
-
+    // 保存
+    public function save()
+    {
+        return $this->_save();
+    }
+    // 编辑
+    public function edit($id)
+    {
+        return $this->_edit($id);
+    }
+    // 编辑
+    public function update($id)
+    {
+        return $this->_update($id);
+    }
 }
-?>

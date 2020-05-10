@@ -25,16 +25,13 @@ export default {
       columns: {
         id: { title: 'ID', type: 'string' },
         username: { title: '用户名', type: 'string' },
-        email: { title: '邮箱', type: 'string' },
-        mobile: { title: '手机号', type: 'string' },
-        qq: { title: 'QQ', type: 'string' },
-        state: {
+        status: {
           title: '状态', type: 'state', options: ['禁用', '正常', '删除'], rules: [{ required: true }]
         },
         role_id: {
           title: '角色', type: 'radio', options: {}
         },
-        desc: { title: '备注', type: 'string' },
+        last_at: { title: '最后登录', type: 'datetime', format: 'MM-DD' },
         create_at: {
           title: '注册时间', type: 'date', format: 'YYYY-MM-DD', rules: [{ required: true }]
         },
@@ -43,9 +40,9 @@ export default {
         }
       },
       // 列表项
-      listItems: ['id', 'username', 'email', 'role_id', 'qq', 'state', 'create_at', 'desc', 'action'],
+      listItems: ['id', 'username', 'status', 'last_at', 'create_at', 'action'],
       // 表单
-      formItems: ['username', 'email', 'role_id', 'mobile', 'qq', 'state', 'desc'],
+      formItems: ['username', 'role_id', 'state', 'desc'],
       findItems: ['username', 'mobile', 'state']
     }
   },

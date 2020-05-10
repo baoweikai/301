@@ -15,127 +15,45 @@ export const asyncRouterMap = [
         component: () => import('@/views/dashboard/Workplace'),
         meta: { title: '仪表盘', keepAlive: true, icon: 'home' }
       },
-      // 站长
-      {
-        path: '/master/',
-        redirect: '/master/index',
-        component: Page,
-        meta: { title: '站长管理', icon: 'shopping' },
-        children: [
-          {
-            path: 'index',
-            name: 'MasterIndex',
-            component: () => import('@/views/master/MasterIndex'),
-            meta: { title: '站长' }
-          },
-          {
-            path: 'siter',
-            name: 'SiterIndex',
-            component: () => import('@/views/master/SiterIndex'),
-            meta: { title: '站点' }
-          }
-        ]
-      },
       // 资源
       {
         path: '/res/',
-        redirect: '/res/vedio',
+        redirect: '/res/domain',
         component: Page,
         meta: { title: '资源管理', icon: 'shopping' },
         children: [
           {
-            path: 'video',
-            name: 'VedioIndex',
-            component: () => import('@/views/res/VideoIndex'),
-            meta: { title: '视频', keepAlive: true }
-          },
-          {
-            path: 'route',
-            name: 'RouteIndex',
-            component: () => import('@/views/res/RouteIndex'),
-            meta: { title: '播放线路', keepAlive: true }
-          },
-          {
-            path: 'novel',
-            name: 'NovelIndex',
-            component: () => import('@/views/res/NovelIndex'),
-            meta: { title: '小说' }
-          },
-          {
-            path: 'novel/add',
-            name: 'NovelAdd',
-            hidden: true,
-            component: () => import('@/views/res/NovelAdd'),
-            meta: { title: '小说添加' }
-          },
-          {
-            path: 'picture',
-            name: 'PictureIndex',
-            component: () => import('@/views/res/PictureIndex'),
-            meta: { title: '图片' }
-          },
-          {
-            path: 'picture/add',
-            name: 'PictureAdd',
-            hidden: true,
-            component: () => import('@/views/res/PictureAdd'),
-            meta: { title: '图片添加' }
-          },
-          {
-            path: 'video-upload',
-            name: 'UploadIndex',
-            component: () => import('@/views/res/UploadIndex'),
-            meta: { title: '视频上传', keepAlive: true }
-          },
-          {
-            path: 'upload-route',
-            name: 'UploadRouteIndex',
-            component: () => import('@/views/res/UploadRouteIndex'),
-            meta: { title: '上传线路', keepAlive: true }
-          }
-        ]
-      },
-      /*
-      // 广告管理
-      {
-        path: '/adv/',
-        component: Page,
-        redirect: '/adv/index',
-        meta: { title: '广告管理', icon: 'shopping' },
-        children: [
-          {
-            path: 'index',
-            name: 'AdvIndex',
-            component: () => import('@/views/adv/AdvIndex'),
-            meta: { title: '广告列表', keepAlive: true }
-          },
-          {
-            path: 'stat',
-            name: 'AdvStat',
-            component: () => import('@/views/adv/AdvStat'),
-            meta: { title: '广告统计', keepAlive: true }
-          }
-        ]
-      },
-      */
-      // 分类标签
-      {
-        path: '/catetage/',
-        component: Page,
-        redirect: '/catetage/cate',
-        meta: { title: '分类标签', icon: 'shopping' },
-        children: [
-          {
             path: 'cate',
             name: 'CateIndex',
-            component: () => import('@/views/catetag/CateIndex'),
+            component: () => import('@/views/res/CateIndex'),
             meta: { title: '分类', keepAlive: true }
           },
           {
-            path: 'tag',
-            name: 'TagIndex',
-            component: () => import('@/views/catetag/TagIndex'),
-            meta: { title: '标签', keepAlive: true }
+            path: 'domain',
+            name: 'DomainIndex',
+            component: () => import('@/views/res/DomainIndex'),
+            meta: { title: '域名', keepAlive: true }
+          },
+          {
+            path: 'cname',
+            name: 'CnameIndex',
+            component: () => import('@/views/res/CnameIndex'),
+            meta: { title: '别名' }
+          }
+        ]
+      },
+      // 统计
+      {
+        path: '/stat/',
+        redirect: '/res/domain',
+        component: Page,
+        meta: { title: '统计管理', icon: 'shopping' },
+        children: [
+          {
+            path: 'Jump',
+            name: 'JumpIndex',
+            component: () => import('@/views/stat/JumpIndex'),
+            meta: { title: '跳转' }
           }
         ]
       },
@@ -174,10 +92,16 @@ export const asyncRouterMap = [
             meta: { title: '会员', keepAlive: true }
           },
           {
-            path: 'score',
-            name: 'ScoreIndex',
-            component: () => import('@/views/user/ScoreIndex'),
-            meta: { title: '会员统计', keepAlive: true }
+            path: 'expense',
+            name: 'ExpenseIndex',
+            component: () => import('@/views/user/ExpenseIndex'),
+            meta: { title: '消费', keepAlive: true }
+          },
+          {
+            path: 'recharge',
+            name: 'RechargeIndex',
+            component: () => import('@/views/user/RechargeIndex'),
+            meta: { title: '充值', keepAlive: true }
           }
         ]
       },

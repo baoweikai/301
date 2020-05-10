@@ -129,6 +129,6 @@ class Index extends Controller
     //ip验证
     private function contrast()
     {
-        return bolling($this->redis->get($this->jumpIpKey));
+        return booling($this->redis->get($this->jumpIpKey));
     }
 }

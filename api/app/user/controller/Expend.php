@@ -3,7 +3,7 @@ namespace app\user\controller;
 
 use think\facade\Db;
 
-class Expend extends \app\user\Controller
+class Expend extends \core\Controller
 {
     public function index()
     {
@@ -21,7 +21,7 @@ class Expend extends \app\user\Controller
                 $join_arr = [
                     0 => ['User u', 'u.id = a.user_id']
                 ];
-                $field = 'a.number,a.desc,a.create_time,u.account';
+                $field = 'a.number,a.desc,a.create_at,u.account';
                 $result = $this->getListJson('Expend', $map, $join_arr, $field);
                 return $this->success($result);
             } catch (\Exception $e) {

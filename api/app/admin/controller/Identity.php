@@ -1,108 +1,94 @@
 <?php
+
 namespace app\admin\controller;
 
-use app\admin\model\AuthAdmin;
+use core\Controller;
 use thans\jwt\facade\JWTAuth;
-
-class Identity extends \app\admin\Controller{
-    private $admin;
-    protected function initialize(){
-        $this->admin = new AuthAdmin();
-    }
+use think\facade\Request;
+use app\admin\model\Admin as Model;
+/*
+ * 身份验证管理
+ *
+ * @icon 
+ * @remark 一个管理员可以有多个角色组,左侧的菜单根据管理员所拥有的权限进行生成
+ */
+class Identity extends Controller
+{
+    /*
+     * 用户登录
+     * @return string
+     */
     public function login()
     {
-		if (request()->isPost()) {
-            $post = input('post.');
+        if (request()->isGet()) {
+            $this->result['meta']['title'] = '用户登录';
+            $this->result['captcha']['img'] = captcha_src();
+            return $this->success($this->result);
+        }
 
-            $model = new AuthAdmin();
-            $user = $model->login($post['username'], $post['password']);
-            if($user){ 
-                // 获取token
-                try{
-                    $token = JWTAuth::builder(['id' => $user['id'], 'account' => $user['username']]);
-                    cookie('token', $token);
-                    $admin = AuthAdmin::with('role')->where('id', $user['id'])->find();
+        $user = new Model;
+        //渲染配置信息
+        // $this->result['is_captcha'] = config("site.fastadmin.login_captcha");
 
-                    cache('AuthRule', explode(',', $admin->rules));  //参数为用户认证的信息，请自行添加
-                } catch(\Exception $e){
-                    return $this->error($e->getMessage());
-                }
-            } else {
-                return $this->error($model->error);
-            }
-            return $this->success($user);
+        $res = $user->login(input('post.username/s'), input('post.password/s'), input('post.captcha/s'));
+
+        if($res){
+            return $this->success($this->result + $res, '登录成功');
         }else{
-            if (is_login()) {
-                return redirect('/');
-            }else{
-               return $this->fetch();
-            }
+            return $this->error($user->error, 241);
         }
     }
-    //信息编辑
-    public function saveInfo()
+    /*
+     *  短信登录
+     * @return string
+     */
+    public function snslogin()
     {
-        $info = cache("user_auth_" . session('admin'));
-        if (request()->isPost()) {
-            try{
-                $post = input('post.');
-                $result = $this->admin->saveInfo($post);
-                if(!$result){
-                    return $this->error($this->admin->error);
-                }
-                return $this->success($this->admin->error, $result);
-            } catch (\Exception $e) {
-                return $this->error($e->getMessage());
-            }
+        if (request()->isGet()) {
+            $this->result['meta']['title'] = '用户登录';
+            return $this->success($this->result);
+        }
+
+        $user = new Model;
+        $user->accountField = 'mobile';
+
+        $res = $user->snslogin(input('post.mobile/s'), input('post.snscode/s'));
+        if($res){
+            $this->success($this->result + $res, '登录成功');
         }else{
-            $this->result['title'] = '信息编辑';
-            $this->result['info'] = json_encode($info,true);
-            return $this->fetch('saveInfo');
+            $this->error($user->getError(), 241);
         }
     }
 
-    //修改密码
-    public function savePwd()
+    /*
+     * 用户注册
+     * @return string
+     * @throws \think\Exception
+    */
+    public function signup()
     {
-        $info = cache("user_auth_" . session('admin'));
-        if (request()->isPost()) {
-            try {
-                $post = input('post.');
-                $result = $this->admin->saveUserPwd($post);
-                if (!$result) {
-                    return $this->error($this->admin->error);
-                }
-                return $this->success($this->admin->error, $result);
-            } catch (\Exception $e) {
-                return $this->error($e->getMessage());
-            }
+        if ($this->request->isGet()) {
+            $this->result['meta']['title'] = '用户注册';
+            return $this->success($this->result);
+        }
 
+        $user = new Model;
+        $user->accountField = 'mobile';
+
+        $res = $user->signup([$user->accountField => input('post.' . $user->accountField . '/s'), 'password' => input('post.password/s'), 'repeat' => input('post.repeat/s')]);
+        if($res){
+            $this->success($this->result + $res, '注册成功');
         }else{
-            $this->result['title'] = '密码修改';
-            $this->result['info'] = json_encode($info, true);
-            return $this->fetch('pwd');
+            $this->error($user->getError(), 241);
         }
     }
-
+    /*
+     * 退出登录
+     */
     public function logout()
     {
-        if (is_admin_login()) {
-            $this->admin->logout();
-			return $this->success('退出成功！', url('/identity/login'));
-		} else {
-			return $this->error('您还未登陆哟', url('/identity/login'));
-		}
+        $token = Request::header('Authorization');
+        JWTAuth::invalidate($token);
+        $this->success(['status' => 1]);
     }
-
-    
-    
-    //超时
-    public function check_timeout() {
-		if (!is_admin_login()) {
-			return $this->error('亲,请重新登陆~');
-		} else {
-			return $this->success();
-		}
-	}
 }
-?>

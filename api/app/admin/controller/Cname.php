@@ -1,47 +1,36 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\Attribute;
+use app\common\model\Cate;
 
-class Cname extends \app\admin\Controller
+class Cname extends \core\Controller
 {
     protected $middleware = ['auth'];
-    protected $attributeModel,$attrList;
-    protected function initialize()
-    { 
-        parent::initialize();
-        $this->attributeModel = new Attribute();
-        $this->attrList = $this->attributeModel->getAttrList();
-        $this->result['attrList'] = $this->attrList;
-    }
+    protected $model = '\app\common\model\Cname'; // 对应表格
+    protected $name = '管理员';
 
-
-    public function  index()
+    public function index()
     {
-        if (request()->isPost()) {
-            try { 
-                $keyword = input('keyword');
-				//列表过滤器，生成查询Map对象
-                $map = [];
-                if (!empty($keyword)) {
-        
-                    $map[] = ['a.cname|at.name','like', '%' . $keyword . '%'];
-
-                }
-                $join_arr = [
-                    0 => ['Attribute at', 'at.id = a.attr_id']
-                ];
-                $field = 'a.*,at.name';
-                $result = $this->getListJson('Cname', $map, $join_arr, $field);
-                return $this->success($result);
-            } catch (\Exception $e) {
-                return $this->error($e->getMessage());
-            }
-        
-        }else{
-			return $this->fetch();
-		}
+        return $this->_index();
+    }
+    // 添加
+    public function add()
+    {
+        return $this->_add();
+    }
+    // 保存
+    public function save()
+    {
+        return $this->_save();
+    }
+    // 编辑
+    public function edit($id)
+    {
+        return $this->_edit($id);
+    }
+    // 编辑
+    public function update($id)
+    {
+        return $this->_update($id);
     }
 }
-
-?>

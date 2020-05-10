@@ -3,11 +3,8 @@ namespace app\common\model;
 /**
  * 引量
  */
-class SwitchCited extends \think\Model
+class SwitchCited extends \core\Model
 {
-    protected $resultSetType = 'collection';
-    protected $autoWriteTimestamp = true;
-
 }
 
 
