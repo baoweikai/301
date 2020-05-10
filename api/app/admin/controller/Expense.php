@@ -5,6 +5,7 @@ class Expense extends \core\Controller
 {
     protected $middleware = ['auth'];
     protected $model = '\app\common\model\Expense'; // 对应表格
+    protected $with = ['user'];
     protected $name = '管理员';
 
     public function index()

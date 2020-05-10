@@ -23,23 +23,9 @@ export default {
         id: { title: 'ID', type: 'string' },
         account: { title: '用户名', type: 'string' },
         phone: { title: '手机号', type: 'string' },
-        status: {
-          title: '状态',
-          type: 'state',
-          options: ['封禁', '正常'],
-          rules: [{ required: true }]
-        },
-        create_at: {
-          title: '注册时间',
-          type: 'date',
-          format: 'YYYY-MM-DD',
-          rules: [{ required: true }]
-        },
-        action: {
-          title: '操作',
-          type: 'action',
-          actions: ['state']
-        }
+        status: { title: '状态', type: 'state', options: ['封禁', '正常'], rules: [{ required: true }] },
+        create_at: { title: '注册时间', type: 'date', format: 'YYYY-MM-DD', rules: [{ required: true }] },
+        action: { title: '操作', type: 'action', actions: ['state'] }
       },
       // 列表项
       listItems: ['id', 'account', 'email', 'phone', 'state', 'create_at', 'action'],

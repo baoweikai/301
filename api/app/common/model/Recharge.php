@@ -7,5 +7,7 @@ class Recharge extends \core\Model
     protected $type = [
         'create_at' => 'timestamp:m-d H:i',
     ];
+    public function user (){
+        return $this->belongsTo(User::class)->bind(['account']);
+    }
 }
-?>

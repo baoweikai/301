@@ -45,15 +45,15 @@ export const asyncRouterMap = [
       // 统计
       {
         path: '/stat/',
-        redirect: '/res/domain',
+        redirect: '/stat/date',
         component: Page,
-        meta: { title: '统计管理', icon: 'shopping' },
+        meta: { title: '统计数据', icon: 'shopping' },
         children: [
           {
-            path: 'Jump',
-            name: 'JumpIndex',
-            component: () => import('@/views/stat/JumpIndex'),
-            meta: { title: '跳转' }
+            path: 'date',
+            name: 'DateIndex',
+            component: () => import('@/views/stat/DateIndex'),
+            meta: { title: '日报' }
           }
         ]
       },
