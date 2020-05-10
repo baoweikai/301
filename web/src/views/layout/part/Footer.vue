@@ -11,7 +11,7 @@
       >
         <a-icon type="github" />
       </a>
-      <a href="https://ant.design/">资源站</a>
+      <a href="https://ant.design/">301管理</a>
       <a href="https://vue.ant.design/">Vue Antd</a>
     </div>
     <div class="copyright">

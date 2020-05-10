@@ -5,12 +5,6 @@ use app\common\model\User;
 
 class Identity extends \core\Controller
 {
-    private $userModel;
-    protected function initialize(){
-        parent::initialize();
-        $this->userModel = new User();
-    }
-
     public function login()
     {
 

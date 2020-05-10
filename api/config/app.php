@@ -20,6 +20,10 @@ return [
     'default_action'      => 'index',
     // 默认时区
     'default_timezone' => 'Asia/Shanghai',
+    // 调试模式
+    'app_debug'              => true,
+    // 应用Trace
+    'app_trace'              => false,
 
     // 
     'app_name' => '301',

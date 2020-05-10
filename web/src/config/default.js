@@ -14,7 +14,7 @@
  */
 
 export default {
-  appName: '资源站', // app ,
+  appName: '301管理', // app ,
   // 主题
   primaryColor: '#1890FF', // primary color of 视频 Admin
   navTheme: 'light', // theme for nav menu

@@ -38,7 +38,6 @@ class Admin extends \core\Controller
     // 编辑
     public function edit($id)
     {
-        var_dump($id);die();
         return $this->_edit($id);
     }
     // 编辑
