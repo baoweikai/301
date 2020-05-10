@@ -9,8 +9,8 @@ class Cited extends \core\Model
     protected $type = [
         'create_at' => 'timestamp:Y-m-d H:i:s',
     ];
+
+    public function domain (){
+        return $this->belongsTo(Domain::class);
+    }
 }
-
-
-
-?>

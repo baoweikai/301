@@ -62,7 +62,7 @@
           <a-tag  v-for="(tag, i) in text" :key="i">{{ tag.name }}</a-tag>
         </template>
         <template v-else-if="column.type === 'action'">
-          <a-tag v-for="(act, i) in column.actions" :key="i" :color="actColor[act] || 'gray'" v-show="actShow(act, record)" @click="action(act, record.id || record._id, record)">{{ $t('action.' + act) }}</a-tag>
+          <a-tag v-for="(act, i) in column.actions" :key="i" :color="colors[act] || ''" v-show="actShow(act, record)" @click="action(act, record.id || record._id, record)">{{ $t('action.' + act) }}</a-tag>
         </template>
       </span>
     </a-table>
@@ -83,7 +83,6 @@ export default {
   data () {
     return {
       list: [],
-      modalName: '',
       loading: false,
       isPage: true, // 列表是否分页
       pagination: { showTotal: total => `共 ${total} 条`, defaultPageSize: 10, pageSizeOptions: ['10', '20', '50', '100'], showSizeChanger: true, total: 0 },
@@ -96,7 +95,7 @@ export default {
           onChange: this.onSelectChange
         }
       },
-      actColor: { del: 'red', preview: 'green', edit: 'blue' },
+      colors: { del: 'red', preview: 'green', edit: 'blue' },
       optionAlertShow: false,
       uploading: null
     }

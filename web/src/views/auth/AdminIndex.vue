@@ -4,7 +4,6 @@
     <List ref="list" v-bind="{ columns: pick(columns, listItems), controller: controller }" />
     <Edit ref="edit" v-bind="{ columns: pick(columns, formItems), controller: controller }" />
     <Add ref="add" v-bind="{ columns: pick(columns, formItems), controller: controller }" />
-
     <Password ref="password" />
   </div>
 </template>

@@ -7,6 +7,7 @@ class Cname extends \core\Controller
 {
     protected $middleware = ['auth'];
     protected $model = '\app\common\model\Cname'; // 对应表格
+    protected $with = ['cate'];
     protected $name = '管理员';
 
     public function index()

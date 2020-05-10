@@ -10,4 +10,8 @@ class Cname extends \core\Model
         'create_at' => 'timestamp:Y-m-d H:i:s',
         'update_at' => 'timestamp:Y-m-d H:i:s',
     ];
+
+    public function cate (){
+        return $this->belongsTo(Cate::class)->bind(['cate_name' => 'name']);
+    }
 }
