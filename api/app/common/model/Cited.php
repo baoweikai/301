@@ -7,9 +7,13 @@ class Cited extends \core\Model
     //定义属性
     protected $type = [
         'domain_id' => 'integer',
-        'create_at' => 'timestamp:Y-m-d H:i:s',
-        'update_at' => 'timestamp:Y-m-d H:i:s',
+        'create_at' => 'timestamp:m-d H:i',
+        'update_at' => 'timestamp:m-d H:i',
     ];
     protected $fillable = ['name', 'domain_id', 'ip'];
     protected $filter = ['name', 'domain_id'];  // 搜索项
+    protected $rule = [
+        'domain_id'  => 'require|integer',
+        'ip'   => 'require',
+    ];
 }

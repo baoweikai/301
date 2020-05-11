@@ -30,12 +30,12 @@ class Index extends BaseController
         ];
 
         //查询数据
-        $domain = $this->redis->get('domain' . $host);
+        $domain = $this->redis->get('domain_' . $host);
 
         if($domain === null){
             $res = Db::name('domain')->where($map)->find();
             if($res !== null){
-                $this->redis->set('domain' . $host, $res->toArray());
+                $this->redis->set('domain_' . $host, $res->toArray());
                 $domain = $res->toArray();
             } else {
                 $this->jump();

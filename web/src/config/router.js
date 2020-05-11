@@ -35,6 +35,12 @@ export const asyncRouterMap = [
             meta: { title: '域名', keepAlive: true }
           },
           {
+            path: 'cited-domain',
+            name: 'CitedDomainIndex',
+            component: () => import('@/views/res/CitedDomainIndex'),
+            meta: { title: '引量域名' }
+          },
+          {
             path: 'cname',
             name: 'CnameIndex',
             component: () => import('@/views/res/CnameIndex'),

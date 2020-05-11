@@ -11,4 +11,8 @@ class Cate extends \core\Model
     ];
     protected $fillable = ['name', 'status'];
     protected $filter = ['name', 'status'];  // 搜索项
+    protected $rule = [
+        'name'  => 'require|unique:cate',
+        'status'   => 'integer',
+    ];
 }
