@@ -11,7 +11,7 @@
           <a-input
             size="large"
             type="text"
-            placeholder="账户: admin"
+            placeholder="账户: 字母数字组合"
             v-decorator="[
               'username',
               { rules: [{ required: true, message: '请输入帐户名' }], validateTrigger: 'change' }
@@ -42,7 +42,7 @@
                 size="large"
                 type="text"
                 autocomplete="false"
-                placeholder="验证码: 4个字符"
+                placeholder="验证码: 5个字符"
                 v-decorator="[
                   'captcha',
                   { rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur' }
