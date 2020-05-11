@@ -8,6 +8,3 @@ class Jump extends \core\Model
         'create_at' => 'timestamp:m-d H:i',
     ];
 }
-
-
-?>

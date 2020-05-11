@@ -6,10 +6,10 @@ class User extends \core\Model
     protected $type = [
         'is_use' => 'integer',
         'status' => 'integer',
-        'start_time' => 'array',
-        'create_at' => 'timestamp:Y-m-d H:i:s',
-        'update_at' => 'timestamp:Y-m-d H:i:s',
+        'login_at' => 'timestamp:m-d H:i',
+        'create_at' => 'timestamp:m-d H:i',
+        'update_at' => 'timestamp:m-d H:i',
     ];
-    protected $fillable = ['shield_url', 'jump_url', 'cited_url', 'percent', 'is_param', 'is_open', 'start_time', 'status'];
-    protected $filter = ['shield_url', 'jump_url', 'is_param', 'is_open', 'status'];  // 搜索项
+    protected $fillable = ['account', 'phone', 'password', 'login_at', 'login_ip', 'status'];
+    protected $filter = ['account', 'status', 'login_ip'];  // 搜索项
 }

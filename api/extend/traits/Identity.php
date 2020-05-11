@@ -40,7 +40,7 @@ trait Identity
 
             if($user->password !== $password){
                 $this->error = '密码错误';
-                return false;                    
+                return false;                  
             }
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
@@ -68,7 +68,7 @@ trait Identity
             $this->snsField => $sns,
         ];
         // 用户信息验证
-        $validate = new \validate\UserValidate;
+        $validate = new \validate\User;
 
         if (!$validate->scene('snslogin')->check($data)) {
             $this->error = $validate->getError();

@@ -3,8 +3,6 @@ namespace app\common\model;
 
 class Cate extends \core\Model
 {
-    use \traits\Identity;
-    protected $table = 'auth_admin';     // 系统管理员表
     //定义属性
     protected $type = [
         'status' => 'integer',

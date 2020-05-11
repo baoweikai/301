@@ -78,4 +78,3 @@ class Identity extends \core\Controller
             }
         }
 }
-?>

@@ -5,7 +5,7 @@ class UserCname extends \core\Model
 {
     //定义属性
     protected $type = [
-        'create_at' => 'timestamp:Y-m-d H:i:s',
-        'use_time' => 'timestamp:Y-m-d H:i:s',
+        'create_at' => 'timestamp:m-d H:i',
+        'use_at' => 'timestamp:m-d H:i',
     ];
 }

@@ -3,9 +3,10 @@ namespace app\common\model;
 
 class Cname extends \core\Model
 {
-    // protected $table = 'auth_admin';     // 系统管理员表
+    // protected $table = 'cname';     // 系统管理员表
     //定义属性
     protected $type = [
+        'cate_id' => 'integer',
         'is_use' => 'integer',
         'status' => 'integer',
         'create_at' => 'timestamp:Y-m-d H:i:s',

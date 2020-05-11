@@ -35,7 +35,24 @@
             <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
           </a-input>
         </a-form-item>
-
+        <a-form-item>
+          <a-row :gutter="4">
+            <a-col :span="12">
+              <a-input
+                size="large"
+                type="text"
+                autocomplete="false"
+                placeholder="验证码: 4个字符"
+                v-decorator="[
+                  'captcha',
+                  { rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur' }
+              ]" />
+            </a-col>
+            <a-col :span="12">
+              <img :src="'/api/captcha.html?' + t" @click="t = (new Date()).valueOf()" />
+            </a-col>
+          </a-row>
+        </a-form-item>
         <a-form-item style="pt5 fjc">
           <a-button
             size="large"
@@ -68,11 +85,11 @@ export default {
       state: {
         time: 60,
         loginBtn: false
-      }
+      },
+      t: 0
     }
   },
   mounted () {
-    // this.load('identity/login')
   },
   methods: {
     ...mapActions(['Login', 'Logout']),

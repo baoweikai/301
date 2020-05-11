@@ -23,7 +23,7 @@ class User extends Validate
         'password|密码'   => 'require|min:6|max:36',
         'snscode|短信验证码' => 'require|min:4|max:6',
         'repeat|确认密码'   => 'require|confirm:password',
-        'captcha|验证码'=>'captcha|min:4|max:6',
+        'captcha|验证码'=>'require|captcha|min:4|max:6',
         'email|电子邮箱'=>'email',
         'oldpass|旧密码' => 'require|min:8|max:16',
     ];

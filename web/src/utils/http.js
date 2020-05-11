@@ -32,8 +32,10 @@ const codes = {
 
 const http = {
   request () {
+    // axios.defaults.withCredentials = true
     // 创建 axios 实例
     const service = axios.create({
+      withCredentials: true,
       baseURL: '/api', // api base_url
       timeout: 6000 // 请求超时时间
     })

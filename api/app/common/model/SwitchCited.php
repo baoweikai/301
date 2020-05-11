@@ -6,6 +6,3 @@ namespace app\common\model;
 class SwitchCited extends \core\Model
 {
 }
-
-
-?>
