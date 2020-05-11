@@ -10,35 +10,27 @@
     <div>
       <a-row :gutter="16">
         <a-col class="gutter-row" :span="6">
-          <a-card title="总视频数">
+          <a-card title="昨日IP数">
             <router-link to="/res/video?flow_status=3" slot="extra">查看</router-link>
-            <p class="fs34 fc-success tac">{{succCount}}</p>
+            <p class="fs34 fc-success tac">{{ipCount}}</p>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
-          <a-card title="失败视频数">
+          <a-card title="昨日跳转数">
             <router-link to="/res/video?flow_status=5" slot="extra">查看</router-link>
-            <p class="fs34 fc-success tac">{{failCount}}</p>
+            <p class="fs34 fc-success tac">{{jumpCount}}</p>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
-          <a-card title="当日视频数">
+          <a-card title="昨日引流数">
             <router-link to="/res/video?flow_status=5" slot="extra">查看</router-link>
-            <p class="fs34 fc-success tac">{{todayCount}}</p>
+            <p class="fs34 fc-success tac">{{citedCount}}</p>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
-          <a-card title="视频总大小">
+          <a-card title="域名数">
             <router-link to="/res/video?flow_status=5" slot="extra"></router-link>
-            <p class="fs34 fc-success tac">{{(totalSum / (1024 * 1024 * 1024)).toFixed(2)}}</p>
-          </a-card>
-        </a-col>
-      </a-row>
-      <a-row :gutter="16" class="mt4">
-        <a-col class="gutter-row" :span="6" v-for="(item, i) in codeStat" :key="i">
-          <a-card :title="'路由' + item.route_id + '视频数'">
-            <router-link to="/res/video?route_id=2" slot="extra">查看</router-link>
-            <p class="fs34 fc-success tac">{{item.num}}</p>
+            <p class="fs34 fc-success tac">{{domainCount}}</p>
           </a-card>
         </a-col>
       </a-row>
@@ -61,10 +53,10 @@ export default {
       user: {},
 
       codeStat: [],
-      succCount: 0,
-      failCount: 0,
-      todayCount: 0,
-      totalSum: 0
+      ipCount: 0,
+      jumpCount: 0,
+      citedCount: 0,
+      domainCount: 0
     }
   },
   computed: {
