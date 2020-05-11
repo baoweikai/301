@@ -15,12 +15,11 @@ class Domain extends \core\Model
         'create_at' => 'timestamp:m-d H:i',
         'update_at' => 'timestamp:m-d H:i',
     ];
-    protected $fillable = ['shield_url', 'jump_url', 'cited_url', 'percent', 'user_id', 'is_param', 'is_open', 'start_time', 'status'];
+    protected $fillable = ['shield_url', 'jump_url', 'percent', 'user_id', 'is_param', 'is_open', 'start_time', 'status'];
     protected $filter = ['shield_url', 'jump_url', 'is_param', 'is_open', 'user_id', 'status'];  // 搜索项
     protected $rule = [
         'shield_url'  => 'require',
         'jump_url'  => 'require',
-        'cited_url'  => 'require',
         'percent'  => 'require|integer',
         'is_param'  => 'integer',
         'is_open'  => 'integer',
