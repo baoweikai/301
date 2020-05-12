@@ -8,7 +8,7 @@ use app\model\CitedDomain;
 
 class Index extends BaseController
 {
-    protected  $redis, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.dt2277.com?301';
+    protected  $redis, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
     protected function initialize(){
         //ip处理
         $this->ip = request()->ip();
@@ -71,6 +71,10 @@ class Index extends BaseController
     //跳转统计
     private function jump()
     {
+        $fh = fopen(runtime_path() . '/' . date('Y-m-d') . '.txt', "a");
+        fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
+        fclose($fh);
+
         $this->redis->inc('JumpCount_' . $this->did . '_' . date('m-d'));
     }
 
@@ -84,6 +88,12 @@ class Index extends BaseController
         $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];
         $l = count($domains);
         $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
+		$this->jump_url .= '?' . $this->did;
+		
+        $fh = fopen(runtime_path() . '/' . date('Y-m-d') . '.txt', "a");
+        fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
+        fclose($fh);
+
         $this->redis->inc('CitedCount_' . $this->did . '_' . date('m-d'));
     }
     // 验证五天内该Ip是否引流
