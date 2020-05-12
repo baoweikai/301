@@ -29,6 +29,12 @@ export const asyncRouterMap = [
             meta: { title: '分类', keepAlive: true }
           },
           {
+            path: 'group',
+            name: 'GroupIndex',
+            component: () => import('@/views/res/GroupIndex'),
+            meta: { title: '引量分组' }
+          },
+          {
             path: 'domain',
             name: 'DomainIndex',
             component: () => import('@/views/res/DomainIndex'),

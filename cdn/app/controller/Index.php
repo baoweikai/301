@@ -4,10 +4,11 @@ namespace app\controller;
 use app\BaseController;
 use think\cache\driver\Redis;
 use think\facade\Db;
+use app\model\CitedDomain;
 
 class Index extends BaseController
 {
-    protected  $redis, $ip, $did = 0;
+    protected  $redis, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.dt2277.com?301';
     protected function initialize(){
         //ip处理
         $this->ip = request()->ip();
@@ -21,25 +22,22 @@ class Index extends BaseController
 
     public function index()
     {
-        $host = request()->domain();
+        $host = request()->host();
         //查询
         $map[] = [
-            ["shield_url", '=', $host],
-            ["is_expire", '=', 0],
+            ["shield_host", '=', $host],
             ["status", '=', 1]
         ];
-
         //查询数据
         $domain = $this->redis->get('domain_' . $host);
 
-        if($domain === null){
-            $res = Db::name('domain')->where($map)->find();
-            if($res !== null){
-                $this->redis->set('domain_' . $host, $res->toArray());
-                $domain = $res->toArray();
+        if(!$domain){
+            $domain = Db::name('domain')->where($map)->field('id, jump_host, percent, expire_at, is_param, is_open, group_id')->find();
+            if($domain !== null){      
+                $this->redis->set('domain_' . $host, $domain);           
             } else {
-                $this->jump();
-                return redirect('https://www.dt2277.com?301');
+                $this->cited();
+                return redirect($this->jump_url);
             }
         }
 
@@ -48,20 +46,18 @@ class Index extends BaseController
         $this->ip();
         $rand = mt_rand(1, 100);
         //判断是否引量
-        if($domain['is_open'] == 1 && $rand <= $domain['percent'] && $domain["cited_url"] && $this->contrast()){
-            // 引量地址
-            $jump_url = $domain["cited_url"];
+        if($domain['is_open'] == 1 && $domain['expire_at'] > time() && $rand <= $domain['percent'] && $this->contrast()){
             // 引量统计
-            $this->cited();
+            $this->cited($domain['group_id']);
         }else{
             // 跳转地址
-            $request_url= urldecode(request()->url());
-            $jump_url = $domain["is_param"] === 1 ? $domain["jump_url"] . $request_url : $domain['jump_url'];
+            $query= urldecode(request()->query());
+            $this->jump_url = $domain["is_param"] === 1 ? $domain["jump_host"] . '?' . $query : $domain['jump_host'];
             // 跳转统计
             $this->jump();
         }
 
-        return redirect($jump_url);
+        return redirect($this->jump_url);
     }
 
     /**
@@ -79,17 +75,25 @@ class Index extends BaseController
     }
 
     //引量统计
-    private function cited(){
+    private function cited($groupId = null){
+        $citeds = $this->redis->get('citeds');
+        if($citeds === null){
+            $citeds = CitedDomain::cache();
+            $this->redis->set('citeds', $citeds);
+        }
+        $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];
+        $l = count($domains);
+        $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
         $this->redis->inc('CitedCount_' . $this->did . '_' . date('m-d'));
     }
     // 验证五天内该Ip是否引流
     private function contrast()
     {
-        $lastAt = $this->redis->handler()->hget('ip' . $this->ip, $this->did);
+        $lastAt = $this->redis->handler()->hget('IpList', $this->did . $this->ip);
         if($lastAt && time() - $lastAt < 3600 * 120){
             return false;
         }
-        $this->redis->handler()->hset('ip' . $this->ip, $this->did, time());
-        return false;
+        $this->redis->handler()->hset('IpList', $this->did . $this->ip, time());
+        return true;
     }
 }

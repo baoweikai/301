@@ -14,7 +14,7 @@ return [
             'type'	=>	'redis',
             'host'	=>	'redis',
             'port' => 6379,
-            'password' => 'huaren54321',
+            'password' => env('database.password', 'huaren54321'),
             'timeout'=> 259200,
             // 全局缓存有效期（0为永久有效）
             'expire'=>  259200,

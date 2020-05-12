@@ -12,14 +12,14 @@ class Domain extends \core\Model
         'is_param' => 'integer',
         'is_open' => 'integer',
         'start_time' => 'array',
-        'create_at' => 'timestamp:m-d H:i',
-        'update_at' => 'timestamp:m-d H:i',
+        // 'create_at' => 'timestamp:m-d H:i',
+        // 'update_at' => 'timestamp:m-d H:i',
     ];
-    protected $fillable = ['shield_url', 'jump_url', 'percent', 'user_id', 'is_param', 'is_open', 'start_time', 'status'];
-    protected $filter = ['shield_url', 'jump_url', 'is_param', 'is_open', 'user_id', 'status'];  // 搜索项
+    protected $fillable = ['shield_host', 'jump_host', 'percent', 'user_id', 'is_param', 'is_open', 'start_time', 'status'];
+    protected $filter = ['shield_host', 'jump_host', 'is_param', 'is_open', 'user_id', 'status'];  // 搜索项
     protected $rule = [
-        'shield_url'  => 'require',
-        'jump_url'  => 'require',
+        'shield_host'  => 'require',
+        'jump_host'  => 'require',
         'percent'  => 'require|integer',
         'is_param'  => 'integer',
         'is_open'  => 'integer',
@@ -30,10 +30,14 @@ class Domain extends \core\Model
     public function user (){
         return $this->belongsTo(User::class)->bind(['account' => 'account']);
     }
+    // 分组
+    public function group (){
+        return $this->belongsTo(Group::class)->bind(['group_name' => 'name']);
+    }
     // 
     public static function onAfterUpdate($model)
     {
-    	cache('domain_' . $model->domain, $model->getData(['jump_url', 'cited_url', 'is_param', 'is_open', 'percent', 'start_time']));
+    	cache('domain_' . $model->domain, $model->getData(['jump_host', 'cited_host', 'is_param', 'is_open', 'percent', 'start_time']));
     }
     // 
     public static function onAfterDelete($model)
