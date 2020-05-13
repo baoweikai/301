@@ -24,7 +24,7 @@ class Stat extends Command
     // 调用update 这个类时,会自动运行execute方法
     protected function execute(Input $input, Output $output)
     {
-
+        
         $output->writeln('执行完成');
     }
 }

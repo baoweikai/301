@@ -25,7 +25,7 @@ export default {
         id: { title: 'ID', type: 'string' },
         username: { title: '用户名', type: 'string' },
         status: {
-          title: '状态', type: 'state', options: ['禁用', '正常', '删除'], rules: [{ required: true }]
+          title: '状态', type: 'switch', options: ['禁用', '正常', '删除'], rules: [{ required: true }]
         },
         role_id: {
           title: '角色', type: 'radio', options: {}

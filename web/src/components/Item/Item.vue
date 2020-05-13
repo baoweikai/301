@@ -132,6 +132,7 @@ export default {
         decorators.normalize = v => moment(v)
       }
       if (this.type === 'switch') {
+        decorators.preserve = true
         decorators.valuePropName = 'checked'
         decorators.normalize = v => typeof (v) === 'boolean' ? v : (parseInt(v) > 0)
       }

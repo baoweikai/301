@@ -23,10 +23,10 @@ export const asyncRouterMap = [
         meta: { title: '资源管理', icon: 'shopping' },
         children: [
           {
-            path: 'cate',
-            name: 'CateIndex',
-            component: () => import('@/views/res/CateIndex'),
-            meta: { title: '分类', keepAlive: true }
+            path: 'domain',
+            name: 'DomainIndex',
+            component: () => import('@/views/res/DomainIndex'),
+            meta: { title: '域名', keepAlive: true }
           },
           {
             path: 'group',
@@ -35,22 +35,22 @@ export const asyncRouterMap = [
             meta: { title: '引量分组' }
           },
           {
-            path: 'domain',
-            name: 'DomainIndex',
-            component: () => import('@/views/res/DomainIndex'),
-            meta: { title: '域名', keepAlive: true }
-          },
-          {
             path: 'cited-domain',
             name: 'CitedDomainIndex',
             component: () => import('@/views/res/CitedDomainIndex'),
-            meta: { title: '引量域名' }
+            meta: { title: '引量地址' }
           },
           {
             path: 'cname',
             name: 'CnameIndex',
             component: () => import('@/views/res/CnameIndex'),
             meta: { title: '别名' }
+          },
+          {
+            path: 'cate',
+            name: 'CateIndex',
+            component: () => import('@/views/res/CateIndex'),
+            meta: { title: '分类', keepAlive: true }
           }
         ]
       },

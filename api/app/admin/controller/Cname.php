@@ -10,6 +10,19 @@ class Cname extends \core\Controller
     protected $with = ['cate'];
     protected $name = '管理员';
 
+    protected function beforeForm($model = null){
+        $this->columns($model);
+    }
+    private function columns($model = null){
+        // 各个字段编辑时需要的数据
+        $this->result['columns'] += [
+            'cate_id' => ['options' => Cate::column('name', 'id')]
+        ];
+    }
+    protected function beforeIndex(){
+        $this->columns();
+    }
+
     public function index()
     {
         return $this->_index();

@@ -4,6 +4,8 @@ namespace app\common\model;
 class Domain extends \core\Model
 {
     // protected $table = 'domain';     // 系统管理员表
+    protected $autoWriteTimestamp = true;    // 自动时间戳
+    // protected $updateTime = false;    // 自动时间戳
     //定义属性
     protected $type = [
         'user_id' => 'integer',
@@ -11,20 +13,16 @@ class Domain extends \core\Model
         'status' => 'integer',
         'is_param' => 'integer',
         'is_open' => 'integer',
-        'start_time' => 'array',
-        // 'create_at' => 'timestamp:m-d H:i',
-        // 'update_at' => 'timestamp:m-d H:i',
+        'cited_range' => 'array',
+        'create_at' => 'timestamp:m-d H:i',
+        'update_at' => 'timestamp:m-d H:i',
     ];
-    protected $fillable = ['shield_host', 'jump_host', 'percent', 'user_id', 'is_param', 'is_open', 'start_time', 'status'];
+    protected $fillable = ['shield_host', 'jump_host', 'percent', 'user_id', 'is_param', 'is_open', 'cited_range', 'status'];
     protected $filter = ['shield_host', 'jump_host', 'is_param', 'is_open', 'user_id', 'status'];  // 搜索项
     protected $rule = [
         'shield_host'  => 'require',
         'jump_host'  => 'require',
-        'percent'  => 'require|integer',
-        // 'is_param'  => 'integer',
-        // 'is_open'  => 'integer',
-        // 'is_param'  => 'require|integer',
-        'status'   => 'integer',
+        'percent'  => 'require|integer'
     ];
     // 用户
     public function user (){
@@ -37,20 +35,11 @@ class Domain extends \core\Model
     // 
     public static function onAfterUpdate($model)
     {
-    	cache('domain_' . $model->domain, $model->column('jump_host, is_param, is_open, percent, start_time'));
+    	cache('domain_' . $model->domain, $model->column('jump_host, is_param, is_open, percent, cited_range'));
     }
     // 
     public static function onAfterDelete($model)
     {
 		cache('domain_' . $model->domain, null);
-    }
-    public function setIsParamAttr ($val) {
-        return $val ? 1 : 0;
-    }
-    public function setIsOpenAttr ($val) {
-        return $val ? 1 : 0;
-    }
-    public function setStatusAttr ($val) {
-        return $val ? 1 : 0;
     }
 }

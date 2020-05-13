@@ -213,7 +213,7 @@ abstract class Controller
     // 加载model
     protected function loadModel($params, $exce = true){
         $where = is_string($params) || is_numeric($params) ? [['id', '=', $params]] : $params;
-        $model = call_user_func($this->model . '::where', $where)->with($this->extend)->find();
+        $model = $this->model::where($where)->with($this->extend)->find();
 
         if($model === null){
             if($exce){

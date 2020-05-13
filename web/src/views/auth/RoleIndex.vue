@@ -23,7 +23,7 @@ export default {
       columns: {
         id: { title: 'ID', type: 'string' },
         name: { title: '权限名称', type: 'string' },
-        status: { title: '状态', type: 'state', options: ['禁用', '启用'], rules: [{ required: true }] },
+        status: { title: '状态', type: 'switch', options: ['禁用', '启用'], rules: [{ required: true }] },
         desc: { title: '备注', type: 'string' },
         create_at: { title: '创建时间', type: 'date', format: 'YYYY-MM-DD', rules: [{ required: true }] },
         action: { title: '操作', type: 'action', actions: ['edit', 'state', 'view'] }
