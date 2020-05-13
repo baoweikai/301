@@ -23,24 +23,24 @@ class Index extends BaseController
 
     public function index()
     {
-        $host = request()->host();
-        //查询
-        $map[] = [
-            ["shield_host", '=', $host]
-        ];
-        //查询数据
-        $domain = $this->redis->get('domain_' . $host);
-
-        //if(!$domain){
-            $domain = Db::name('domain')->where($map)->field('id, jump_host, percent, expire_at, is_param, status, is_open, group_id')->find();
-            if($domain !== null){      
-                $this->redis->set('domain_' . $host, $domain);           
-            } else {
-                $this->cited();
-                return redirect($this->jump_url);
+        // 如果不存在DomainList缓存，则建立
+        $this->redis->handler()->del('DomainList');
+        if(!$this->redis->handler()->exists('DomainList')){
+            $rows = Db::name('domain')->field('id, shield_host, jump_host, percent, expire_at, is_param, status, is_open, group_id')->select();
+            $domains = [];
+            foreach($rows as $row){
+                $domains[$row['shield_host']] = json_encode($row);
             }
-        //}
-
+            $this->redis->handler()->hmset('DomainList', $domains);
+        }
+        $host = request()->host();
+        //查询数据
+        $domain = $this->redis->handler()->hget('DomainList', $host);
+        if($domain === false){
+            $this->cited();
+            return redirect($this->jump_url);
+        }
+        $domain = json_decode($domain, true);
         $this->did = $domain['id'];
         //ip统计
         $this->ip();
@@ -84,10 +84,10 @@ class Index extends BaseController
     //引量统计
     private function cited($groupId = null){
         $citeds = $this->redis->get('Citeds');
-        // if($citeds === null){
+        if($citeds === null){
             $citeds = CitedDomain::cache();
             $this->redis->set('Citeds', $citeds);
-        // }
+        }
         $groupId = $this->redis->get('DefaultGroupId');
         if($groupId === null){
             $groupId = Group::where('status', '=', 1)->order(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
