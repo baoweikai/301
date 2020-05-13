@@ -41,16 +41,18 @@ class Domain extends \core\Model
         $configs = config('cache.stores');
         foreach($configs as $config){
             $redis = new Redis($config);
-            $redis->set('domain_' . $model->shield_host, $model->column('jump_host, is_param, is_open, percent, cited_range'));
+            $data = json_encode($model->column('id, jump_host, is_param, is_open, status, percent, cited_range'));
+            $redis->hanlder()->hset('DomainList', $model->shield_host, $data);
         }
     }
     // 
     public static function onAfterDelete($model)
     {
         $configs = config('cache.stores');
+        $data = json_encode($model->column('id, jump_host, is_param, is_open, status, percent, cited_range'));
         foreach($configs as $config){
             $redis = new Redis($config);
-            $redis->set('domain_' . $model->shield_host, $model->column('jump_host, is_param, is_open, percent, cited_range'));
+            $redis->set('domain_' . $model->shield_host, $data);
         }
     }
     // 域名搜索
