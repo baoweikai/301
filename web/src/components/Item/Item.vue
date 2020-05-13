@@ -114,7 +114,7 @@ export default {
       const column = this.column
       return {
         label: column.type === 'editor' ? '' : column.label || column.title,
-        hasFeedback: !['radio', 'checkbox', 'state', 'editor'].includes(column.type),
+        hasFeedback: !['radio', 'checkbox', 'state', 'editor', 'switch'].includes(column.type),
         labelCol: column.labelCol || this.labelCol,
         wrapperCol: column.wrapperCol || this.wrapperCol
       }
@@ -130,6 +130,10 @@ export default {
       // 时间格式化
       if (['date', 'time', 'datetime'].includes(this.type)) {
         decorators.normalize = v => moment(v)
+      }
+      if (this.type === 'switch') {
+        decorators.valuePropName = 'checked'
+        decorators.normalize = v => typeof (v) === 'boolean' ? v : (parseInt(v) > 0)
       }
       // 编辑器内容初始化
       if (column.type === 'editor') {

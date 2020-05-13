@@ -172,14 +172,11 @@ abstract class Controller
         return $this->error("删除失败，请稍候再试！", 401);
     }
 
-    protected  function _state($id, $state = null){
-        $model = $this->loadModel($id);
-
-        if($state === null){
-            $state = $model->state == 1 ? 0 : 1;
-        }
-        $model->state = input('post.state', $state) ;
-        if($model->save()){
+    protected  function _switch(){
+        $ids = input('post.ids', []);
+        $attr = input('post.attr', 'status');
+        $value = input('post.value', 0);
+        if($this->model::where('id', 'in', $ids)->update([$attr => $value])){
             return $this->success();
         }
         return $this->error("修改失败！");
@@ -200,7 +197,7 @@ abstract class Controller
     // 审核通过
     protected function _adopt($ids = [])
     {
-        if(call_user_func($this->model . '::where', [['id', 'in', $ids]])->update(['exame_status' => 2])){
+        if($this->model::where('id', 'in', $ids)->update(['exame_status' => 2])){
             return $this->success($this->result);
         }
         return $this->error('', 201);
@@ -208,7 +205,7 @@ abstract class Controller
     // 审核驳回
     protected function _reject($ids = [])
     {
-        if(call_user_func($this->model . '::where', [['id', 'in', $ids]])->update(['exame_status' => 3])){
+        if($this->model::where('id', 'in', $ids)->update(['exame_status' => 3])){
             return $this->success($this->result);
         }
         return $this->error('', 201);

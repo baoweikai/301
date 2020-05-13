@@ -21,9 +21,9 @@ class Domain extends \core\Model
         'shield_host'  => 'require',
         'jump_host'  => 'require',
         'percent'  => 'require|integer',
-        'is_param'  => 'integer',
-        'is_open'  => 'integer',
-        'is_param'  => 'require|integer',
+        // 'is_param'  => 'integer',
+        // 'is_open'  => 'integer',
+        // 'is_param'  => 'require|integer',
         'status'   => 'integer',
     ];
     // 用户
@@ -37,11 +37,20 @@ class Domain extends \core\Model
     // 
     public static function onAfterUpdate($model)
     {
-    	cache('domain_' . $model->domain, $model->getData(['jump_host', 'cited_host', 'is_param', 'is_open', 'percent', 'start_time']));
+    	cache('domain_' . $model->domain, $model->column('jump_host, is_param, is_open, percent, start_time'));
     }
     // 
     public static function onAfterDelete($model)
     {
 		cache('domain_' . $model->domain, null);
+    }
+    public function setIsParamAttr ($val) {
+        return $val ? 1 : 0;
+    }
+    public function setIsOpenAttr ($val) {
+        return $val ? 1 : 0;
+    }
+    public function setStatusAttr ($val) {
+        return $val ? 1 : 0;
     }
 }

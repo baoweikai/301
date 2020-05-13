@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\model\Group;
+use app\common\model\Domain as Model;
 
 class Domain extends \core\Controller
 {
@@ -45,5 +46,10 @@ class Domain extends \core\Controller
     public function update($id)
     {
         return $this->_update($id);
+    }
+    // 切换
+    public function switch()
+    {
+        return $this->_switch();
     }
 }

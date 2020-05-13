@@ -49,6 +49,12 @@
           </a-popover>
           <a-icon v-else type="fund" :style="{ color: 'gray' }" />
         </template>
+        <template v-else-if="column.type === 'switch'">
+          <a-switch size="small" :default-checked="text == 1" @change="state({ ids: [record.id], attr: index, value: text == 1 ? 0 : 1 })">
+            <a-icon slot="checkedChildren" type="check" />
+            <a-icon slot="unCheckedChildren" type="close" />
+          </a-switch>
+        </template>
         <template v-else-if="column.type === 'duration'">
           {{ text | duration(column.format) }}
         </template>
@@ -131,7 +137,7 @@ export default {
         }
         if (cols[i].customRender) {
           col.customRender = cols[i].customRender
-        } else if (['image', 'date', 'state', 'radio', 'checkbox', 'select', 'duration', 'tag', 'action'].includes(cols[i].type)) {
+        } else if (['image', 'date', 'state', 'radio', 'switch', 'checkbox', 'select', 'duration', 'tag', 'action'].includes(cols[i].type)) {
           col.scopedSlots = { customRender: i }
         }
         res.push(col)
@@ -210,7 +216,7 @@ export default {
         }
       })
     },
-    state (ids, post = {}) {
+    state (post) {
       const _this = this
       this.$confirm({
         title: this.$t('oprate.affirm', { act: this.$t('action.state') }),
@@ -220,7 +226,7 @@ export default {
         centered: true,
         cancelText: this.$t('action.cancel'),
         onOk () {
-          http.post(_this.controller + '/state', ids, post).then(res => {
+          http.post(_this.controller + '/switch', post).then(res => {
             if (res) {
               _this.$message.success('修改成功')
               _this.fetch(_this.queryParams)

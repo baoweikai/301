@@ -5,6 +5,7 @@ use app\BaseController;
 use think\cache\driver\Redis;
 use think\facade\Db;
 use app\model\CitedDomain;
+use app\model\Group;
 
 class Index extends BaseController
 {
@@ -25,14 +26,13 @@ class Index extends BaseController
         $host = request()->host();
         //查询
         $map[] = [
-            ["shield_host", '=', $host],
-            ["status", '=', 1]
+            ["shield_host", '=', $host]
         ];
         //查询数据
         $domain = $this->redis->get('domain_' . $host);
 
         if(!$domain){
-            $domain = Db::name('domain')->where($map)->field('id, jump_host, percent, expire_at, is_param, is_open, group_id')->find();
+            $domain = Db::name('domain')->where($map)->field('id, jump_host, percent, expire_at, is_param, status, is_open, group_id')->find();
             if($domain !== null){      
                 $this->redis->set('domain_' . $host, $domain);           
             } else {
@@ -44,15 +44,18 @@ class Index extends BaseController
         $this->did = $domain['id'];
         //ip统计
         $this->ip();
-        $rand = mt_rand(1, 100);
-        //判断是否引量
-        if($domain['is_open'] == 1 && $domain['expire_at'] > time() && $rand <= $domain['percent'] && $this->contrast()){
+        // 如果网站已失效，直接引流
+        if($domain['status'] === 0){
+            $this->cited($domain['group_id']);
+        }
+        // 否则如果已开启引流，按照概率引流
+        else if($domain['is_open'] == 1 &&  mt_rand(1, 100) <= $domain['percent'] && $this->contrast()){
             // 引量统计
             $this->cited($domain['group_id']);
         }else{
             // 跳转地址
-            $query= urldecode(request()->query());
-            $this->jump_url = $domain["is_param"] === 1 ? $domain["jump_host"] . '?' . $query : $domain['jump_host'];
+            $query= request()->query();
+            $this->jump_url = $domain["is_param"] === 1 && $query !== '' ? $domain["jump_host"] . '?' . $query : $domain['jump_host'];
             // 跳转统计
             $this->jump();
         }
@@ -65,13 +68,13 @@ class Index extends BaseController
      */
     private function ip()
     {
-        $this->redis->handler()->sadd('domain_' . $this->did . '_' . date('m-d'), $this->ip);
+        $this->redis->handler()->sadd('IpCount_' . $this->did . '_' . date('m-d'), $this->ip);
     }
 
     //跳转统计
     private function jump()
     {
-        $fh = fopen(runtime_path() . '/' . date('Y-m-d') . '.txt', "a");
+        $fh = fopen(runtime_path() . '/' . date('Y-m-d'), "a");
         fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
 
@@ -85,12 +88,15 @@ class Index extends BaseController
             $citeds = CitedDomain::cache();
             $this->redis->set('citeds', $citeds);
         }
+        if($groupId = null){
+            $groupId = Group::where([['status', '=', 1], ['is_default', '=', 1]])->value('id');
+        }
         $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];
         $l = count($domains);
         $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
 		$this->jump_url .= '?' . $this->did;
 		
-        $fh = fopen(runtime_path() . '/' . date('Y-m-d') . '.txt', "a");
+        $fh = fopen(runtime_path() . '/' . date('Y-m-d'), "a");
         fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
 
