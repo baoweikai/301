@@ -31,7 +31,7 @@ class Index extends BaseController
         //查询数据
         $domain = $this->redis->get('domain_' . $host);
 
-        if(!$domain){
+        //if(!$domain){
             $domain = Db::name('domain')->where($map)->field('id, jump_host, percent, expire_at, is_param, status, is_open, group_id')->find();
             if($domain !== null){      
                 $this->redis->set('domain_' . $host, $domain);           
@@ -39,7 +39,7 @@ class Index extends BaseController
                 $this->cited();
                 return redirect($this->jump_url);
             }
-        }
+        //}
 
         $this->did = $domain['id'];
         //ip统计
@@ -84,13 +84,13 @@ class Index extends BaseController
     //引量统计
     private function cited($groupId = null){
         $citeds = $this->redis->get('Citeds');
-        if($citeds === null){
+        // if($citeds === null){
             $citeds = CitedDomain::cache();
             $this->redis->set('Citeds', $citeds);
-        }
+        // }
         $groupId = $this->redis->get('DefaultGroupId');
         if($groupId === null){
-            $groupId = Group::where('status', '=', 1)->orcer(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
+            $groupId = Group::where('status', '=', 1)->order(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
             $this->redis->set('DefaultGroupId', $groupId);
         }
         $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];

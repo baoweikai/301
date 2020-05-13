@@ -16,6 +16,7 @@ class Domain extends \core\Model
         'is_param' => 'integer',
         'is_open' => 'integer',
         'cited_range' => 'array',
+        'expire_at' => 'timestamp:Y-m-d',
         'create_at' => 'timestamp:m-d H:i',
         'update_at' => 'timestamp:m-d H:i',
     ];
@@ -51,5 +52,25 @@ class Domain extends \core\Model
             $redis = new Redis($config);
             $redis->set('domain_' . $model->shield_host, $model->column('jump_host, is_param, is_open, percent, cited_range'));
         }
+    }
+    // 域名搜索
+    public function searchShieldHostAttr($query, $value, $data)
+    {
+        !empty($value) && $query->where('shield_host', 'like', $value . '%');
+    }
+    // 用户搜索
+    public function searchUserIdAttr($query, $value, $data)
+    {
+        !empty($value) && $query->where('user_id', $value);
+    }
+    // 状态搜索
+    public function searchIsOpenAttr($query, $value, $data)
+    {
+        $value !== null && $value !== '' && $query->where('is_open', '=', $value);
+    }
+    // 状态搜索
+    public function searchStatusAttr($query, $value, $data)
+    {
+        $value !== null && $value !== '' && $query->where('status', '=', $value);
     }
 }

@@ -25,7 +25,7 @@ class CitedDomain extends \core\Model
         $rows = CitedDomain::where('status', 1)->field(['host', 'group_id'])->select();
         $citeds = [];
         foreach($rows as $row){
-            $citeds[$row->group_id][] = $row->toArray();
+            $citeds[$row->group_id][] = $row->host;
         }
         return $citeds;
     }

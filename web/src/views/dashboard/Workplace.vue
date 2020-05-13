@@ -10,21 +10,51 @@
     <div>
       <a-row :gutter="16">
         <a-col class="gutter-row" :span="6">
-          <a-card title="昨日IP数">
+          <a-card title="IP数">
             <router-link to="/res/video?flow_status=3" slot="extra">查看</router-link>
-            <p class="fs34 fc-success tac">{{ipCount}}</p>
+            <div class="fs16 tac">
+              <a-row>
+                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{ipCount}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{ipCount}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{ipCount}}</a-col>
+              </a-row>
+            </div>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
-          <a-card title="昨日跳转数">
+          <a-card title="跳转">
             <router-link to="/res/video?flow_status=5" slot="extra">查看</router-link>
-            <p class="fs34 fc-success tac">{{jumpCount}}</p>
+            <div class="fs16 tac">
+              <a-row>
+                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{jumpCount}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{jumpCount}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{jumpCount}}</a-col>
+              </a-row>
+            </div>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
-          <a-card title="昨日引流数">
+          <a-card title="引流数">
             <router-link to="/res/video?flow_status=5" slot="extra">查看</router-link>
-            <p class="fs34 fc-success tac">{{citedCount}}</p>
+            <div class="fs16 tac">
+              <a-row>
+                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{citedCount}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{citedCount}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{citedCount}}</a-col>
+              </a-row>
+            </div>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
