@@ -1,6 +1,8 @@
 <?php
 namespace app\common\model;
 
+use think\cache\driver\Redis;
+
 class Domain extends \core\Model
 {
     // protected $table = 'domain';     // 系统管理员表
@@ -35,11 +37,19 @@ class Domain extends \core\Model
     // 
     public static function onAfterUpdate($model)
     {
-    	cache('domain_' . $model->domain, $model->column('jump_host, is_param, is_open, percent, cited_range'));
+        $configs = config('cache.stores');
+        foreach($configs as $config){
+            $redis = new Redis($config);
+            $redis->set('domain_' . $model->shield_host, $model->column('jump_host, is_param, is_open, percent, cited_range'));
+        }
     }
     // 
     public static function onAfterDelete($model)
     {
-		cache('domain_' . $model->domain, null);
+        $configs = config('cache.stores');
+        foreach($configs as $config){
+            $redis = new Redis($config);
+            $redis->set('domain_' . $model->shield_host, $model->column('jump_host, is_param, is_open, percent, cited_range'));
+        }
     }
 }

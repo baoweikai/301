@@ -63,4 +63,9 @@ class Admin extends \core\Controller
         }
         return $this->error('密码修改失败，请稍候再试！', 201);
     }
+    // 切换
+    public function switch()
+    {
+        return $this->_switch();
+    }
 }

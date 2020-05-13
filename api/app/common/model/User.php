@@ -3,6 +3,7 @@ namespace app\common\model;
 
 class User extends \core\Model
 {
+    protected $autoWriteTimestamp = true;    // 自动时间戳
     protected $type = [
         'is_use' => 'integer',
         'status' => 'integer',

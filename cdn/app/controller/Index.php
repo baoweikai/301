@@ -48,7 +48,7 @@ class Index extends BaseController
         if($domain['status'] === 0){
             $this->cited($domain['group_id']);
         }
-        // 否则如果已开启引流，按照概率引流
+        // 否则如果已开启引流，且五天内为引流者，按照概率引流
         else if($domain['is_open'] == 1 &&  mt_rand(1, 100) <= $domain['percent'] && $this->contrast()){
             // 引量统计
             $this->cited($domain['group_id']);
@@ -83,13 +83,15 @@ class Index extends BaseController
 
     //引量统计
     private function cited($groupId = null){
-        $citeds = $this->redis->get('citeds');
+        $citeds = $this->redis->get('Citeds');
         if($citeds === null){
             $citeds = CitedDomain::cache();
-            $this->redis->set('citeds', $citeds);
+            $this->redis->set('Citeds', $citeds);
         }
-        if($groupId = null){
-            $groupId = Group::where([['status', '=', 1], ['is_default', '=', 1]])->value('id');
+        $groupId = $this->redis->get('DefaultGroupId');
+        if($groupId === null){
+            $groupId = Group::where('status', '=', 1)->orcer(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
+            $this->redis->set('DefaultGroupId', $groupId);
         }
         $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];
         $l = count($domains);

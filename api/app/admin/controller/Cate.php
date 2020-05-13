@@ -31,4 +31,9 @@ class Cate extends \core\Controller
     {
         return $this->_update($id);
     }
+    // 切换
+    public function switch()
+    {
+        return $this->_switch();
+    }
 }
