@@ -15,7 +15,6 @@ class Group extends \core\Model
     protected $filter = ['name', 'status', 'is_default'];  // 搜索项
     protected $rule = [
         'name'  => 'require|unique:cate',
-        'is_default'   => 'integer',
         'status'   => 'integer',
     ];
 }

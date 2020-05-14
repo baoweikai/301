@@ -1,6 +1,8 @@
 <?php
 namespace app\common\model;
 
+use think\cache\driver\Redis;
+
 class CitedDomain extends \core\Model
 {
     //定义属性
@@ -38,7 +40,12 @@ class CitedDomain extends \core\Model
         $rows = CitedDomain::where('status', 1)->select();
         $citeds = [];
         foreach($rows as $row){
-            $citeds[$row->group_id][] = $row->toArray();
+            $citeds[$row->group_id][] = $row->host;
         }
+        $configs = config('cache.stores');
+        foreach($configs as $config){
+            $redis = new Redis($config);
+            $redis->set('Citeds', $citeds);
+        } 
     }
 }

@@ -11,11 +11,11 @@ class Index extends BaseController
 {
     protected  $redis, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
     protected function initialize(){
-        //ip处理
+        // ip处理
         $this->ip = request()->ip();
         $ipLast = substr($this->ip, -1);
         $i = $ipLast % count(config('cache.stores'));
-        //$redis配置
+        // $redis配置
         $config = config('cache.stores.redis' . $i);
 
         $this->redis = new Redis($config);
@@ -34,7 +34,7 @@ class Index extends BaseController
             $this->redis->handler()->hmset('DomainList', $domains);
         }
         $host = request()->host();
-        //查询数据
+        // 查询数据
         $domain = $this->redis->handler()->hget('DomainList', $host);
         if($domain === false){
             $this->cited();
@@ -42,7 +42,7 @@ class Index extends BaseController
         }
         $domain = json_decode($domain, true);
         $this->did = $domain['id'];
-        //ip统计
+        // ip统计
         $this->ip();
         // 如果网站已失效，直接引流
         if($domain['status'] === 0){

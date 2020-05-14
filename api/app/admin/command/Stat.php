@@ -8,9 +8,7 @@ use think\console\input\Option;
 use think\console\Output;
 use think\cache\driver\Redis;
 use app\common\model\Domain;
-use think\facade\Log;
-use think\facade\Db;
-use helper\Http;
+// use think\facade\Db;
 use app\admin\model\Stat as Model;
 
 class Stat extends Command
@@ -42,7 +40,15 @@ class Stat extends Command
                 $stat[$did]['cited_count'] += intval($redis->get('CitedCount_' . $did . '_' . $date));
             }
         }
-        
+        foreach($stat as $did => $row){
+            $model = Model::where([['domain_id', '=', $did], ['date', '=', $date]])->find();
+            if($model !== null){
+                $model->ip_count = $row['ip_count'];
+                $model->jump_count = $row['jump_count'];
+                $model->cited_count = $row['cited_count'];
+                $model->save();
+            }
+        }
 
         $output->writeln('执行完成');
     }
