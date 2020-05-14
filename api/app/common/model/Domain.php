@@ -20,8 +20,8 @@ class Domain extends \core\Model
         'create_at' => 'timestamp:m-d H:i',
         'update_at' => 'timestamp:m-d H:i',
     ];
-    protected $fillable = ['shield_host', 'jump_host', 'percent', 'user_id', 'is_param', 'is_open', 'cited_range', 'status'];
-    protected $filter = ['shield_host', 'jump_host', 'is_param', 'is_open', 'user_id', 'status'];  // 搜索项
+    protected $fillable = ['shield_host', 'jump_host', 'percent', 'user_id', 'is_param', 'is_open', 'expire_at', 'cited_range', 'status'];
+    protected $filter = ['shield_host', 'is_param', 'is_open', 'user_id', 'status'];  // 搜索项
     protected $rule = [
         'shield_host'  => 'require',
         'jump_host'  => 'require',
@@ -39,10 +39,10 @@ class Domain extends \core\Model
     public static function onAfterUpdate($model)
     {
         $configs = config('cache.stores');
+        $data = json_encode($model->column('id, jump_host, is_param, is_open, status, percent, cited_range'));
         foreach($configs as $config){
             $redis = new Redis($config);
-            $data = json_encode($model->column('id, jump_host, is_param, is_open, status, percent, cited_range'));
-            $redis->hanlder()->hset('DomainList', $model->shield_host, $data);
+            $redis->handler()->hset('DomainList', $model->shield_host, $data);
         }
     }
     // 
@@ -52,7 +52,7 @@ class Domain extends \core\Model
         $data = json_encode($model->column('id, jump_host, is_param, is_open, status, percent, cited_range'));
         foreach($configs as $config){
             $redis = new Redis($config);
-            $redis->set('domain_' . $model->shield_host, $data);
+            $redis->handler()->hset('DomainList', $model->shield_host, $data);
         }
     }
     // 域名搜索

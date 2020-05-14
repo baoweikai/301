@@ -74,11 +74,11 @@ class Index extends BaseController
     //跳转统计
     private function jump()
     {
+        $this->redis->inc('JumpCount_' . $this->did . '_' . date('m-d'));
+        
         $fh = fopen(runtime_path() . '/' . date('Y-m-d'), "a");
         fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
-
-        $this->redis->inc('JumpCount_' . $this->did . '_' . date('m-d'));
     }
 
     //引量统计
@@ -98,11 +98,11 @@ class Index extends BaseController
         $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
 		$this->jump_url .= '?' . $this->did;
 		
+        $this->redis->inc('CitedCount_' . $this->did . '_' . date('m-d'));
+
         $fh = fopen(runtime_path() . '/' . date('Y-m-d'), "a");
         fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
-
-        $this->redis->inc('CitedCount_' . $this->did . '_' . date('m-d'));
     }
     // 验证五天内该Ip是否引流
     private function contrast()
