@@ -13,7 +13,7 @@
 
 <script>
 import { List, Find, Edit, Add } from '@/components'
-import { page, http } from '@/utils'
+import { page } from '@/utils'
 
 export default {
   mixins: [page],
@@ -27,7 +27,7 @@ export default {
       columns: {
         id: { title: 'ID', type: 'string' },
         date: { title: '日期', type: 'date' },
-        domain_id: { title: '跳转地址', type: 'string', customRender: (v, record) => record.jump_url },
+        domain_id: { title: '域名', type: 'string', customRender: (v, record) => record.shield_host },
         ip_count: { title: 'ip量', type: 'number' },
         jump_count: { title: '跳转', type: 'number' },
         cited_count: { title: '引量', type: 'number' },
@@ -46,19 +46,6 @@ export default {
   created () {
   },
   methods: {
-    edit (id) {
-      this.$refs.edit.load(id)
-    },
-    preview (id, record) {
-      window.open(record.play_host + record.source_path)
-    },
-    change (index, val) {
-      if (index === 'cate_id') {
-        http.get('tag/options/' + val.target.value).then(res => {
-          this.columns.tagIds.options = res
-        })
-      }
-    }
   },
   beforeRouteUpdate (to, from, next) {
     this.queryParams = to.query

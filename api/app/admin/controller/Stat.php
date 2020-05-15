@@ -9,6 +9,7 @@ class Stat extends \core\Controller
 {
     protected $middleware = ['auth'];
     protected $model = '\app\common\model\Stat'; // 对应表格
+    protected $with = ['domain'];
     protected $name = '管理员';
 
     public function index()

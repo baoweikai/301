@@ -52,4 +52,14 @@ class Cache extends BaseController
             $redis->set('DefaultGroupId', $groupId);
         } 
     }
+    public function count(){
+        $configs = config('cache.stores');
+        $date = date('Ymd', strtotime('-1 hour'));
+        foreach($configs as $config){
+            $redis = new Redis($config);
+            $redis->set('IpCount' . $date, null);
+            $redis->set('JumpCount' . $date, null);
+            $redis->set('CitedCount' . $date, null);
+        } 
+    }
 }

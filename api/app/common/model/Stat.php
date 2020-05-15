@@ -15,4 +15,8 @@ class Stat extends \core\Model
     ];
     protected $fillable = ['date', 'domain_id', 'ip_count', 'jump_count', 'cited_count'];
     protected $filter = ['date', 'domain_id'];  // 搜索项
+    // 域名
+    public function domain (){
+        return $this->belongsTo(Domain::class)->bind(['shield_host' => 'shield_host']);
+    }
 }

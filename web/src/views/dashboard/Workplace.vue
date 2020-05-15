@@ -14,13 +14,13 @@
             <div slot="extra" @click="stat()">更新</div>
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{ipCount}}</a-col>
+                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{ipCount[0]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{ipCount}}</a-col>
+                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{ipCount[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{ipCount}}</a-col>
+                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{ipCount[2]}}</a-col>
               </a-row>
             </div>
           </a-card>
@@ -30,13 +30,13 @@
             <div @click="stat()" slot="extra">更新</div>
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{jumpCount}}</a-col>
+                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{jumpCount[0]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{jumpCount}}</a-col>
+                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{jumpCount[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{jumpCount}}</a-col>
+                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{jumpCount[2]}}</a-col>
               </a-row>
             </div>
           </a-card>
@@ -46,13 +46,13 @@
             <div @click="stat()" slot="extra">更新</div>
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{citedCount}}</a-col>
+                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{citedCount[0]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{citedCount}}</a-col>
+                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{citedCount[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{citedCount}}</a-col>
+                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{citedCount[2]}}</a-col>
               </a-row>
             </div>
           </a-card>
@@ -83,9 +83,9 @@ export default {
       user: {},
 
       codeStat: [],
-      ipCount: 0,
-      jumpCount: 0,
-      citedCount: 0,
+      ipCount: [0, 0, 0],
+      jumpCount: [0, 0, 0],
+      citedCount: [0, 0, 0],
       domainCount: 0
     }
   },
