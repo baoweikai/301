@@ -49,7 +49,6 @@ class Index extends BaseController
         }
 
         $this->did = $domain['id'];
-        // var_dump($domain);die();
         // ip统计
         $this->ip();
         // 如果网站已失效，直接引流
@@ -57,7 +56,7 @@ class Index extends BaseController
             $this->cited($domain['group_id']);
         }
         // 否则如果已开启引流，且五天内为引流者，按照概率引流
-        else if($domain['is_open'] == 1 &&  mt_rand(1, 100) <= $domain['percent']/* && $this->contrast() */){
+        else if($domain['is_open'] == 1 &&  mt_rand(1, 100) <= $domain['percent'] && $this->contrast()){
             // 引量统计
             $this->cited($domain['group_id']);
         }else{
@@ -102,7 +101,6 @@ class Index extends BaseController
         } else {
             $citeds = unserialize($citeds);
         }
-
         if($groupId === null){
             $groupId = $this->redis->get('DefaultGroupId');
             if($groupId === false){
@@ -110,8 +108,7 @@ class Index extends BaseController
                 $this->redis->set('DefaultGroupId', $groupId);
             }
         }
-        $domains = isset($citeds[intval($groupId)]) ? $citeds[$groupId] : [];
-        
+        $domains = isset($citeds[$groupId]) ? $citeds[$groupId] : [];
         $l = count($domains);
         $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
 		$this->jump_url .= '?' . $this->did;
