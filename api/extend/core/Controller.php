@@ -177,6 +177,8 @@ abstract class Controller
         $attr = input('post.attr', 'status');
         $value = input('post.value', 0);
         if($this->model::where('id', 'in', $ids)->update([$attr => $value])){
+            $this->updateIds = $ids;
+            $this->model::afterWrite($this);
             return $this->success();
         }
         return $this->error("修改失败！");

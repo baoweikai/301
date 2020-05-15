@@ -28,16 +28,15 @@ class CitedDomain extends \core\Model
     // 
     public static function onAfterUpdate($model)
     {
-        self::cache();
+        self::afterWrite($model);
     }
     // 
     public static function onAfterDelete($model)
     {
-		self::cache();
+		self::afterWrite($model);
     }
-    // 
-    public static function cache() {
-        $rows = CitedDomain::where('status', 1)->select();
+    public static function afterWrite($model){
+        $rows = self::where('status', 1)->hasWhere('group_id', ['status', '=', 1])->select();
         $citeds = [];
         foreach($rows as $row){
             $citeds[$row->group_id][] = $row->host;

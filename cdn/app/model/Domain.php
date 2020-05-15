@@ -30,14 +30,4 @@ class Domain extends \core\Model
     public function group (){
         return $this->belongsTo(Group::class)->bind(['group_name' => 'name']);
     }
-    // 
-    public static function onAfterUpdate($model)
-    {
-    	cache('domain_' . $model->domain, $model->getData(['jump_host', 'cited_host', 'is_param', 'is_open', 'percent', 'start_time']));
-    }
-    // 
-    public static function onAfterDelete($model)
-    {
-		cache('domain_' . $model->domain, null);
-    }
 }

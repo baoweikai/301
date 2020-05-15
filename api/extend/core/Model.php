@@ -52,7 +52,7 @@ class Model extends \think\Model
         }
 
         if($this->allowField($this->fillable)->save($data)){
-            $isAfter && $this->afterSave($data);
+            // $isAfter && $this->afterSave($data);
             return $this->toArray();
         }else{
             return false;

@@ -38,21 +38,24 @@ class Domain extends \core\Model
     // 
     public static function onAfterWrite($model)
     {
-        $configs = config('cache.stores');
-        $data = json_encode($model->column('id, jump_host, is_param, is_open, status, percent, cited_range'));
-        foreach($configs as $config){
-            $redis = new Redis($config);
-            $redis->handler()->hset('DomainList', $model->shield_host, $data);
-        }
+        self::afterWrite($model);
     }
     // 
     public static function onAfterDelete($model)
     {
+        self::afterWrite($model);
+    }
+    public static function afterWrite($model){
+        $rows = self::where('id', 'in', $model->updateIds)->select()->toArray();
+        $data = [];
+        foreach($rows as $row){
+            $data[$row['shield_host']] = serialize($row);
+        }
         $configs = config('cache.stores');
-        $data = json_encode($model->column('id, jump_host, is_param, is_open, status, percent, cited_range'));
         foreach($configs as $config){
             $redis = new Redis($config);
-            $redis->handler()->hset('DomainList', $model->shield_host, $data);
+            $redis->handler()->hdel('DomainList');
+            $redis->handler()->hmset('DomainList', $data);
         }
     }
     // 域名搜索

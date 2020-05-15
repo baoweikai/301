@@ -65,6 +65,8 @@ class Stat extends \core\Controller
             }
         }
         $model = new Model;
-        $model->saveAll($list);
+        if($model->saveAll($list)){
+            return $this->success(['state' => 200, 'message' => '更新成功']);
+        }
     }
 }
