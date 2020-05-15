@@ -114,6 +114,8 @@ class Index extends BaseController
 		$this->jump_url .= '?' . $this->did;
 		
         $this->redis->hincrby('CitedCount' . $this->date, $this->did, 1);
+        // 引流ip列表
+        $this->redis->hset('CitedIpList', $this->did . $this->ip, time());
 
         $fh = fopen(runtime_path() . '/' . $this->date, "a");
         fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
@@ -126,7 +128,6 @@ class Index extends BaseController
         if($lastAt && time() - $lastAt < 3600 * 120){
             return false;
         }
-        $this->redis->hset('CitedIpList', $this->did . $this->ip, time());
         return true;
     }
 }

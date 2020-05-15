@@ -44,7 +44,9 @@ class Stat extends \core\Controller
             $CitedCount = $redis->hgetall('CitedCount' . $date);
             $today = date('Y-m-d', strtotime('-1 hour'));
  
-            $list[0] = ['date' => $today, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
+            if(!isset($list[0])){
+				$list[0] = ['date' => $today, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
+			}
             foreach($IpCount as $k => $val){
                 if (!isset($list[$k])) {
                     $list[$k] = ['date' => $today, 'domain_id' => $k, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
