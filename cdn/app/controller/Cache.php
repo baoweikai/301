@@ -43,6 +43,7 @@ class Cache extends BaseController
         $date = date('Ymd', strtotime('-1 hour'));
         foreach($configs as $config){
             $redis = (new Redis($config))->handler();
+            $redis->del('IpList' . $date);
             $redis->del('IpCount' . $date);
             $redis->del('JumpCount' . $date);
             $redis->del('CitedCount' . $date);

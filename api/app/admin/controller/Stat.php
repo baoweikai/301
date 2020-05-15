@@ -38,12 +38,13 @@ class Stat extends \core\Controller
         $list = [];
         $date = date('Ymd', strtotime('-1 hour'));
         foreach($configs as $config){
-            $redis = new Redis($config);
-            $IpCount = $redis->handler()->hgetall('IpCount' . $date);
-            $JumpCount = $redis->handler()->hgetall('JumpCount' . $date);
-            $CitedCount = $redis->handler()->hgetall('CitedCount' . $date);
+            $redis = (new Redis($config))->handler();
+            $IpCount = $redis->hgetall('IpCount' . $date);
+            $JumpCount = $redis->hgetall('JumpCount' . $date);
+            $CitedCount = $redis->hgetall('CitedCount' . $date);
             $today = date('Y-m-d', strtotime('-1 hour'));
-
+ 
+            $list[0] = ['date' => $today, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
             foreach($IpCount as $k => $val){
                 if (!isset($list[$k])) {
                     $list[$k] = ['date' => $today, 'domain_id' => $k, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
