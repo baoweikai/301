@@ -3,6 +3,7 @@ namespace app\common\model;
 
 class Stat extends \core\Model
 {
+    // protected $pk = ['date', 'domain_id'];
     protected $type = [
         'date' => 'date',
         'domain_id' => 'integer',

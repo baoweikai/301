@@ -13,14 +13,14 @@ export const asyncRouterMap = [
         path: '/dashboard/workplace',
         name: 'Dashboard',
         component: () => import('@/views/dashboard/Workplace'),
-        meta: { title: '仪表盘', keepAlive: true, icon: 'home' }
+        meta: { title: '首页', keepAlive: true, icon: 'home' }
       },
       // 资源
       {
         path: '/res/',
         redirect: '/res/domain',
         component: Page,
-        meta: { title: '资源管理', icon: 'shopping' },
+        meta: { title: '域名管理', icon: 'shopping' },
         children: [
           {
             path: 'domain',

@@ -11,7 +11,7 @@
       <a-row :gutter="16">
         <a-col class="gutter-row" :span="6">
           <a-card title="IP数">
-            <router-link to="/res/video?flow_status=3" slot="extra">查看</router-link>
+            <div slot="extra" @click="stat()">更新</div>
             <div class="fs16 tac">
               <a-row>
                 <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{ipCount}}</a-col>
@@ -27,7 +27,7 @@
         </a-col>
         <a-col class="gutter-row" :span="6">
           <a-card title="跳转">
-            <router-link to="/res/video?flow_status=5" slot="extra">查看</router-link>
+            <div @click="stat()" slot="extra">更新</div>
             <div class="fs16 tac">
               <a-row>
                 <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{jumpCount}}</a-col>
@@ -43,7 +43,7 @@
         </a-col>
         <a-col class="gutter-row" :span="6">
           <a-card title="引流数">
-            <router-link to="/res/video?flow_status=5" slot="extra">查看</router-link>
+            <div @click="stat()" slot="extra">更新</div>
             <div class="fs16 tac">
               <a-row>
                 <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{citedCount}}</a-col>
@@ -59,7 +59,7 @@
         </a-col>
         <a-col class="gutter-row" :span="6">
           <a-card title="域名数">
-            <router-link to="/res/video?flow_status=5" slot="extra"></router-link>
+            <div to="/res/video?flow_status=5" slot="extra"></div>
             <p class="fs34 fc-success tac">{{domainCount}}</p>
           </a-card>
         </a-col>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { util, page } from '@/utils'
+import { util, page, http } from '@/utils'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -102,7 +102,10 @@ export default {
     this.load('index/workplace')
   },
   methods: {
-    ...mapGetters(['nickname', 'welcome'])
+    ...mapGetters(['nickname', 'welcome']),
+    stat () {
+      http.get('stat/update')
+    }
   }
 }
 </script>

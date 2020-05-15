@@ -12,27 +12,27 @@ return [
     'stores'  => [
         'redis0'	=>	[
             'type'	=>	'redis',
-            'host'	=>	'222.186.3.230',
-            'port' => 8168,
-            'password' => 'Tw2012927++',
+            'host'	=>	'redis',
+            'port' => 6379,
+            'password' => 'huaren54321',
             'timeout'=> 259200,
             // 全局缓存有效期（0为永久有效）
             'expire'=>  259200,
             // 缓存前缀
-            'prefix'=>  '',
+            'prefix'=>  '301',
             'persistent' => false,
         ],
        
         'redis1'	=>	[
            'type'	=>	'redis',
-           'host'	=>	'222.186.15.61',
-           'port' => 8168,
-           'password' => 'Tw2012927++',
+           'host'	=>	'redis',
+           'port' => 6379,
+           'password' => 'huaren54321',
            'timeout'=> 259200,
            // 全局缓存有效期（0为永久有效）
            'expire'=>  259200,
            // 缓存前缀
-           'prefix'=>  '',
+           'prefix'=>  '301',
            'persistent' => false,
        ]
     ],

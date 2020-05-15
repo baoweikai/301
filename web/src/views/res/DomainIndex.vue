@@ -64,7 +64,7 @@ export default {
       listItems: ['id', 'user_id', 'shield_host', 'jump_host', 'expire_at', 'is_open', 'percent', 'group_id', 'status', 'create_at', 'update_at', 'action'],
       // 表单
       formItems: ['shield_host', 'jump_host', 'expire_at', 'is_param', 'is_open', 'percent', 'group_id', 'cited_range', 'status'],
-      findItems: ['id', 'shield_host', 'is_open', 'status', 'exame_status']
+      findItems: ['id', 'shield_host', 'jump_host', 'is_open', 'status', 'exame_status']
     }
   },
   created () {

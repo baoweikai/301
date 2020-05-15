@@ -9,6 +9,7 @@ class CitedDomain extends \core\Controller
     protected $model = '\app\common\model\CitedDomain'; // 对应表格
     protected $with = ['group'];
     protected $name = '管理员';
+    protected $defaults = ['status' => 1];
 
     protected function beforeForm($model = null){
         $this->columns($model);

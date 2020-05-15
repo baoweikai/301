@@ -9,22 +9,21 @@ use app\model\Group;
 
 class Index extends BaseController
 {
-    protected  $redis, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
-    protected function initialize(){
+    protected  $redis, $date, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
+    protected function initialize(){        
         // ip处理
         $this->ip = request()->ip();
         $ipLast = substr($this->ip, -1);
+        $this->date = date('Ymd');
         $i = $ipLast % count(config('cache.stores'));
         // $redis配置
         $config = config('cache.stores.redis' . $i);
-
         $this->redis = new Redis($config);
     }
 
     public function index()
     {
         // 如果不存在DomainList缓存，则建立
-        $this->redis->handler()->del('DomainList');
         if(!$this->redis->handler()->exists('DomainList')){
             $rows = Db::name('domain')->field('id, shield_host, jump_host, percent, expire_at, is_param, status, is_open, group_id')->select();
             $domains = [];
@@ -41,6 +40,12 @@ class Index extends BaseController
             return redirect($this->jump_url);
         }
         $domain = json_decode($domain, true);
+
+        //验证后缀是否是图片，js，css等
+        if(verifyExt(request()->ext())){
+            return redirect($domain["jump_url"] . request()->url());
+        }
+
         $this->did = $domain['id'];
         // ip统计
         $this->ip();
@@ -54,8 +59,8 @@ class Index extends BaseController
             $this->cited($domain['group_id']);
         }else{
             // 跳转地址
-            $query= request()->query();
-            $this->jump_url = $domain["is_param"] === 1 && $query !== '' ? $domain["jump_host"] . '?' . $query : $domain['jump_host'];
+            $url= request()->url();
+            $this->jump_url = $domain["is_param"] === 1 ? $domain["jump_host"] . $url : $domain['jump_host'];
             // 跳转统计
             $this->jump();
         }
@@ -68,15 +73,19 @@ class Index extends BaseController
      */
     private function ip()
     {
-        $this->redis->handler()->sadd('IpCount_' . $this->did . '_' . date('m-d'), $this->ip);
+        // 如果ip 不存在当日ip，则增加ip统计
+        if(!$this->redis->handler()->sismember('IpList' . $this->date, $this->did . '_' . $this->ip)){
+            $this->redis->handler()->hincrby('IpCount' . $this->date, $this->did, 1);
+            $this->redis->handler()->sadd('IpList' . $this->date,  $this->did . '_' . $this->ip);
+        }   
     }
 
     //跳转统计
     private function jump()
     {
-        $this->redis->inc('JumpCount_' . $this->did . '_' . date('m-d'));
+        $this->redis->handler()->hincrby('JumpCount' . $this->date, $this->did, 1);
         
-        $fh = fopen(runtime_path() . '/' . date('Y-m-d'), "a");
+        $fh = fopen(runtime_path() . '/' . $this->date, "a");
         fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
     }
@@ -88,30 +97,32 @@ class Index extends BaseController
             $citeds = CitedDomain::cache();
             $this->redis->set('Citeds', $citeds);
         }
-        $groupId = $this->redis->get('DefaultGroupId');
         if($groupId === null){
-            $groupId = Group::where('status', '=', 1)->order(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
-            $this->redis->set('DefaultGroupId', $groupId);
+            $groupId = $this->redis->get('DefaultGroupId');
+            if($groupId === null){
+                $groupId = Group::where('status', '=', 1)->order(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
+                $this->redis->set('DefaultGroupId', $groupId);
+            }
         }
         $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];
         $l = count($domains);
         $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
 		$this->jump_url .= '?' . $this->did;
 		
-        $this->redis->inc('CitedCount_' . $this->did . '_' . date('m-d'));
+        $this->redis->handler()->hincrby('CitedCount' . $this->date, $this->did, 1);
 
-        $fh = fopen(runtime_path() . '/' . date('Y-m-d'), "a");
+        $fh = fopen(runtime_path() . '/' . $this->date, "a");
         fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
     }
     // 验证五天内该Ip是否引流
     private function contrast()
     {
-        $lastAt = $this->redis->handler()->hget('IpList', $this->did . $this->ip);
+        $lastAt = $this->redis->handler()->hget('CitedIpList', $this->did . $this->ip);
         if($lastAt && time() - $lastAt < 3600 * 120){
             return false;
         }
-        $this->redis->handler()->hset('IpList', $this->did . $this->ip, time());
+        $this->redis->handler()->hset('CitedIpList', $this->did . $this->ip, time());
         return true;
     }
 }

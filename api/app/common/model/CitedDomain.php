@@ -17,9 +17,9 @@ class CitedDomain extends \core\Model
     protected $fillable = ['host', 'weight', 'status', 'group_id'];
     protected $filter = ['host', 'group_id', 'status'];  // 搜索项
     protected $rule = [
-        'host'  => 'require|unique:cited_domain,host',
+        'host'  => 'require|unique:cited_domain',
         'weight'  => 'require|integer|length:1',
-        'status'   => 'integer',
+        'status'   => 'integer'
     ];
     // 分组
     public function group (){
