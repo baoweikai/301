@@ -19,4 +19,9 @@ class Stat extends \core\Model
     public function domain (){
         return $this->belongsTo(Domain::class)->bind(['shield_host' => 'shield_host']);
     }
+    // 状态搜索
+    public function searchDomainIdAttr($query, $value, $data)
+    {
+        $value !== null && $value !== '' && $query->where('domain_id', '=', $value);
+    }
 }

@@ -12,7 +12,7 @@ class Index extends BaseController
     protected  $redis, $date, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
     protected function initialize(){      
         // ip处理
-        $this->ip = request()->ip();
+        $this->ip = get_ip();
         $ipLast = substr($this->ip, -1);
         $this->date = date('Ymd');
         $i = $ipLast % count(config('cache.stores'));
@@ -114,7 +114,7 @@ class Index extends BaseController
 		$this->jump_url .= '?' . $this->did;
 		
         $this->redis->hincrby('CitedCount' . $this->date, $this->did, 1);
-        // 引流ip列表
+        // 引量ip列表
         $this->redis->hset('CitedIpList', $this->did . $this->ip, time());
 
         $fh = fopen(runtime_path() . '/' . $this->date, "a");

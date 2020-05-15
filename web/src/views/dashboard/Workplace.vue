@@ -104,7 +104,13 @@ export default {
   methods: {
     ...mapGetters(['nickname', 'welcome']),
     stat () {
-      http.get('stat/update')
+      http.get('stat/update').then(res => {
+        if (res) {
+          // Do something
+          this.$message.success('更新成功')
+          this.$route.reload()
+        }
+      })
     }
   }
 }

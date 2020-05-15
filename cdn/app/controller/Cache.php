@@ -47,6 +47,15 @@ class Cache extends BaseController
             $redis->del('IpCount' . $date);
             $redis->del('JumpCount' . $date);
             $redis->del('CitedCount' . $date);
+            $redis->del('CitedIpList');
+        } 
+    }
+    public function citedIp(){
+        $configs = config('cache.stores');
+        // $date = date('Ymd', strtotime('-1 hour'));
+        foreach($configs as $config){
+            $redis = (new Redis($config))->handler();
+            $redis->del('CitedIpList');
         } 
     }
 }

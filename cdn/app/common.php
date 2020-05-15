@@ -16,3 +16,22 @@ function verifyExt($param ='')
         return false;
     }
 }
+
+/*
+* 获取用户真实IP地址
+*/
+function get_ip(){
+    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+        $cip = $_SERVER['HTTP_CLIENT_IP'];
+    }else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+        $cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+    }else if(!empty($_SERVER["REMOTE_ADDR"])){
+        $cip = $_SERVER["REMOTE_ADDR"];
+    }else{
+        $cip = '';
+    }
+    preg_match("/[\d\.]{7,15}/", $cip, $cips);
+    $cip = isset($cips[0]) ? $cips[0] : '0';
+    unset($cips);
+    return $cip;
+}
