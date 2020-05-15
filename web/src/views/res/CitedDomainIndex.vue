@@ -41,7 +41,7 @@ export default {
           title: '状态', type: 'switch', options: ['关闭', '启用'], rules: [{ required: true }]
         },
         create_at: { title: '创建时间', type: 'date', format: 'MM-DD' },
-        action: { title: '操作', type: 'action', actions: ['edit', 'audit', 'del'] }
+        action: { title: '操作', type: 'action', actions: ['edit', 'audit'] }
       },
       // 列表项
       listItems: ['id', 'host', 'group_id', 'weight', 'status', 'create_at', 'action'],

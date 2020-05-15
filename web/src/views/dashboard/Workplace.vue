@@ -105,10 +105,11 @@ export default {
     ...mapGetters(['nickname', 'welcome']),
     stat () {
       http.get('stat/update').then(res => {
-        if (res) {
+        if (res.state === 200) {
           // Do something
           this.$message.success('更新成功')
-          this.$route.reload()
+          Object.assign(this, res.result)
+          // this.$router.replace(location)
         }
       })
     }

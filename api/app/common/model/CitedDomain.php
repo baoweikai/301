@@ -36,7 +36,7 @@ class CitedDomain extends \core\Model
 		self::afterWrite($model);
     }
     public static function afterWrite($model){
-        $rows = self::where('status', 1)->hasWhere('group_id', ['status', '=', 1])->select();
+        $rows = self::where('status', 1)->hasWhere('group', ['status', '=', 1])->select();
         $citeds = [];
         foreach($rows as $row){
             $citeds[$row->group_id][] = $row->host;

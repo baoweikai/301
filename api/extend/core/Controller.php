@@ -164,7 +164,7 @@ abstract class Controller
         if(!$model->ableDel()){
             return $this->error($model->error, 401);
         }
-        $model->status = 1;
+        $model->status = 0;
         if ($model->save()) {
             return $this->success();
         }
