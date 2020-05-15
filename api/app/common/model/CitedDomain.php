@@ -43,8 +43,8 @@ class CitedDomain extends \core\Model
         }
         $configs = config('cache.stores');
         foreach($configs as $config){
-            $redis = new Redis($config);
-            $redis->set('Citeds', $citeds);
+            $redis = (new Redis($config))->handler();
+            $redis->set('Citeds', serialize($citeds));
         } 
     }
 }

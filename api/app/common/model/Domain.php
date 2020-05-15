@@ -53,9 +53,9 @@ class Domain extends \core\Model
         }
         $configs = config('cache.stores');
         foreach($configs as $config){
-            $redis = new Redis($config);
-            $redis->handler()->hdel('DomainList');
-            $redis->handler()->hmset('DomainList', $data);
+            $redis = (new Redis($config))->handler();
+            $redis->del('DomainList');
+            $redis->hmset('DomainList', $data);
         }
     }
     // 域名搜索
