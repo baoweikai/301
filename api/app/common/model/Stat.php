@@ -3,7 +3,7 @@ namespace app\common\model;
 
 class Stat extends \core\Model
 {
-    // protected $pk = ['date', 'domain_id'];
+    protected $table = 'stat';     // 系统管理员表
     protected $type = [
         'date' => 'date',
         'domain_id' => 'integer',
@@ -22,6 +22,11 @@ class Stat extends \core\Model
     // 状态搜索
     public function searchDomainIdAttr($query, $value, $data)
     {
-        $value !== null && $value !== '' && $query->where('domain_id', '=', $value);
+        $value !== null && $query->hasWhere('domain', ['shield_host' => $value]);
+    }
+    // 创建日期搜索
+    public function searchDateAttr($query, $value, $data)
+    {
+        is_array($value) && $query->where('date', '>=', $value[0])->where('date', '<=', $value[1]);
     }
 }

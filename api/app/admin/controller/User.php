@@ -11,6 +11,10 @@ class User extends \core\Controller
     {
         return $this->_index();
     }
+    public function select()
+    {
+        return $this->_select('account');
+    }
     // 添加
     public function add()
     {

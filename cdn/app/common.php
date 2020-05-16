@@ -6,9 +6,8 @@
  * @param $param  参数
  * @return  bool
  */
-function verifyExt($param ='')
+function verifyExt($ext ='')
 {
-    $ext = substr(strrchr($param,"."), 1);
     $extArr = ["js","css","jpg","jpeg","png","gif","xml","rar","zip","exe","pdf","xls","txt","doc","ico"];
     if(in_array($ext, $extArr)){
         return true;

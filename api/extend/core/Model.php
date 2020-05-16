@@ -104,7 +104,7 @@ class Model extends \think\Model
      * @param string $node
      * @return bool
      */
-    public function _select($params = [], $attr = ''){
+    public function _select($params = [], $attr = 'name'){
         // 使用查询构造器查询
         $result = self::field(['id', $attr => 'name'])->withSearch($this->filter, $params)->order($this->order)->paginate(10);
         return ['total' => $result->total(), 'list' => $result->items()];

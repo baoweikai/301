@@ -31,7 +31,7 @@ export default {
       columns: {
         id: { title: 'ID', type: 'string' },
         user_id: {
-          title: '用户', type: 'relate', rules: [{ required: true }], customRender: (v, record) => record.account
+          title: '用户', type: 'relate', rules: [{ required: true }], customRender: (v, record) => record.account, text: '', controller: 'user', column: ['username'], findItems: ['account']
         },
         shield_host: { title: '域名', type: 'string', rules: [{ required: true }] },
         jump_host: { title: '跳转地址', type: 'string', rules: [{ required: true }] },
@@ -63,8 +63,8 @@ export default {
       // 列表项
       listItems: ['id', 'user_id', 'shield_host', 'jump_host', 'is_param', 'is_open', 'percent', 'group_id', 'status', 'create_at', 'update_at', 'action'],
       // 表单
-      formItems: ['shield_host', 'jump_host', 'expire_at', 'is_param', 'is_open', 'percent', 'group_id', 'cited_range', 'status'],
-      findItems: ['id', 'shield_host', 'jump_host', 'is_open', 'status', 'exame_status']
+      formItems: ['shield_host', 'jump_host', 'user_id', 'expire_at', 'is_param', 'is_open', 'percent', 'group_id', 'cited_range', 'status'],
+      findItems: ['id', 'user_id', 'shield_host', 'jump_host', 'is_open', 'status', 'exame_status', 'create_at']
     }
   },
   created () {

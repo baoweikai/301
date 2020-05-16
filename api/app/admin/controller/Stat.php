@@ -37,15 +37,16 @@ class Stat extends \core\Controller
         $configs = config('cache.stores');
         $list = [];
         $date = date('Ymd', strtotime('-1 hour'));
+        $today = date('Y-m-d', strtotime('-1 hour'));
         foreach($configs as $config){
             $redis = (new Redis($config))->handler();
             $IpCount = $redis->hgetall('IpCount' . $date);
             $JumpCount = $redis->hgetall('JumpCount' . $date);
             $CitedCount = $redis->hgetall('CitedCount' . $date);
-            $today = date('Y-m-d', strtotime('-1 hour'));
  
             if(!isset($list[0])){
-				$list[0] = ['date' => $today, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
+                $list[0] = ['date' => $today, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
+                // $list[0]['ip_count'] += isset($IpCount[0]) ? $IpCount[0] : 0;
 			}
             foreach($IpCount as $k => $val){
                 if (!isset($list[$k])) {
@@ -75,15 +76,15 @@ class Stat extends \core\Controller
             $date = date('Y-m-d', strtotime('-8 day'));
             $rows = Model::where('date', '>', $date)->select();
             $yesterday = date('Y-m-d', strtotime('-1 day'));
-            $today = date('Y-m-d', strtotime('-1 day'));
+            $today = date('Y-m-d');
             $sevenday = date('Y-m-d', strtotime('-7 day'));
             foreach($rows as $row){
-                if($row->date = $today){
+                if($row->date == $today){
                     $this->result['ipCount'][0] += $row->ip_count;
                     $this->result['jumpCount'][0] += $row->jump_count;
                     $this->result['citedCount'][0] += $row->cited_count;
                 }
-                if($row->date = $yesterday){
+                if($row->date == $yesterday){
                     $this->result['ipCount'][1] += $row->ip_count;
                     $this->result['jumpCount'][1] += $row->jump_count;
                     $this->result['citedCount'][1] += $row->cited_count;

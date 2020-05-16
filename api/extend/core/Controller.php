@@ -41,7 +41,7 @@ abstract class Controller
     /*
      * 选择列表
      */
-    protected function _select($params = [], $attr = 'name')
+    protected function _select($attr = 'name', $params = [])
     {
         $model = new $this->model;
         $this->result += $model->_select($params + input('get.', []), $attr);

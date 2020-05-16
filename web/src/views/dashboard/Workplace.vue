@@ -11,7 +11,7 @@
       <a-row :gutter="16">
         <a-col class="gutter-row" :span="6">
           <a-card title="IP数">
-            <div slot="extra" @click="stat()">更新</div>
+            <a slot="extra" @click="stat()">更新</a>
             <div class="fs16 tac">
               <a-row>
                 <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{ipCount[0]}}</a-col>
@@ -20,14 +20,14 @@
                 <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{ipCount[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{ipCount[2]}}</a-col>
+                <a-col :span="12">周内</a-col><a-col class="fc-success" :span="12">{{ipCount[2]}}</a-col>
               </a-row>
             </div>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
           <a-card title="跳转">
-            <div @click="stat()" slot="extra">更新</div>
+            <a @click="stat()" slot="extra">更新</a>
             <div class="fs16 tac">
               <a-row>
                 <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{jumpCount[0]}}</a-col>
@@ -36,14 +36,14 @@
                 <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{jumpCount[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{jumpCount[2]}}</a-col>
+                <a-col :span="12">周内</a-col><a-col class="fc-success" :span="12">{{jumpCount[2]}}</a-col>
               </a-row>
             </div>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
           <a-card title="引流数">
-            <div @click="stat()" slot="extra">更新</div>
+            <a @click="stat()" slot="extra">更新</a>
             <div class="fs16 tac">
               <a-row>
                 <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{citedCount[0]}}</a-col>
@@ -52,7 +52,7 @@
                 <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{citedCount[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">本周</a-col><a-col class="fc-success" :span="12">{{citedCount[2]}}</a-col>
+                <a-col :span="12">周内</a-col><a-col class="fc-success" :span="12">{{citedCount[2]}}</a-col>
               </a-row>
             </div>
           </a-card>

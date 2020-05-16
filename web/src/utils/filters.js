@@ -4,7 +4,7 @@ import api from '@/config/api'
 export default {
   // 时间转换
   date (text, format) {
-    return moment(text).format(format)
+    return text % 1 === 0 ? moment(text).format(format) : text
   },
   // 图片
   image (text, isReco = false) {

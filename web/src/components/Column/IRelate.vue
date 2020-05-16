@@ -9,6 +9,17 @@
       @cancel="visible=false"
       :footer="null"
     >
+      <a-form layout="inline" :form="form" class="mb-3" @submit="handleSearch">
+        <a-form-item v-for="(column, index) in findColumns" :key="index" :label="'名称'">
+          <a-input
+            v-decorator="[column]"
+          />
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" icon="search" html-type="submit"></a-button>
+        </a-form-item>
+      </a-form>
+
       <a-list
         itemLayout="vertical"
         size="small"
@@ -47,7 +58,8 @@ export default {
         },
         pageSize: 10,
         total: 0
-      }
+      },
+      form: this.$form.createForm(this)
     }
   },
   beforeCreate () {
@@ -59,7 +71,6 @@ export default {
     // 从store读取数据
     value: {
       get () {
-        console.log(this.$props)
         return this.$attrs['data-__field'].value
       },
       set (value) {
@@ -93,6 +104,21 @@ export default {
       this.$emit('update:value', item.id)
       this.label = item.name
       this.visible = false
+    },
+    handleSearch (e) {
+      // 触发表单提交
+      e.preventDefault()
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          let queryParams
+          if (this.$listeners.callBackFormat && typeof this.$listeners.callBackFormat === 'function') {
+            queryParams = this.$listeners.callBackFormat(values)
+          } else {
+            queryParams = this.handleParams(values)
+          }
+          this.$router.push({ path: this.$route.path, query: queryParams }).catch(err => err)
+        }
+      })
     }
   },
   watch: {

@@ -38,7 +38,6 @@ export default {
     submit () {
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log(values)
           const params = { password: md5(values.password), confirm: md5(values.confirm) }
           http.post('admin/pass/' + this.pk, params)
             .then(res => {

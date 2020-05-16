@@ -52,8 +52,8 @@ class Admin extends \core\Controller
         if (request()->isGet()) {
             return $this->success(['vo' => $model]);
         }
-
         $post = input('post.');
+
         if ($post['password'] !== $post['confirm']) {
             return $this->error('两次输入的密码不一致！', 201);
         }

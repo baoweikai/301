@@ -10,6 +10,10 @@ use app\model\Group;
 class Index extends BaseController
 {
     protected  $redis, $date, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
+    public function __call($method, $args)
+    {
+        return $this->index();
+    }
     protected function initialize(){      
         // ip处理
         $this->ip = get_ip();
@@ -19,7 +23,6 @@ class Index extends BaseController
         // $redis配置
         $config = config('cache.stores.redis' . $i);
         $this->redis = (new Redis($config))->handler();
-        // $this->redis = $redis->handler();
     }
 
     public function index()
@@ -37,6 +40,7 @@ class Index extends BaseController
         // 查询数据
         $domain = $this->redis->hget('DomainList', $host);
         if($domain === false){
+            $this->ip();
             $this->cited();
             return redirect($this->jump_url);
         } else{
@@ -75,7 +79,7 @@ class Index extends BaseController
      */
     private function ip()
     {
-        // 如果ip 不存在当日ip，则增加ip统计
+        // 如果ip 不存在当日ip列表中，则增加ip统计
         if(!$this->redis->sismember('IpList' . $this->date, $this->did . '_' . $this->ip)){
             $this->redis->hincrby('IpCount' . $this->date, $this->did, 1);
             $this->redis->sadd('IpList' . $this->date,  $this->did . '_' . $this->ip);

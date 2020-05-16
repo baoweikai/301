@@ -27,7 +27,7 @@ export default {
       columns: {
         id: { title: 'ID', type: 'string' },
         date: { title: '日期', type: 'date' },
-        domain_id: { title: '域名', type: 'string', customRender: (v, record) => record.shield_host },
+        domain_id: { title: '域名', type: 'string', customRender: (v, record) => v === 0 ? '未入库域名' : record.shield_host },
         ip_count: { title: 'ip量', type: 'number' },
         jump_count: { title: '跳转', type: 'number' },
         cited_count: { title: '引量', type: 'number' },
@@ -40,7 +40,7 @@ export default {
       // 表单
       formItems: ['date', 'domain_id', 'ip_count', 'jump_count', 'cited_count'],
       // 搜索项
-      findItems: ['id', 'date', 'domain_id', 'create_at']
+      findItems: ['date', 'domain_id']
     }
   },
   created () {

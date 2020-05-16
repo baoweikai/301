@@ -41,9 +41,4 @@ class Admin extends Model
         }
         return true;
     }
-    //对密码加密
-    protected function setPasswordAttr($value) 
-    {
-		return md5(Sha1($value));
-	}
 }

@@ -9,6 +9,7 @@ class Domain extends \core\Controller
     protected $middleware = ['auth'];
     protected $model = '\app\common\model\Domain'; // 对应表格
     protected $with = ['user', 'group'];
+    protected $extend = ['user'];
     protected $name = '管理员';
 
     protected function beforeForm($model = null){
@@ -17,7 +18,8 @@ class Domain extends \core\Controller
     private function columns($model = null){
         // 各个字段编辑时需要的数据
         $this->result['columns'] += [
-            'group_id' => ['options' => Group::column('name', 'id')]
+            'group_id' => ['options' => Group::column('name', 'id')],
+            'user_id' => ['text' => isset($model->account) ? $model->account : '']
         ];
     }
     protected function beforeIndex(){
