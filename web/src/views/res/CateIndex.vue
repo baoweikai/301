@@ -2,16 +2,17 @@
   <div>
     <List ref="list" v-bind="{ columns: pick(columns, listItems), controller: controller }" />
     <Edit ref="edit" v-bind="{ columns: pick(columns, formItems), controller: controller }" />
+    <Add ref="add" v-bind="{ columns: pick(columns, formItems), controller: controller }" />
   </div>
 </template>
 
 <script>
-import { List, Edit } from '@/components'
+import { List, Edit, Add } from '@/components'
 import { page } from '@/utils'
 
 export default {
   mixins: [page],
-  components: { Edit, List },
+  components: { List, Edit, Add },
   data () {
     return {
       description: '分类',
@@ -29,7 +30,7 @@ export default {
           title: '创建时间', type: 'date', format: 'YYYY-MM-DD'
         },
         action: {
-          title: '操作', type: 'action', actions: ['edit', 'del']
+          title: '操作', type: 'action', actions: ['edit']
         }
       },
       // 列表项

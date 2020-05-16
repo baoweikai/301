@@ -10,10 +10,8 @@
       :footer="null"
     >
       <a-form layout="inline" :form="form" class="mb-3" @submit="handleSearch">
-        <a-form-item v-for="(column, index) in findColumns" :key="index" :label="'名称'">
-          <a-input
-            v-decorator="[column]"
-          />
+        <a-form-item v-for="(attr, index) in find" :key="index" :label="'名称'">
+          <a-input v-decorator="[attr]" />
         </a-form-item>
         <a-form-item>
           <a-button type="primary" icon="search" html-type="submit"></a-button>
@@ -43,7 +41,7 @@ import { http, filters } from '@/utils'
 
 export default {
   name: 'IRelate',
-  props: ['column', 'findColumns', 'controller'],
+  props: ['column', 'find', 'controller', 'text'],
   data () {
     return {
       visible: false,
@@ -56,16 +54,13 @@ export default {
             ...this.queryParams
           })
         },
+        size: 'small',
         pageSize: 10,
         total: 0
       },
+      label: '',
       form: this.$form.createForm(this)
     }
-  },
-  beforeCreate () {
-    const values = {}
-    values[this.$attrs['data-__field'].name] = { label: '' }
-    this.$store.commit('form/UPDATE', values)
   },
   computed: {
     // 从store读取数据
@@ -74,15 +69,8 @@ export default {
         return this.$attrs['data-__field'].value
       },
       set (value) {
-        this.$emit('update:data-__field', { value: value, name: this.$attrs['data-__field'].value })
-      }
-    },
-    label: {
-      get () {
-        return this.$attrs.text
-      },
-      set (value) {
-        this.$emit('update:text', value)
+        this.$emit('change', value)
+        // this.$emit('update:data-__field', { value: value, name: this.$attrs['data-__field'].value })
       }
     }
   },
@@ -101,7 +89,7 @@ export default {
       })
     },
     handelChoose (item) {
-      this.$emit('update:value', item.id)
+      this.value = item.id
       this.label = item.name
       this.visible = false
     },
@@ -110,13 +98,9 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          let queryParams
-          if (this.$listeners.callBackFormat && typeof this.$listeners.callBackFormat === 'function') {
-            queryParams = this.$listeners.callBackFormat(values)
-          } else {
-            queryParams = this.handleParams(values)
-          }
-          this.$router.push({ path: this.$route.path, query: queryParams }).catch(err => err)
+          http.get(this.controller + '/select', values).then(res => {
+            this.list = res.list
+          })
         }
       })
     }
@@ -126,6 +110,13 @@ export default {
       handler (newVal, oldVal) {
         if (newVal) {
           this.fetch()
+        }
+      }
+    },
+    text: {
+      handler (newVal, oldVal) {
+        if (newVal) {
+          this.label = newVal
         }
       }
     }

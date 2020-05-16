@@ -6,8 +6,8 @@ class Cate extends \core\Model
     //定义属性
     protected $type = [
         'status' => 'integer',
-        'create_at' => 'timestamp:Y-m-d H:i:s',
-        'update_at' => 'timestamp:Y-m-d H:i:s',
+        'create_at' => 'timestamp:m-d H:i',
+        'update_at' => 'timestamp:m-d H:i',
     ];
     protected $fillable = ['name', 'status'];
     protected $filter = ['name', 'status'];  // 搜索项

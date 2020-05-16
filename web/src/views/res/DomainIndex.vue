@@ -31,7 +31,7 @@ export default {
       columns: {
         id: { title: 'ID', type: 'string' },
         user_id: {
-          title: '用户', type: 'relate', rules: [{ required: true }], customRender: (v, record) => record.account, text: '', controller: 'user', column: ['username'], findItems: ['account']
+          title: '用户', type: 'relate', rules: [{ required: true }], customRender: (v, record) => record.account, text: '', controller: 'user', column: ['username'], find: ['account']
         },
         shield_host: { title: '域名', type: 'string', rules: [{ required: true }] },
         jump_host: { title: '跳转地址', type: 'string', rules: [{ required: true }] },
@@ -58,7 +58,7 @@ export default {
         },
         create_at: { title: '创建日期', type: 'date', format: 'MM-DD' },
         update_at: { title: '更新时间', type: 'date', format: 'MM-DD HH:mm' },
-        action: { title: '操作', type: 'action', actions: ['edit', 'audit', 'del'] }
+        action: { title: '操作', type: 'action', actions: ['edit', 'audit'] }
       },
       // 列表项
       listItems: ['id', 'user_id', 'shield_host', 'jump_host', 'is_param', 'is_open', 'percent', 'group_id', 'status', 'create_at', 'update_at', 'action'],

@@ -43,13 +43,13 @@ class Error extends BaseController
         if($domain === false){
             $this->ip();
             $this->cited();
-            return redirect($this->jump_url);
+            return redirect($this->jump_url, 301);
         }
         $domain = unserialize($domain);
 
         //验证后缀是否是图片，js，css等
         if(verifyExt(request()->ext())){
-            return redirect($domain["jump_host"] . request()->url());
+            return redirect($domain["jump_host"] . request()->url(), 301);
         }
 
         $this->did = $domain['id'];
@@ -71,7 +71,7 @@ class Error extends BaseController
             $this->jump();
         }
 
-        return redirect($this->jump_url);
+        return redirect($this->jump_url, 301);
     }
 
     /**
