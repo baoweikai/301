@@ -113,8 +113,13 @@ class Error extends BaseController
         $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];
         $l = count($domains);
         $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
-		$this->jump_url .= '?' . $this->did;
-		
+        $this->jump_url .= '?' . $this->did;
+        
+        // 验证后缀非 html，php， asp等
+        if(verifyExt(request()->ext())){
+            return redirect($this->jump_url, 301);
+        }
+        
         $this->redis->hincrby('CitedCount' . $this->date, $this->did, 1);
         // 引流ip列表
         $this->redis->hset('CitedIpList', $this->did . $this->ip, time());
