@@ -61,7 +61,7 @@ export default {
         action: { title: '操作', type: 'action', actions: ['edit', 'audit'] }
       },
       // 列表项
-      listItems: ['id', 'user_id', 'shield_host', 'jump_host', 'is_param', 'is_open', 'percent', 'group_id', 'status', 'create_at', 'update_at', 'action'],
+      listItems: ['id', 'user_id', 'shield_host', 'jump_host', 'is_param', 'is_open', 'percent', 'group_id', 'status', 'action'],
       // 表单
       formItems: ['shield_host', 'jump_host', 'user_id', 'expire_at', 'is_param', 'is_open', 'percent', 'group_id', 'cited_range', 'status'],
       findItems: ['id', 'user_id', 'shield_host', 'jump_host', 'is_open', 'status', 'exame_status', 'create_at']

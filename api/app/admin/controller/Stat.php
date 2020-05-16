@@ -14,7 +14,7 @@ class Stat extends \core\Controller
 
     public function index()
     {
-        return $this->_index();
+        return $this->_index(['date' => [date('Y-m-d'), date('Y-m-d')]]);
     }
     // 添加
     public function add()
@@ -46,7 +46,6 @@ class Stat extends \core\Controller
  
             if(!isset($list[0])){
                 $list[0] = ['date' => $today, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
-                // $list[0]['ip_count'] += isset($IpCount[0]) ? $IpCount[0] : 0;
 			}
             foreach($IpCount as $k => $val){
                 if (!isset($list[$k])) {

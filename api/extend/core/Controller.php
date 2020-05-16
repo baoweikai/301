@@ -28,11 +28,10 @@ abstract class Controller
     /*
      * 列表
      */
-    protected function _index($params = [])
+    protected function _index($params)
     {
         $model = new $this->model;
-
-        $this->result += $model->_list($params + input('get.', []), $this->isPage, $this->with);
+        $this->result += $model->_list(input('get.', []) + $params, $this->isPage, $this->with);
 
         $this->beforeIndex();
 
@@ -44,7 +43,7 @@ abstract class Controller
     protected function _select($attr = 'name', $params = [])
     {
         $model = new $this->model;
-        $this->result += $model->_select($params + input('get.', []), $attr);
+        $this->result += $model->_select(input('get.', []) + $params, $attr);
         return $this->success($this->result);
     }
     /*
