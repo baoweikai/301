@@ -13,4 +13,9 @@ class User extends \core\Model
     ];
     protected $fillable = ['account', 'phone', 'password', 'login_at', 'login_ip', 'status'];
     protected $filter = ['account', 'status', 'login_ip'];  // 搜索项
+    // 状态搜索
+    public function searchAccountAttr($query, $value, $data)
+    {
+        $value !== null && $value !== '' && $query->where('account', 'like', $value . '%');
+    }
 }

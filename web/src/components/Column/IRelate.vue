@@ -100,6 +100,7 @@ export default {
         if (!err) {
           http.get(this.controller + '/select', values).then(res => {
             this.list = res.list
+            this.pagination.total = res.total
           })
         }
       })

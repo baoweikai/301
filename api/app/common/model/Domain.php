@@ -54,7 +54,6 @@ class Domain extends \core\Model
         $configs = config('cache.stores');
         foreach($configs as $config){
             $redis = (new Redis($config))->handler();
-            $redis->del('DomainList');
             $redis->hmset('DomainList', $data);
         }
     }

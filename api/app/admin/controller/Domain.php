@@ -29,6 +29,10 @@ class Domain extends \core\Controller
     {
         return $this->_index();
     }
+    public function select()
+    {
+        return $this->_select('shield_host');
+    }
     // 添加
     public function add()
     {

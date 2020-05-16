@@ -22,7 +22,7 @@ class Stat extends \core\Model
     // 状态搜索
     public function searchDomainIdAttr($query, $value, $data)
     {
-        $value !== null && $query->hasWhere('domain', ['shield_host' => $value]);
+        $value !== null && $query->where('domain_id', $value);
     }
     // 创建日期搜索
     public function searchDateAttr($query, $value, $data)
