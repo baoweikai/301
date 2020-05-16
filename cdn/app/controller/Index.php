@@ -14,7 +14,7 @@ class Index extends BaseController
     {
         return $this->index();
     }
-    protected function initialize(){      
+    protected function initialize(){    
         // ip处理
         $this->ip = get_ip();
         $ipLast = substr($this->ip, -1);

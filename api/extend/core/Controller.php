@@ -28,7 +28,7 @@ abstract class Controller
     /*
      * 列表
      */
-    protected function _index($params)
+    protected function _index($params = [])
     {
         $model = new $this->model;
         $this->result += $model->_list(input('get.', []) + $params, $this->isPage, $this->with);
@@ -163,8 +163,8 @@ abstract class Controller
         if(!$model->ableDel()){
             return $this->error($model->error, 401);
         }
-        $model->status = 0;
-        if ($model->save()) {
+        // $model->status = 0;
+        if ($model->delete()) {
             return $this->success();
         }
         

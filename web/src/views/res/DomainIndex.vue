@@ -58,7 +58,7 @@ export default {
         },
         create_at: { title: '创建日期', type: 'date', format: 'MM-DD' },
         update_at: { title: '更新时间', type: 'date', format: 'MM-DD HH:mm' },
-        action: { title: '操作', type: 'action', actions: ['edit', 'audit'] }
+        action: { title: '操作', type: 'action', actions: ['edit', 'audit', 'del'] }
       },
       // 列表项
       listItems: ['id', 'user_id', 'shield_host', 'jump_host', 'is_param', 'is_open', 'percent', 'group_id', 'status', 'action'],

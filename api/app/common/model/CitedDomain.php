@@ -26,7 +26,7 @@ class CitedDomain extends \core\Model
         return $this->belongsTo(Group::class)->bind(['group_name' => 'name']);
     }
     // 
-    public static function onAfterUpdate($model)
+    public static function onAfterWrite($model)
     {
         self::afterWrite($model);
     }

@@ -58,4 +58,7 @@ class Cache extends BaseController
             $redis->del('CitedIpList');
         } 
     }
+    public function realIp(){
+        return get_client_ip();
+    }
 }
