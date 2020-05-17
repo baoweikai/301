@@ -9,8 +9,6 @@ use app\model\Group;
 
 class Cache extends BaseController
 {
-    // protected  $redis, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
-
     public function domain()
     {
         $rows = Db::name('domain')->column('id, shield_host, jump_host, percent, expire_at, is_param, status, is_open, group_id', 'shield_host');
@@ -22,7 +20,7 @@ class Cache extends BaseController
         $configs = config('cache.stores');
         foreach($configs as $config){
             $redis = (new Redis($config))->handler();
-            $redis->del('DomainList');
+            // $redis->del('DomainList');
             $redis->hmset('DomainList', $domains);
         } 
     }
@@ -43,11 +41,11 @@ class Cache extends BaseController
         $date = date('Ymd', strtotime('-1 hour'));
         foreach($configs as $config){
             $redis = (new Redis($config))->handler();
-            $redis->del('IpList' . $date);
+            $redis->del('SsidList' . $date);
             $redis->del('IpCount' . $date);
             $redis->del('JumpCount' . $date);
             $redis->del('CitedCount' . $date);
-            $redis->del('CitedIpList');
+            $redis->del('CitedSsidList');
         } 
     }
     public function citedIp(){
@@ -55,10 +53,13 @@ class Cache extends BaseController
         // $date = date('Ymd', strtotime('-1 hour'));
         foreach($configs as $config){
             $redis = (new Redis($config))->handler();
-            $redis->del('CitedIpList');
+            $redis->del('CitedSsidList');
         } 
     }
     public function realIp(){
-        return get_client_ip();
+        var_dump(ord('222'));die();
+        cookie('SSID', uniqid(), 3600);
+        // var_dump(cookie('SSID'));die();
+        return cookie('SSID');
     }
 }

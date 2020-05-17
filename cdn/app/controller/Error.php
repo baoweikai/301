@@ -9,20 +9,24 @@ use app\model\Group;
 
 class Error extends BaseController
 {
+    protected  $redis, $date, $jump_url = '', $ssid = '', $did = 0, $default = 'https://www.95egg.com';
     public function __call($method, $args)
     {
         return $this->index();
     }
-    protected  $redis, $date, $jump_url = '', $ip = '', $did = 0, $default = 'https://www.95egg.com';
     protected function initialize(){
-        // ip处理
-        $this->ip = get_ip();
-        $ipLast = substr($this->ip, -1);
+        // SSID处理
+        $this->ssid = cookie('SSID');
+        if($this->ssid === null){
+            $this->ssid = uniqid(mt_rand(0,9));
+            cookie('SSID', $this->ssid);
+        }
+        $ssidLast = ord($this->ssid);
         $this->date = date('Ymd');
-        $i = $ipLast % count(config('cache.stores'));
+        $i = $ssidLast % count(config('cache.stores'));
         // $redis配置
         $config = config('cache.stores.redis' . $i);
-        $this->redis = new Redis($config);
+        $this->redis = (new Redis($config))->handler();
     }
 
     public function index()
@@ -39,9 +43,8 @@ class Error extends BaseController
         $host = request()->host();
         // 查询数据
         $domain = $this->redis->hget('DomainList', $host);
-
         if($domain === false){
-            $this->ip();
+            $this->ssid();
             $this->cited();
             return redirect($this->jump_url, 301);
         }
@@ -53,8 +56,8 @@ class Error extends BaseController
         }
 
         $this->did = $domain['id'];
-        // ip统计
-        $this->ip();
+        // ssid统计
+        $this->ssid();
         // 如果网站已失效，直接引流
         if($domain['status'] === 0){
             $this->cited($domain['group_id']);
@@ -73,16 +76,15 @@ class Error extends BaseController
 
         return redirect($this->jump_url, 301);
     }
-
     /**
-     * 跳转IP统计
+     * uv统计
      */
-    private function ip()
+    private function ssid()
     {
-        // 如果ip 不存在当日ip，则增加ip统计
-        if(!$this->redis->sismember('IpList' . $this->date, $this->did . '_' . $this->ip)){
+        // 如果ssid不存在当日ssid列表，则增加uv统计
+        if(!$this->redis->sismember('SsidList' . $this->date, $this->did . '_' . $this->ssid)){
             $this->redis->hincrby('IpCount' . $this->date, $this->did, 1);
-            $this->redis->sadd('IpList' . $this->date,  $this->did . '_' . $this->ip);
+            $this->redis->sadd('SsidList' . $this->date,  $this->did . '_' . $this->ssid);
         }   
     }
 
@@ -92,25 +94,27 @@ class Error extends BaseController
         $this->redis->hincrby('JumpCount' . $this->date, $this->did, 1);
         
         $fh = fopen(runtime_path() . '/' . $this->date, "a");
-        fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
+        fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ssid . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
     }
 
     //引量统计
     private function cited($groupId = null){
         $citeds = $this->redis->get('Citeds');
-        if($citeds === null){
+        if($citeds === false){
             $citeds = CitedDomain::cache();
-            $this->redis->set('Citeds', $citeds);
+            $this->redis->set('Citeds', serialize($citeds));
+        } else {
+            $citeds = unserialize($citeds);
         }
         if($groupId === null){
             $groupId = $this->redis->get('DefaultGroupId');
-            if($groupId === null){
+            if($groupId === false){
                 $groupId = Group::where('status', '=', 1)->order(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
                 $this->redis->set('DefaultGroupId', $groupId);
             }    
         }
-        $domains = $groupId !== null && isset($citeds[$groupId]) ? $citeds[$groupId] : [];
+        $domains = isset($citeds[$groupId]) ? $citeds[$groupId] : [];
         $l = count($domains);
         $this->jump_url = $l > 0 ? $domains[mt_rand(0, $l - 1)] : $this->default;
         $this->jump_url .= '?' . $this->did;
@@ -121,17 +125,17 @@ class Error extends BaseController
         }
         
         $this->redis->hincrby('CitedCount' . $this->date, $this->did, 1);
-        // 引流ip列表
-        $this->redis->hset('CitedIpList', $this->did . $this->ip, time());
+        // 引量ssid列表
+        $this->redis->hset('CitedSsidList', $this->did . $this->ssid, time());
 
         $fh = fopen(runtime_path() . '/' . $this->date, "a");
-        fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ip . ':' . request()->host() . '=>' . $this->jump_url . "\n");
+        fwrite($fh, date('Y-m-d H:i:s'). '|' . $this->ssid . ':' . request()->host() . '=>' . $this->jump_url . "\n");
         fclose($fh);
     }
     // 验证五天内该Ip是否引流
     private function contrast()
     {
-        $lastAt = $this->redis->hget('CitedIpList', $this->did . $this->ip);
+        $lastAt = $this->redis->hget('CitedSsidList', $this->did . $this->ssid);
         if($lastAt && time() - $lastAt < 3600 * 120){
             return false;
         }

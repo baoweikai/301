@@ -13,7 +13,7 @@ class Index extends \core\Controller
     }
     // 工作台
     public function workplace(){
-        $this->result['ipCount'] = $this->result['jumpCount'] = $this->result['citedCount'] = [0, 0, 0];
+        $this->result['today'] = $this->result['yesterday'] = $this->result['sevenday'] = [0, 0, 0];
         $this->result['domainCount'] = Domain::where('status', 1)->count();
         $date = date('Y-m-d', strtotime('-7 day'));
         $rows = Stat::where('date', '>=', $date)->select();
@@ -23,19 +23,19 @@ class Index extends \core\Controller
 
         foreach($rows as $row){
             if($row->date == $today){
-                $this->result['ipCount'][0] += $row->ip_count;
-                $this->result['jumpCount'][0] += $row->jump_count;
-                $this->result['citedCount'][0] += $row->cited_count;
+                $this->result['today'][0] += $row->ip_count;
+                $this->result['today'][1] += $row->jump_count;
+                $this->result['today'][2] += $row->cited_count;
             }
             if($row->date == $yesterday){
-                $this->result['ipCount'][1] += $row->ip_count;
-                $this->result['jumpCount'][1] += $row->jump_count;
-                $this->result['citedCount'][1] += $row->cited_count;
+                $this->result['yesterday'][0] += $row->ip_count;
+                $this->result['yesterday'][1] += $row->jump_count;
+                $this->result['yesterday'][2] += $row->cited_count;
             }
             if($row->date >= $sevenday){
-                $this->result['ipCount'][2] += $row->ip_count;
-                $this->result['jumpCount'][2] += $row->jump_count;
-                $this->result['citedCount'][2] += $row->cited_count;
+                $this->result['sevenday'][0] += $row->ip_count;
+                $this->result['sevenday'][1] += $row->jump_count;
+                $this->result['sevenday'][2] += $row->cited_count;
             }
         }
         return $this->success($this->result);

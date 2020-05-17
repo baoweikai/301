@@ -10,49 +10,48 @@
     <div>
       <a-row :gutter="16">
         <a-col class="gutter-row" :span="6">
-          <a-card title="IP数">
+          <a-card title="今日">
             <a slot="extra" @click="stat()">更新</a>
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{ipCount[0]}}</a-col>
+                <a-col :span="12">uv</a-col><a-col class="fc-success" :span="12">{{today[0]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{ipCount[1]}}</a-col>
+                <a-col :span="12">跳转</a-col><a-col class="fc-success" :span="12">{{today[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">周内</a-col><a-col class="fc-success" :span="12">{{ipCount[2]}}</a-col>
-              </a-row>
-            </div>
-          </a-card>
-        </a-col>
-        <a-col class="gutter-row" :span="6">
-          <a-card title="跳转">
-            <a @click="stat()" slot="extra">更新</a>
-            <div class="fs16 tac">
-              <a-row>
-                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{jumpCount[0]}}</a-col>
-              </a-row>
-              <a-row>
-                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{jumpCount[1]}}</a-col>
-              </a-row>
-              <a-row>
-                <a-col :span="12">周内</a-col><a-col class="fc-success" :span="12">{{jumpCount[2]}}</a-col>
+                <a-col :span="12">引量</a-col><a-col class="fc-success" :span="12">{{today[2]}}</a-col>
               </a-row>
             </div>
           </a-card>
         </a-col>
         <a-col class="gutter-row" :span="6">
-          <a-card title="引流数">
-            <a @click="stat()" slot="extra">更新</a>
+          <a-card title="昨日">
+            <a @click="stat(1)" slot="extra">更新</a>
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">今日</a-col><a-col class="fc-success" :span="12">{{citedCount[0]}}</a-col>
+                <a-col :span="12">uv</a-col><a-col class="fc-success" :span="12">{{yesterday[0]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">昨日</a-col><a-col class="fc-success" :span="12">{{citedCount[1]}}</a-col>
+                <a-col :span="12">跳转</a-col><a-col class="fc-success" :span="12">{{yesterday[1]}}</a-col>
               </a-row>
               <a-row>
-                <a-col :span="12">周内</a-col><a-col class="fc-success" :span="12">{{citedCount[2]}}</a-col>
+                <a-col :span="12">引量</a-col><a-col class="fc-success" :span="12">{{yesterday[2]}}</a-col>
+              </a-row>
+            </div>
+          </a-card>
+        </a-col>
+        <a-col class="gutter-row" :span="6">
+          <a-card title="一周">
+            <div class="fs16 tac">
+              <a-row>
+                <a-col :span="12">uv</a-col><a-col class="fc-success" :span="12">{{sevenday[0]}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">跳转</a-col><a-col class="fc-success" :span="12">{{sevenday[1]}}</a-col>
+              </a-row>
+              <a-row>
+                <a-col :span="12">引量</a-col><a-col class="fc-success" :span="12">{{sevenday[2]}}</a-col>
               </a-row>
             </div>
           </a-card>
@@ -83,9 +82,9 @@ export default {
       user: {},
 
       codeStat: [],
-      ipCount: [0, 0, 0],
-      jumpCount: [0, 0, 0],
-      citedCount: [0, 0, 0],
+      today: [0, 0, 0],
+      yesterday: [0, 0, 0],
+      sevenday: [0, 0, 0],
       domainCount: 0
     }
   },
@@ -103,13 +102,11 @@ export default {
   },
   methods: {
     ...mapGetters(['nickname', 'welcome']),
-    stat () {
-      http.get('stat/update').then(res => {
-        if (res.state === 200) {
-          // Do something
-          this.$message.success('更新成功')
-          Object.assign(this, res.result)
-          // this.$router.replace(location)
+    stat (type = 0) {
+      http.post('stat/frush', { type: type }).then(res => {
+        if (res) {
+          this.$message.success('刷新成功')
+          Object.assign(this, res)
         }
       })
     }

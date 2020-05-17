@@ -28,7 +28,7 @@ export default {
         id: { title: 'ID', type: 'string' },
         date: { title: '日期', type: 'date' },
         domain_id: { title: '域名', type: 'relate', customRender: (v, record) => v === 0 ? '未入库域名' : record.shield_host, text: '', controller: 'domain', column: ['shield_host'], find: ['shield_host'] },
-        ip_count: { title: 'ip量', type: 'number' },
+        ip_count: { title: 'uv', type: 'number' },
         jump_count: { title: '跳转', type: 'number' },
         cited_count: { title: '引量', type: 'number' },
         create_at: { title: '添加日期', type: 'date', format: 'MM-DD' },

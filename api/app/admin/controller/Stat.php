@@ -31,25 +31,27 @@ class Stat extends \core\Controller
     {
         return $this->_edit($id);
     }
-    // 编辑
-    public function update()
+    // 刷新数据
+    public function frush()
     {
+        $type = input('post.type/d', 0);
+        $date = date('Y-m-d', $type > 0 ? strtotime('-' . $type . ' day') :  time());
         $configs = config('cache.stores');
         $list = [];
-        $date = date('Ymd', strtotime('-1 hour'));
-        $today = date('Y-m-d', strtotime('-1 hour'));
+        $today = date('Ymd', strtotime($date));
+
         foreach($configs as $config){
             $redis = (new Redis($config))->handler();
-            $IpCount = $redis->hgetall('IpCount' . $date);
-            $JumpCount = $redis->hgetall('JumpCount' . $date);
-            $CitedCount = $redis->hgetall('CitedCount' . $date);
+            $IpCount = $redis->hgetall('IpCount' . $today);
+            $JumpCount = $redis->hgetall('JumpCount' . $today);
+            $CitedCount = $redis->hgetall('CitedCount' . $today);
  
             if(!isset($list[0])){
-                $list[0] = ['date' => $today, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
+                $list[0] = ['date' => $date, 'domain_id' => 0, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
 			}
             foreach($IpCount as $k => $val){
                 if (!isset($list[$k])) {
-                    $list[$k] = ['date' => $today, 'domain_id' => $k, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
+                    $list[$k] = ['date' => $date, 'domain_id' => $k, 'ip_count' => 0, 'jump_count' => 0, 'cited_count' => 0];
                 }
                 $list[$k]['ip_count'] += $val;
             }
@@ -61,7 +63,7 @@ class Stat extends \core\Controller
             }
         }
 
-        $ids = Model::where([['date', '=', $today], ['domain_id', 'in', array_keys($list)]])->column('id', 'domain_id');
+        $ids = Model::where([['date', '=', $date], ['domain_id', 'in', array_keys($list)]])->column('id', 'domain_id');
 
         foreach($list as $k => $v){
             if(isset($ids[$k])){
@@ -70,31 +72,31 @@ class Stat extends \core\Controller
         }
         $model = new Model;
         if($model->saveAll($list)){
-            $this->result['ipCount'] = $this->result['jumpCount'] = $this->result['citedCount'] = [0, 0, 0];
+            $this->result['today'] = $this->result['yesterday'] = $this->result['sevenday'] = [0, 0, 0];
             $this->result['domainCount'] = Domain::where('status', 1)->count();
-            $date = date('Y-m-d', strtotime('-8 day'));
-            $rows = Model::where('date', '>', $date)->select();
-            $yesterday = date('Y-m-d', strtotime('-1 day'));
+
+            $rows = Model::where('date', '>', date('Y-m-d', strtotime('-8 day')))->select();
             $today = date('Y-m-d');
+            $yesterday = date('Y-m-d', strtotime('-1 day'));
             $sevenday = date('Y-m-d', strtotime('-7 day'));
             foreach($rows as $row){
                 if($row->date == $today){
-                    $this->result['ipCount'][0] += $row->ip_count;
-                    $this->result['jumpCount'][0] += $row->jump_count;
-                    $this->result['citedCount'][0] += $row->cited_count;
+                    $this->result['today'][0] += $row->ip_count;
+                    $this->result['today'][1] += $row->jump_count;
+                    $this->result['today'][2] += $row->cited_count;
                 }
                 if($row->date == $yesterday){
-                    $this->result['ipCount'][1] += $row->ip_count;
-                    $this->result['jumpCount'][1] += $row->jump_count;
-                    $this->result['citedCount'][1] += $row->cited_count;
+                    $this->result['yesterday'][0] += $row->ip_count;
+                    $this->result['yesterday'][1] += $row->jump_count;
+                    $this->result['yesterday'][2] += $row->cited_count;
                 }
                 if($row->date >= $sevenday){
-                    $this->result['ipCount'][2] += $row->ip_count;
-                    $this->result['jumpCount'][2] += $row->jump_count;
-                    $this->result['citedCount'][2] += $row->cited_count;
+                    $this->result['sevenday'][0] += $row->ip_count;
+                    $this->result['sevenday'][1] += $row->jump_count;
+                    $this->result['sevenday'][2] += $row->cited_count;
                 }
             }
-            return $this->success($this->result, '更新成功');
+            return $this->success($this->result);
             // return $this->success(['state' => 200, 'message' => '更新成功']);
         }
         return $this->error('更新失败', 201);
