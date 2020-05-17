@@ -171,7 +171,7 @@ abstract class Controller
         return $this->error("删除失败，请稍候再试！", 401);
     }
 
-    protected  function _switch(){
+    protected function _switch(){
         $ids = input('post.ids', []);
         $attr = input('post.attr', 'status');
         $value = input('post.value', 0);
