@@ -14,7 +14,7 @@
             <a slot="extra" @click="stat()">更新</a>
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">uv</a-col><a-col class="fc-success" :span="12">{{today[0]}}</a-col>
+                <a-col :span="12">IP</a-col><a-col class="fc-success" :span="12">{{today[0]}}</a-col>
               </a-row>
               <a-row>
                 <a-col :span="12">跳转</a-col><a-col class="fc-success" :span="12">{{today[1]}}</a-col>
@@ -30,7 +30,7 @@
             <a @click="stat(1)" slot="extra">更新</a>
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">uv</a-col><a-col class="fc-success" :span="12">{{yesterday[0]}}</a-col>
+                <a-col :span="12">IP</a-col><a-col class="fc-success" :span="12">{{yesterday[0]}}</a-col>
               </a-row>
               <a-row>
                 <a-col :span="12">跳转</a-col><a-col class="fc-success" :span="12">{{yesterday[1]}}</a-col>
@@ -45,7 +45,7 @@
           <a-card title="一周">
             <div class="fs16 tac">
               <a-row>
-                <a-col :span="12">uv</a-col><a-col class="fc-success" :span="12">{{sevenday[0]}}</a-col>
+                <a-col :span="12">IP</a-col><a-col class="fc-success" :span="12">{{sevenday[0]}}</a-col>
               </a-row>
               <a-row>
                 <a-col :span="12">跳转</a-col><a-col class="fc-success" :span="12">{{sevenday[1]}}</a-col>
