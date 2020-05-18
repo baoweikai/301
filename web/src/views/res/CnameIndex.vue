@@ -37,7 +37,7 @@ export default {
           title: '是否使用', type: 'switch', options: ['未使用', '已使用'], rules: [{ required: true }]
         },
         status: {
-          title: '状态', type: 'switch', options: ['正常', '删除', '禁用'], rules: [{ required: true }]
+          title: '状态', type: 'switch', options: ['正常', '关闭'], rules: [{ required: true }]
         },
         create_at: { title: '创建日期', type: 'date', format: 'MM-DD' },
         update_at: { title: '更新时间', type: 'date', format: 'MM-DD HH:mm' },

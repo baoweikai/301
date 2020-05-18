@@ -38,7 +38,7 @@ export default {
           title: '权重', type: 'string', rules: [{ required: true }]
         },
         status: {
-          title: '状态', type: 'switch', options: ['关闭', '启用'], rules: [{ required: true }]
+          title: '开关', type: 'switch', options: ['关闭', '启用'], rules: [{ required: true }]
         },
         create_at: { title: '创建时间', type: 'date', format: 'MM-DD' },
         action: { title: '操作', type: 'action', actions: ['edit', 'audit', 'del'] }

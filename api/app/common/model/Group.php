@@ -32,7 +32,7 @@ class Group extends \core\Model
     // 
     public static function cache() {
         $rows = CitedDomain::where('status', 1)->hasWhere('group_id', ['status' => 1])->select();
-        $groupId = Group::where('status', 1)->order(['is_default' => 'desc', 'id' => 'asc'])->find();
+        $groupId = intval(Group::where('status', 1)->order(['is_default' => 'desc', 'id' => 'asc'])->value('id'));
         $citeds = [];
         foreach($rows as $row){
             $citeds[$row->group_id][] = $row->host;
