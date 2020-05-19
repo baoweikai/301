@@ -51,7 +51,7 @@ export default {
           title: '引流分组', type: 'radio', options: {}, rules: [{ required: true }], customRender: (v, record) => record.group_name
         },
         status: {
-          title: '开关', type: 'switch', options: ['失效', '正常'], rules: [{ required: true }]
+          title: '启用', type: 'switch', options: ['失效', '正常'], rules: [{ required: true }]
         },
         cited_range: {
           title: '引流时段', type: 'checkbox', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']

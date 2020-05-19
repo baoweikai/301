@@ -95,7 +95,6 @@ export default {
     ...mapActions(['Login', 'Logout']),
     handleSubmit (e) {
       e.preventDefault()
-      this.state.loginBtn = true
 
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -106,12 +105,12 @@ export default {
             scope: '*'
           }
           loginParams.password = md5(values.password)
+          this.state.loginBtn = true
 
           http.post('identity/login', loginParams)
             .then(res => {
               if (res.state === 200) {
-                console.log(res)
-                // this.Login(res.result)
+                this.Login(res.result)
                 this.$router.push({ name: 'Dashboard' }).catch(e => {})
                 // 延迟 1 秒显示欢迎信息
                 setTimeout(() => {
@@ -125,12 +124,8 @@ export default {
             }).finally(() => {
               this.state.loginBtn = false
             })
-        } else {
-          this.state.loginBtn = false
         }
       })
-    },
-    loginSuccess (res) {
     }
   }
 }

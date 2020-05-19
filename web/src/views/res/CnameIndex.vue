@@ -34,7 +34,7 @@ export default {
         },
         create_at: { title: '创建日期', type: 'date', format: 'MM-DD' },
         update_at: { title: '更新时间', type: 'date', format: 'MM-DD HH:mm' },
-        action: { title: '操作', type: 'action', actions: ['edit', 'audit', 'del'] }
+        action: { title: '操作', type: 'action', actions: ['edit', 'del'] }
       },
       // 列表项
       listItems: ['id', 'name', 'cate_id', 'status', 'is_use', 'create_at', 'update_at', 'action'],
