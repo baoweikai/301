@@ -105,15 +105,15 @@ export default {
             client_secret: 'dLUF49huM6RloQ76wQ6wVf5WaMkG5sPxPUOZQUYQ',
             scope: '*'
           }
-          console.log(values.password)
           loginParams.password = md5(values.password)
-          console.log(loginParams.password)
 
           http.post('identity/login', loginParams)
             .then(res => {
-              if (res) {
+              if (res.state === 200) {
                 this.Login(res)
                 this.loginSuccess(res)
+              } else if (res.state < 300) {
+                this.t = (new Date()).valueOf()
               }
             }).catch(() => {
               // console.log('catch:', e)
