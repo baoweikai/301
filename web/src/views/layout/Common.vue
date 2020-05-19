@@ -2,7 +2,7 @@
   <div class="page">
     <div class="fac">
       <router-link class="sider tac" :class="{ fold: fold }" :to="{ name:'Dashboard' }">
-        <logo alt="logo" class="w4 h4" />
+        <div class="w4 h4"></div>
       </router-link>
       <div class="f1 tal">
         <a-icon :type="fold ? 'menu-unfold' : 'menu-fold'" class="fc-white" @click="fold = !fold" />
@@ -45,11 +45,10 @@ import { mixin, mixinDevice } from '@/utils/mixin/app'
 import config from '@/config/default'
 import SubMenu from '@/components/SubMenu'
 import { UserMenu } from './part'
-import Logo from '@/assets/logo.svg?inline'
 
 export default {
   mixins: [mixin, mixinDevice],
-  components: { SubMenu, UserMenu, Logo },
+  components: { SubMenu, UserMenu },
   data () {
     return {
       title: config.appName,
