@@ -50,8 +50,8 @@ router.beforeEach((to, from, next) => {
     // 如果管理员权限没保存
     if (store.getters.perms.length === 0) {
       http.get(api.UserInfo).then(res => {
-        if (res) {
-          store.dispatch('Auth', res)
+        if (res.state === 200) {
+          store.dispatch('Auth', res.result)
           const redirect = decodeURIComponent(from.query.redirect || to.path)
           if (to.path === redirect) {
             // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record

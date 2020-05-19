@@ -41,11 +41,8 @@ export default {
           const params = { password: md5(values.password), confirm: md5(values.confirm) }
           http.post('admin/pass/' + this.pk, params)
             .then(res => {
-              if (res) {
-              }
-            }).catch(e => {
-            }).finally(() => {
-            })
+              res.state === 200 && this.$message.success('修改成功')
+            }).catch(e => {})
         } else {
           // this.state.loginBtn = false
         }

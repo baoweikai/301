@@ -54,11 +54,12 @@ export default {
       this.spinning = true
       http.edit(this.controller, id)
         .then(res => {
+          const date = res.result
           // 非表单提交数据储存在store，以便其他地方调用
-          for (const i in res.result.columns) {
-            this.columns[i] && Object.assign(this.columns[i], res.result.columns[i])
+          for (const i in date.columns) {
+            this.columns[i] && Object.assign(this.columns[i], date.columns[i])
           }
-          this.form.setFieldsValue(util.pick(res.result.view, Object.keys(this.columns)))
+          this.form.setFieldsValue(util.pick(date.view, Object.keys(this.columns)))
           this.spinning = false
         })
     },

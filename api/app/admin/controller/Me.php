@@ -13,7 +13,7 @@ use thans\jwt\facade\JWTAuth;
 class Me extends Controller
 {
     protected $middleware = ['auth'];  // 中间件
-    protected $model = '\app\model\Admin';
+    protected $model = '\app\admin\model\Admin';
     protected $name = '管理员';
 
     /*

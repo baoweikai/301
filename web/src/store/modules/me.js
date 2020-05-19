@@ -76,7 +76,7 @@ export default {
     // 授权信息
     Auth ({ commit, state }, res) {
       if (!res.perms || res.perms.length === 0) {
-        util.message('getInfo: roles must be a non-null array !', 'error')
+        util.message('getInfo: perms must be a non-null array !', 'error')
         return false
       }
       // 重置权限
@@ -85,7 +85,6 @@ export default {
     // 登出
     Logout ({ commit, state }) {
       storage.remove(ACCESS_TOKEN)
-      console.log(storage.get(ACCESS_TOKEN))
       storage.remove('ACCESS_PERMS')
 
       http.get('identity/logout').then(() => {

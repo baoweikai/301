@@ -104,9 +104,9 @@ export default {
     ...mapGetters(['nickname', 'welcome']),
     stat (type = 0) {
       http.post('stat/frush', { type: type }).then(res => {
-        if (res) {
+        if (res.state === 200) {
           this.$message.success('刷新成功')
-          Object.assign(this, res)
+          Object.assign(this, res.result)
         }
       })
     }

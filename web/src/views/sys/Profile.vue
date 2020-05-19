@@ -61,7 +61,6 @@ export default {
   methods: {
     handleSubmit (e) {
       e.preventDefault()
-      this.state.loginBtn = true
 
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -75,19 +74,15 @@ export default {
           */
           const params = { password: md5(values.password) }
 
+          this.state.loginBtn = true
           http.post('me/pass', params)
             .then(res => {
-              if (!res.state || res.state === 200) {
-                this.Login(res)
-                this.loginSuccess(res)
+              if (res.state === 200) {
+                this.$message.success('修改成功')
               }
-            }).catch(e => {
-              console.log('catch:', e)
-            }).finally(() => {
+            }).catch(e => {}).finally(() => {
               this.state.loginBtn = false
             })
-        } else {
-          this.state.loginBtn = false
         }
       })
     }

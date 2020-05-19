@@ -200,7 +200,7 @@ export default {
         cancelText: this.$t('action.reject'),
         onOk () {
           http.post(_this.controller + '/adopt', ids, post).then(res => {
-            if (res) {
+            if (res.state === 200) {
               _this.$message.success('修改成功')
               _this.fetch(_this.queryParams)
             }
@@ -208,7 +208,7 @@ export default {
         },
         onCancel () {
           http.post(_this.controller + '/reject', ids, post).then(res => {
-            if (res) {
+            if (res.state === 200) {
               _this.$message.success('修改成功')
               _this.fetch(_this.queryParams)
             }
@@ -227,7 +227,7 @@ export default {
         cancelText: this.$t('action.cancel'),
         onOk () {
           http.post(_this.controller + '/switch', post).then(res => {
-            if (res) {
+            if (res.state === 200) {
               _this.$message.success('修改成功')
               _this.fetch(_this.queryParams)
             }
@@ -241,13 +241,13 @@ export default {
     },
     handleImport (info) {
       if (info.file.status === 'uploading') {
-        this.$message.loading({ content: '导入中...', key: 'uploading' })
+        this.$message.loading({ content: '导入中...', key: 'import' })
       } else {
         if (info.file.status === 'done') {
-          this.$message.success({ content: '导入成功', key: 'uploading' })
+          this.$message.success({ content: '导入成功', key: 'import' })
           this.fresh()
         } else {
-          this.$message.error({ content: info.file.message, key: 'uploading' })
+          this.$message.error({ content: info.file.message, key: 'import' })
         }
       }
     },

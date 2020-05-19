@@ -22,10 +22,9 @@ class Cache extends BaseController
             $redis = (new Redis($config))->handler();
             // $redis->del('DomainList');
             $redis->hmset('DomainList', $domains);
-        } 
+        }
     }
     public function cited(){
-
         $citeds = CitedDomain::cache();
         $groupId = Group::where('status', '=', 1)->order(['is_default' => 'desc', 'id' => 'ASC'])->value('id');
 

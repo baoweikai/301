@@ -82,10 +82,10 @@ export default {
     },
     fetch (params = {}) {
       this.loading = true
-      http.get(this.controller + '/select', params).then(result => {
+      http.get(this.controller + '/select', params).then(res => {
         this.loading = false
-        this.pagination.total = result.total
-        this.list = result.list
+        this.pagination.total = res.result.total
+        this.list = res.result.list
       })
     },
     handelChoose (item) {
@@ -99,8 +99,11 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           http.get(this.controller + '/select', values).then(res => {
-            this.list = res.list
-            this.pagination.total = res.total
+            console.log(res)
+            if (res.state === 200) {
+              this.list = res.result.list
+              this.pagination.total = res.result.total
+            }
           })
         }
       })

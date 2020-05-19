@@ -110,8 +110,13 @@ export default {
           http.post('identity/login', loginParams)
             .then(res => {
               if (res.state === 200) {
-                this.Login(res)
-                this.loginSuccess(res)
+                console.log(res)
+                // this.Login(res.result)
+                this.$router.push({ name: 'Dashboard' }).catch(e => {})
+                // 延迟 1 秒显示欢迎信息
+                setTimeout(() => {
+                  util.notify(`${util.timeFix()}，欢迎回来`)
+                }, 1000)
               } else if (res.state < 300) {
                 this.t = (new Date()).valueOf()
               }
@@ -126,11 +131,6 @@ export default {
       })
     },
     loginSuccess (res) {
-      this.$router.push({ name: 'Dashboard' }).catch(() => {})
-      // 延迟 1 秒显示欢迎信息
-      setTimeout(() => {
-        util.notify(`${util.timeFix()}，欢迎回来`)
-      }, 1000)
     }
   }
 }

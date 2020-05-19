@@ -21,13 +21,13 @@ export default {
     pick,
     async load (path = false, parameter = {}) {
       this.loading = true
-      const result = await http.get(path || this.loadPath, parameter)
+      const res = await http.get(path || this.loadPath, parameter)
 
-      if (result) {
-        this.loadData(result)
+      if (res.state === 200) {
+        this.loadData(res.result)
         this.$store.commit('UPDATE', { pageState: 1 })
         this.loading = true
-        return result
+        return res.result
       }
       return false
     },
