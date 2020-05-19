@@ -1,16 +1,9 @@
 <template>
   <div>
     <Find :columns="pick(columns, findItems)" />
-    <List
-      ref="list"
-      v-bind="{ columns: pick(columns, listItems), controller: controller, data: list, queryParams: queryParams }"
-    />
-    <Edit
-      ref="edit" v-bind="{ columns: pick(columns, formItems), controller: controller }"
-    />
-    <Add
-      ref="add" v-bind="{ columns: pick(columns, formItems), controller: controller }"
-    />
+    <List ref="list" v-bind="{ columns: pick(columns, listItems), controller: controller, data: list, queryParams: queryParams }" />
+    <Edit ref="edit" v-bind="{ columns: pick(columns, formItems), controller: controller }" />
+    <Add sref="add" v-bind="{ columns: pick(columns, formItems), controller: controller }" />
   </div>
 </template>
 

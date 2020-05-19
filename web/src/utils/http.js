@@ -53,7 +53,7 @@ const http = {
       if (status === 200 || data.state === 200) {
         util.message(data.message)
         data.result && data.result.csrf_token && (localStorage.csrf_token = data.result.csrf_token)
-        return data.result || data
+        return data
       } else if (status < 300) {
         util.message(data.message, 'info')
         return data

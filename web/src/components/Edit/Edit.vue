@@ -53,12 +53,12 @@ export default {
       this.visible = true
       this.spinning = true
       http.edit(this.controller, id)
-        .then(result => {
+        .then(res => {
           // 非表单提交数据储存在store，以便其他地方调用
-          for (const i in result.columns) {
-            this.columns[i] && Object.assign(this.columns[i], result.columns[i])
+          for (const i in res.result.columns) {
+            this.columns[i] && Object.assign(this.columns[i], res.result.columns[i])
           }
-          this.form.setFieldsValue(util.pick(result.view, Object.keys(this.columns)))
+          this.form.setFieldsValue(util.pick(res.result.view, Object.keys(this.columns)))
           this.spinning = false
         })
     },
@@ -71,7 +71,7 @@ export default {
           const data = this.convert(this.cols, values)
           http.update(this.controller, this.pk, Object.assign(data, this.defaults))
             .then(res => {
-              if (res) {
+              if (res.state === 200) {
                 // Do something
                 this.$message.success('保存成功')
                 this.visible = false

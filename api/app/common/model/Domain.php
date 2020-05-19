@@ -23,7 +23,7 @@ class Domain extends \core\Model
     protected $fillable = ['shield_host', 'jump_host', 'percent', 'user_id', 'is_param', 'is_open', 'expire_at', 'cited_range', 'status'];
     protected $filter = ['id', 'shield_host', 'jump_host', 'is_param', 'is_open', 'user_id', 'status'];  // 搜索项
     protected $rule = [
-        'shield_host'  => 'require',
+        'shield_host'  => 'require|unique:domain',
         'jump_host'  => 'require',
         'percent'  => 'require|integer'
     ];

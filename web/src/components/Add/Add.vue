@@ -46,11 +46,11 @@ export default {
       return cols
     },
     load () {
-      http.add(this.controller).then(result => {
-        for (const i in result.columns) {
-          this.columns[i] && Object.assign(this.columns[i], result.columns[i])
+      http.add(this.controller).then(res => {
+        for (const i in res.result.columns) {
+          this.columns[i] && Object.assign(this.columns[i], res.result.columns[i])
         }
-        this.form.setFieldsValue(util.pick(result.view, Object.keys(this.columns)))
+        this.form.setFieldsValue(util.pick(res.result.view, Object.keys(this.columns)))
       })
       this.visible = true
     },
@@ -62,7 +62,7 @@ export default {
           // 提交数据到服务端 必须为 Item 对象
           const data = this.convert(this.cols, values)
           http.save(this.controller, Object.assign(data, this.defaults)).then(res => {
-            if (res) {
+            if (res.state === 200) {
               // Do something
               this.$message.success('保存成功')
               this.visible = false

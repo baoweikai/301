@@ -18,4 +18,12 @@ class User extends \core\Model
     {
         $value !== null && $value !== '' && $query->where('account', 'like', $value . '%');
     }
+    /*
+     * 验证规则
+     */
+    protected $rule = [
+        'account'  => 'require|max:30|chsDash|min:5|unique:user',
+        'password'   => 'alphaDash|min:6|max:20',
+        'phone'   => 'number|length:11|unique:auth_admin'
+    ];
 }
